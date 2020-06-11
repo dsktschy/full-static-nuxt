@@ -53,6 +53,10 @@ export default {
       config.node = {
         fs: 'empty'
       }
-    }
+    },
+    /*
+     ** Transpiling configuration
+     */
+    transpile: ['vue-agile']
   }
 }
