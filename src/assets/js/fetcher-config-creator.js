@@ -7,6 +7,8 @@
  * So this module exports functions
  */
 
+import { postsPerRequestToPage } from '../json/variables'
+
 function createBase() {
   return {
     timeout: 0,
@@ -39,7 +41,8 @@ export function createForPosts() {
     ...createBase(),
     baseURL: `${process.env.NUXT_ENV_API_URL}/posts`,
     params: {
-      fields: 'title,description,featuredImage,content,category,tags,author'
+      fields: 'title,description,featuredImage,content,category,tags,author',
+      limit: postsPerRequestToPage
     }
   }
 }

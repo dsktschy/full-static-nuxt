@@ -1,4 +1,6 @@
 import { config } from 'dotenv'
+import { getAllContents } from './src/assets/js/posts-fetcher'
+
 config()
 
 export default {
@@ -58,5 +60,17 @@ export default {
      ** Transpiling configuration
      */
     transpile: ['vue-agile']
+  },
+  /*
+   ** Generating configuration
+   */
+  generate: {
+    async routes() {
+      const contentList = await getAllContents()
+      return contentList.map((content) => ({
+        route: `/blog/${content.id}`,
+        payload: { content }
+      }))
+    }
   }
 }

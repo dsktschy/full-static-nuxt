@@ -19,7 +19,7 @@ export default {
 
   head() {
     return createHead(
-      this.content.title.ja_jp,
+      `${this.content.title.ja_jp} | ${this.$siteData.title.ja_jp}`,
       this.content.description.ja_jp,
       this.$siteData.ogImage.url,
       `${process.env.BASE_URL}${this.$route.path}`

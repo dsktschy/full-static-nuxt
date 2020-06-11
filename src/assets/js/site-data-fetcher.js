@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { createForSiteData as createConfig } from '~/assets/js/fetcher-config-creator'
+import { createForSiteData as createConfig } from './fetcher-config-creator'
 
 export async function getContent() {
   const config = createConfig()

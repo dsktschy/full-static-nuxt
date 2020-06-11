@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { createForPages as createConfig } from '~/assets/js/fetcher-config-creator'
+import { createForPages as createConfig } from './fetcher-config-creator'
 
 export async function getContent(id) {
   if (!id) {
