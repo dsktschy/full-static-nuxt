@@ -16,33 +16,36 @@ function createBase() {
   }
 }
 
-export function createForSiteData() {
+export function createForSiteData({ fields } = {}) {
   return {
     ...createBase(),
     baseURL: `${process.env.NUXT_ENV_API_URL}/site-data`,
     params: {
-      fields: 'title,description,ogImage'
+      fields: fields || 'title,description,ogImage'
     }
   }
 }
 
-export function createForPages() {
+export function createForPages({ fields } = {}) {
   return {
     ...createBase(),
     baseURL: `${process.env.NUXT_ENV_API_URL}/pages`,
     params: {
-      fields: 'title,description,ogImage,texts,images'
+      fields: fields || 'title,description,ogImage,texts,images'
     }
   }
 }
 
-export function createForPosts() {
+export function createForPosts({ fields, offset, limit } = {}) {
   return {
     ...createBase(),
     baseURL: `${process.env.NUXT_ENV_API_URL}/posts`,
     params: {
-      fields: 'title,description,featuredImage,content,category,tags,author',
-      limit: postsPerRequestToPage
+      fields:
+        fields ||
+        'id,title,description,featuredImage,content,category,tags,author',
+      offset: offset || 0,
+      limit: limit || postsPerRequestToPage
     }
   }
 }

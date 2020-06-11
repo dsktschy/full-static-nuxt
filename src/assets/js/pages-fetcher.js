@@ -7,8 +7,7 @@ export async function getContent(id) {
     return Promise.reject(error)
   }
   const config = createConfig()
-  const fetcher = axios.create(config)
-  const response = await fetcher.get(id)
+  const response = await axios.get(id, config)
   if (!response.data) throw new Error('API response is invalid.')
   return response.data
 }

@@ -8,18 +8,14 @@ export async function getContent(id) {
     return Promise.reject(error)
   }
   const config = createConfig()
-  const fetcher = axios.create(config)
-  const response = await fetcher.get(id)
+  const response = await axios.get(id, config)
   if (!response.data) throw new Error('API response is invalid.')
   return response.data
 }
 
-export async function getContentList({ offset, limit } = {}) {
-  const config = createConfig()
-  if (offset) config.params.offset = offset
-  if (limit) config.params.limit = limit
-  const fetcher = axios.create(config)
-  const response = await fetcher.get()
+export async function getContentList({ fields, offset, limit } = {}) {
+  const config = createConfig({ fields, offset, limit })
+  const response = await axios.get('', config)
   if (!response.data || !response.data.contents)
     throw new Error('API response is invalid.')
   return response.data.contents
