@@ -1,6 +1,6 @@
-import { getTotal } from '~/assets/js/posts-fetcher'
+import { getTotalPosts } from '~/assets/js/posts-fetcher'
 
 export default async (context, inject) => {
-  const total = await getTotal()
-  inject('totalPosts', total)
+  const totalPosts = await getTotalPosts()
+  inject('totalPosts', totalPosts)
 }

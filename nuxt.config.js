@@ -1,8 +1,8 @@
 import { config } from 'dotenv'
-import { getAllContents as getAllPostContents } from './src/assets/js/posts-fetcher'
+import { getAllPostContents } from './src/assets/js/posts-fetcher'
 import {
-  createForBlogPostPages as createBlogPostPageRoutes,
-  createForBlogPostListPages as createBlogPostListPageRoutes
+  createBlogPostPageRoutes,
+  createBlogPostListPageRoutes
 } from './src/assets/js/routes-creator'
 
 config()

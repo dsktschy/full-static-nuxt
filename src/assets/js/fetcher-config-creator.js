@@ -9,16 +9,16 @@
 
 import { postsPerRequestToPage } from '../json/variables'
 
-function createBase() {
+function createBaseFetcherConfig() {
   return {
     timeout: 0,
     headers: { 'X-API-KEY': process.env.NUXT_ENV_API_KEY }
   }
 }
 
-export function createForSiteData({ fields } = {}) {
+export function createSiteDataFetcherConfig({ fields } = {}) {
   return {
-    ...createBase(),
+    ...createBaseFetcherConfig(),
     baseURL: `${process.env.NUXT_ENV_API_URL}/site-data`,
     params: {
       fields: fields || 'title,description,ogImage'
@@ -26,9 +26,9 @@ export function createForSiteData({ fields } = {}) {
   }
 }
 
-export function createForPages({ fields } = {}) {
+export function createPagesFetcherConfig({ fields } = {}) {
   return {
-    ...createBase(),
+    ...createBaseFetcherConfig(),
     baseURL: `${process.env.NUXT_ENV_API_URL}/pages`,
     params: {
       fields: fields || 'title,description,ogImage,texts,images'
@@ -36,9 +36,9 @@ export function createForPages({ fields } = {}) {
   }
 }
 
-export function createForPosts({ fields, offset, limit } = {}) {
+export function createPostsFetcherConfig({ fields, offset, limit } = {}) {
   return {
-    ...createBase(),
+    ...createBaseFetcherConfig(),
     baseURL: `${process.env.NUXT_ENV_API_URL}/posts`,
     params: {
       fields:

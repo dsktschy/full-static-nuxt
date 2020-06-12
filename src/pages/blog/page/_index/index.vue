@@ -25,9 +25,9 @@
 <script>
 import BasePager from '~/components/BasePager'
 import { postsPerRequestToPage } from '~/assets/json/variables'
-import { getContent as getPageContent } from '~/assets/js/pages-fetcher'
-import { getContentList as getPostContentList } from '~/assets/js/posts-fetcher'
-import { create as createHead } from '~/assets/js/head-creator'
+import { getPageContent } from '~/assets/js/pages-fetcher'
+import { getPostContentList } from '~/assets/js/posts-fetcher'
+import { createHead } from '~/assets/js/head-creator'
 
 export default {
   components: {

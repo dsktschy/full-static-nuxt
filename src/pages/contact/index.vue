@@ -1,19 +1,17 @@
 <template>
   <div>
-    <h1 class="title">
-      {{ content.title.ja_jp }}
-    </h1>
+    <h1 class="title">{{ content.title.ja_jp }}</h1>
   </div>
 </template>
 
 <script>
-import { getContent } from '~/assets/js/pages-fetcher'
-import { create as createHead } from '~/assets/js/head-creator'
+import { getPageContent } from '~/assets/js/pages-fetcher'
+import { createHead } from '~/assets/js/head-creator'
 
 export default {
   async asyncData({ route }) {
     return {
-      content: await getContent(route.name)
+      content: await getPageContent(route.name)
     }
   },
 

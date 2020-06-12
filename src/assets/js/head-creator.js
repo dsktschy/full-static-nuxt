@@ -1,4 +1,4 @@
-export function create(title, description, imageUrl, pageUrl) {
+export function createHead(title, description, imageUrl, pageUrl) {
   return {
     title,
     description,

@@ -1,21 +1,19 @@
 <template>
   <div>
-    <h1 class="title">
-      {{ content.title.ja_jp }}
-    </h1>
-    <img :src="content.featuredImage.url" alt="" />
+    <h1 class="title">{{ content.title.ja_jp }}</h1>
+    <img :src="content.featuredImage.url" alt />
     <div v-html="content.content.ja_jp" />
   </div>
 </template>
 
 <script>
-import { getContent } from '~/assets/js/posts-fetcher'
-import { create as createHead } from '~/assets/js/head-creator'
+import { getPostContent } from '~/assets/js/posts-fetcher'
+import { createHead } from '~/assets/js/head-creator'
 
 export default {
   async asyncData({ payload, params }) {
     return {
-      content: payload?.content || (await getContent(params.id))
+      content: payload?.content || (await getPostContent(params.id))
     }
   },
 

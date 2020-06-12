@@ -1,13 +1,13 @@
 import { postsPerRequestToPage } from '../json/variables'
 
-export function createForBlogPostPages(allPostContents) {
+export function createBlogPostPageRoutes(allPostContents) {
   return allPostContents.map((postContent) => ({
     route: `/blog/${postContent.id}`,
     payload: { content: postContent }
   }))
 }
 
-export function createForBlogPostListPages(allPostContents) {
+export function createBlogPostListPageRoutes(allPostContents) {
   const postContentListsPerPage = []
   for (let i = 0; i < allPostContents.length; i++) {
     const page = Math.floor(i / postsPerRequestToPage)
