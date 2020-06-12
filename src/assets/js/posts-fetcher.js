@@ -32,3 +32,11 @@ export async function getAllContents() {
   } while (contentList.length === postsPerRequestToGenerate)
   return allContents
 }
+
+export async function getTotal() {
+  const config = createConfig({ fields: 'id', limit: 1 })
+  const response = await axios.get('', config)
+  if (!response.data || !response.data.totalCount)
+    throw new Error('API response is invalid.')
+  return response.data.totalCount
+}

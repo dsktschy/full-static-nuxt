@@ -27,7 +27,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/plugins/inject-site-data'],
+  plugins: ['~/plugins/inject-site-data', '~/plugins/inject-total-posts'],
   /*
    ** Nuxt.js dev-modules
    */
@@ -71,6 +71,9 @@ export default {
         route: `/blog/${content.id}`,
         payload: { content }
       }))
-    }
+    },
+    // To show blog post list pages without generating
+    // If no file matches, must redirect to 404.html
+    fallback: '404.html'
   }
 }

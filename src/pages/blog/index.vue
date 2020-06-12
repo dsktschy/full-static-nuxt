@@ -14,6 +14,7 @@
         <h2>{{ postContent.title.ja_jp }}</h2>
       </NuxtLink>
     </ul>
+    <NuxtLink to="/blog/page/1">More</NuxtLink>
   </div>
 </template>
 
