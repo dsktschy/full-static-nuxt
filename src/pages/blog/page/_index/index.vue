@@ -34,12 +34,14 @@ export default {
     BasePager
   },
 
-  async asyncData({ route, params }) {
+  async asyncData({ route, params, payload }) {
     const pageIndex = parseInt(params.index, 10)
     const offset = postsPerRequestToPage * (pageIndex - 1)
+    const postContentList =
+      payload?.postContentList || (await getPostContentList({ offset }))
     return {
       pageContent: await getPageContent('/blog'),
-      postContentList: await getPostContentList({ offset }),
+      postContentList,
       pageIndex
     }
   },
