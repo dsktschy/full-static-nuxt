@@ -48,7 +48,7 @@ export function createPostsFetcherConfig({
     params: {
       fields:
         fields ||
-        'id,title,description,featuredImage,content,category,tags,author',
+        'id,createdAt,title,description,featuredImage,content,category,tags,author',
       offset: offset || 0,
       limit: limit || postsPerRequestToPage,
       filters: filters || null

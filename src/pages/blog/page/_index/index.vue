@@ -101,7 +101,7 @@ export default {
   cursor: pointer;
 }
 .pager {
-  width: 200px;
+  width: 320px;
   margin: 0 auto;
 }
 </style>

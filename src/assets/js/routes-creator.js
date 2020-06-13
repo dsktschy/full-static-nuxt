@@ -2,10 +2,17 @@ import { postsPerRequestToPage } from '../json/variables'
 import { getAllPostContents } from './posts-fetcher'
 import { getAllCategoryContents } from './categories-fetcher'
 
-function createBlogPostPageRoute(postContent) {
+function createBlogPostPageRoute(postContent, i, postContentList) {
+  const prevPostContent = i ? postContentList[i - 1] : null
+  const nextPostContent =
+    i === postContentList.length - 1 ? postContentList[i + 1] : null
   return {
     route: `/blog/${postContent.id}`,
-    payload: { content: postContent }
+    payload: {
+      postContent,
+      prevPostContent,
+      nextPostContent
+    }
   }
 }
 
