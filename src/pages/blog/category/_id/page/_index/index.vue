@@ -49,6 +49,18 @@ export default {
     BasePager
   },
 
+  validate({ app, params }) {
+    const categoryId = params.id
+    const categoryValid = app.$allCategoryContents.some(
+      (categoryContent) => categoryContent.id === categoryId
+    )
+    if (!categoryValid) return false
+    const pageIndex = parseInt(params.index, 10)
+    const totalPosts = app.$totalCategorizedPosts[categoryId]
+    const maxIndex = Math.ceil(totalPosts / postsPerRequestToPage)
+    return !!pageIndex && pageIndex > 0 && pageIndex <= maxIndex
+  },
+
   async asyncData({ route, params, payload }) {
     const categoryId = params.id
     const pageIndex = parseInt(params.index, 10)

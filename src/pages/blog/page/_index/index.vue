@@ -45,6 +45,12 @@ export default {
     BasePager
   },
 
+  validate({ app, params }) {
+    const pageIndex = parseInt(params.index, 10)
+    const maxIndex = Math.ceil(app.$totalPosts / postsPerRequestToPage)
+    return !!pageIndex && pageIndex > 0 && pageIndex <= maxIndex
+  },
+
   async asyncData({ route, params, payload }) {
     const pageIndex = parseInt(params.index, 10)
     const offset = postsPerRequestToPage * (pageIndex - 1)
