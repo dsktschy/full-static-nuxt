@@ -16,10 +16,17 @@ function createBlogPostListPageRoute(postContentList, i) {
   }
 }
 
-function createCategorizedBlogPostListPageRoute(postContentList, i) {
-  const id = postContentList[0].category.id
+function createCategorizedBlogIndexPageRoute(categoryContent) {
+  const categoryId = categoryContent.id
   return {
-    route: `/blog/category/${id}/page/${i + 1}/`,
+    route: `/blog/category/${categoryId}`
+  }
+}
+
+function createCategorizedBlogPostListPageRoute(postContentList, i) {
+  const categoryId = postContentList[0].category.id
+  return {
+    route: `/blog/category/${categoryId}/page/${i + 1}/`,
     payload: { postContentList }
   }
 }
@@ -44,6 +51,10 @@ function createBlogPostListPageRoutes(postContentList) {
     postContentList,
     createBlogPostListPageRoute
   )
+}
+
+function createCategorizedBlogIndexPageRoutes(categoryContentList) {
+  return categoryContentList.map(createCategorizedBlogIndexPageRoute)
 }
 
 function createCategorizedBlogPostListPageRoutes(
@@ -84,14 +95,19 @@ export async function createDynamicRoutes() {
   create = createBlogPostListPageRoutes
   params = [allPostContents]
   const blogPostListPageRoutes = create(...params)
-  // Generate categorized blog post list pages
+  // Generate categorized blog index pages
   const allCategoryContents = await getAllCategoryContents()
+  create = createCategorizedBlogIndexPageRoutes
+  params = [allCategoryContents]
+  const categorizedBlogIndexPageRoutes = create(...params)
+  // Generate categorized blog post list pages
   create = createCategorizedBlogPostListPageRoutes
   params = [allPostContents, allCategoryContents]
   const categorizedBlogPostListPageRoutes = create(...params)
   return [
     ...blogPostPageRoutes,
     ...blogPostListPageRoutes,
+    ...categorizedBlogIndexPageRoutes,
     ...categorizedBlogPostListPageRoutes
   ]
 }

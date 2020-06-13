@@ -1,24 +1,37 @@
 <template>
   <div>
-    <h1 class="title">{{ content.title.ja_jp }}</h1>
+    <h1 class="title">{{ pageContent.title.ja_jp }}</h1>
     <client-only placeholder="Loading...">
       <VueAgile autoplay class="slider">
         <div
-          v-for="(item, index) of content.images"
+          v-for="(item, index) of pageContent.images"
           :key="item.id"
           :style="{ 'background-image': `url(${item.value.url})` }"
           class="slide"
         >
-          <p class="slide-text">{{ content.texts[index].value.ja_jp }}</p>
+          <p class="slide-text">{{ pageContent.texts[index].value.ja_jp }}</p>
         </div>
       </VueAgile>
     </client-only>
+    <ul>
+      <NuxtLink
+        v-for="postContent of postContentList"
+        :key="postContent.id"
+        :to="`/blog/${postContent.id}`"
+        tag="li"
+        class="post-item"
+      >
+        <h2>{{ postContent.title.ja_jp }}</h2>
+      </NuxtLink>
+    </ul>
+    <NuxtLink to="/blog/page/1">More</NuxtLink>
   </div>
 </template>
 
 <script>
 import { VueAgile } from 'vue-agile'
 import { getPageContent } from '~/assets/js/pages-fetcher'
+import { getPostContentList } from '~/assets/js/posts-fetcher'
 import { createHead } from '~/assets/js/head-creator'
 
 export default {
@@ -28,7 +41,8 @@ export default {
 
   async asyncData({ route }) {
     return {
-      content: await getPageContent(route.name)
+      pageContent: await getPageContent(route.name),
+      postContentList: await getPostContentList()
     }
   },
 
@@ -57,5 +71,8 @@ export default {
   font-size: 30px;
   font-weight: bold;
   color: gray;
+}
+.post-item {
+  cursor: pointer;
 }
 </style>
