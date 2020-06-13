@@ -1,7 +1,7 @@
 <template>
   <div class="base-pager">
     <button
-      :disabled="isMinIndex"
+      :disabled="prevDisabled"
       class="prev"
       @click="$emit('click-prev', { index: prevIndex })"
     >
@@ -13,7 +13,7 @@
       <div class="denominator">{{ maxIndex }}</div>
     </div>
     <button
-      :disabled="isMaxIndex"
+      :disabled="nextDisabled"
       class="next"
       @click="$emit('click-next', { index: nextIndex })"
     >
@@ -36,11 +36,11 @@ export default {
     nextIndex() {
       return this.currentIndex + 1
     },
-    isMinIndex() {
-      return this.currentIndex === 1
+    prevDisabled() {
+      return this.currentIndex <= 1 || this.maxIndex === 0
     },
-    isMaxIndex() {
-      return this.currentIndex === this.maxIndex
+    nextDisabled() {
+      return this.currentIndex >= this.maxIndex || this.maxIndex === 0
     }
   }
 }

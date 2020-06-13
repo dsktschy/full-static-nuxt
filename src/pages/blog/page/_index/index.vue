@@ -22,8 +22,10 @@
       >
         <h2>{{ postContent.title.ja_jp }}</h2>
       </NuxtLink>
+      <li v-if="!postContentList.length">No content</li>
     </ul>
     <BasePager
+      v-if="maxIndex"
       :current-index="pageIndex"
       :max-index="maxIndex"
       class="pager"
@@ -48,7 +50,7 @@ export default {
   validate({ app, params }) {
     const pageIndex = parseInt(params.index, 10)
     const maxIndex = Math.ceil(app.$totalPosts / postsPerRequestToPage)
-    return !!pageIndex && pageIndex > 0 && pageIndex <= maxIndex
+    return pageIndex > 0 && (pageIndex <= maxIndex || maxIndex === 0)
   },
 
   async asyncData({ route, params, payload }) {

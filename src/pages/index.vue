@@ -23,6 +23,7 @@
       >
         <h2>{{ postContent.title.ja_jp }}</h2>
       </NuxtLink>
+      <li v-if="!postContentList.length">No content</li>
     </ul>
     <NuxtLink to="/blog/page/1">More</NuxtLink>
   </div>
