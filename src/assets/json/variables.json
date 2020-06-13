@@ -1,4 +1,5 @@
 {
   "postsPerRequestToPage": 10,
-  "postsPerRequestToGenerate": 100
+  "postsPerRequestToGenerate": 100,
+  "categoriesPerRequest": 100
 }

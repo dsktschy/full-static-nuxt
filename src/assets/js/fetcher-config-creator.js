@@ -7,7 +7,7 @@
  * So this module exports functions
  */
 
-import { postsPerRequestToPage } from '../json/variables'
+import { postsPerRequestToPage, categoriesPerRequest } from '../json/variables'
 
 function createBaseFetcherConfig() {
   return {
@@ -36,7 +36,12 @@ export function createPagesFetcherConfig({ fields } = {}) {
   }
 }
 
-export function createPostsFetcherConfig({ fields, offset, limit } = {}) {
+export function createPostsFetcherConfig({
+  fields,
+  offset,
+  limit,
+  filters
+} = {}) {
   return {
     ...createBaseFetcherConfig(),
     baseURL: `${process.env.NUXT_ENV_API_URL}/posts`,
@@ -45,7 +50,20 @@ export function createPostsFetcherConfig({ fields, offset, limit } = {}) {
         fields ||
         'id,title,description,featuredImage,content,category,tags,author',
       offset: offset || 0,
-      limit: limit || postsPerRequestToPage
+      limit: limit || postsPerRequestToPage,
+      filters: filters || null
+    }
+  }
+}
+
+export function createCategoriesFetcherConfig({ fields, offset, limit } = {}) {
+  return {
+    ...createBaseFetcherConfig(),
+    baseURL: `${process.env.NUXT_ENV_API_URL}/categories`,
+    params: {
+      fields: fields || 'id,name',
+      offset: offset || 0,
+      limit: limit || categoriesPerRequest
     }
   }
 }

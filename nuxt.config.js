@@ -1,9 +1,5 @@
 import { config } from 'dotenv'
-import { getAllPostContents } from './src/assets/js/posts-fetcher'
-import {
-  createBlogPostPageRoutes,
-  createBlogPostListPageRoutes
-} from './src/assets/js/routes-creator'
+import { createDynamicRoutes } from './src/assets/js/routes-creator'
 
 config()
 
@@ -70,18 +66,7 @@ export default {
    */
   generate: {
     // Generate dynamic routes
-    async routes() {
-      const allPostContents = await getAllPostContents()
-      const blogPostPageRoutes = createBlogPostPageRoutes(allPostContents)
-      // Show blog post list pages without generating
-      if (process.env.NUXT_ENV_GENERATING_BLOG_POST_LIST_PAGES == null)
-        return blogPostPageRoutes
-      // Generate blog post list pages
-      const create = createBlogPostListPageRoutes
-      const blogPostListPageRoutes = create(allPostContents)
-      return [...blogPostPageRoutes, ...blogPostListPageRoutes]
-    },
-
+    routes: createDynamicRoutes,
     // To show blog post list pages without generating
     // If no file matches, request must be redirected to 404.html
     fallback: process.env.NUXT_ENV_GENERATE_FALLBACK_FILE_NAME || true

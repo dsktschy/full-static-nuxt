@@ -13,11 +13,15 @@ export async function getPostContent(id) {
   return response.data
 }
 
-export async function getPostContentList({ fields, offset, limit } = {}) {
-  const config = createPostsFetcherConfig({ fields, offset, limit })
+export async function getPostContentList({
+  fields,
+  offset,
+  limit,
+  filters
+} = {}) {
+  const config = createPostsFetcherConfig({ fields, offset, limit, filters })
   const response = await axios.get('', config)
-  if (!response.data || !response.data.contents)
-    throw new Error('API response is invalid.')
+  if (!response.data) throw new Error('API response is invalid.')
   return response.data.contents
 }
 
@@ -33,10 +37,9 @@ export async function getAllPostContents() {
   return allPostContents
 }
 
-export async function getTotalPosts() {
-  const config = createPostsFetcherConfig({ fields: 'id', limit: 1 })
+export async function getTotalPosts({ filters } = {}) {
+  const config = createPostsFetcherConfig({ fields: 'id', limit: 1, filters })
   const response = await axios.get('', config)
-  if (!response.data || !response.data.totalCount)
-    throw new Error('API response is invalid.')
+  if (!response.data) throw new Error('API response is invalid.')
   return response.data.totalCount
 }
