@@ -4,13 +4,24 @@
       Page {{ pageIndex }} - {{ categoryContent.name.ja_jp }} |
       {{ pageContent.title.ja_jp }}
     </h1>
+    <ul class="category-list">
+      <NuxtLink
+        v-for="categoryContent of $allCategoryContents"
+        :key="categoryContent.id"
+        :to="`/blog/category/${categoryContent.id}/page/1`"
+        tag="li"
+        class="category-item"
+      >
+        {{ categoryContent.name.ja_jp }}
+      </NuxtLink>
+    </ul>
     <ul>
       <NuxtLink
         v-for="postContent of postContentList"
         :key="postContent.id"
         :to="`/blog/${postContent.id}`"
         tag="li"
-        class="item"
+        class="post-item"
       >
         <h2>{{ postContent.title.ja_jp }}</h2>
       </NuxtLink>
@@ -80,7 +91,14 @@ export default {
 </script>
 
 <style scoped>
-.item {
+.category-list {
+  display: flex;
+}
+.category-item {
+  margin-right: 30px;
+  cursor: pointer;
+}
+.post-item {
   cursor: pointer;
 }
 .pager {
