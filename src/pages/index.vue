@@ -34,9 +34,9 @@ export default {
 
   head() {
     return createHead(
-      this.$siteData.title.ja_jp,
-      this.$siteData.description.ja_jp,
-      this.$siteData.ogImage.url,
+      this.$siteDataContent.title.ja_jp,
+      this.$siteDataContent.description.ja_jp,
+      this.$siteDataContent.ogImage.url,
       `${process.env.BASE_URL}${this.$route.path}`
     )
   }

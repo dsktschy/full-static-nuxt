@@ -61,9 +61,9 @@ export default {
 
   head() {
     return createHead(
-      `Page ${this.pageIndex} | ${this.$siteData.title.ja_jp}`,
+      `Page ${this.pageIndex} | ${this.$siteDataContent.title.ja_jp}`,
       this.pageContent.description.ja_jp,
-      this.$siteData.ogImage.url,
+      this.$siteDataContent.ogImage.url,
       `${process.env.BASE_URL}${this.$route.path}`
     )
   }

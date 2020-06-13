@@ -27,7 +27,11 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/plugins/inject-site-data', '~/plugins/inject-total-posts'],
+  plugins: [
+    '~/plugins/inject-site-data-content',
+    '~/plugins/inject-all-category-contents',
+    '~/plugins/inject-total-posts'
+  ],
   /*
    ** Nuxt.js dev-modules
    */
