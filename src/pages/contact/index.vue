@@ -8,13 +8,7 @@
         netlify-honeypot="honeypot"
         @submit.prevent="handleSubmit(submit)"
       >
-        <ValidationProvider>
-          <input
-            v-model="formValues.honeypot"
-            name="honeypot"
-            class="honeypot"
-          />
-        </ValidationProvider>
+        <input v-model="formValues.honeypot" name="honeypot" class="honeypot" />
 
         <ValidationProvider
           v-slot="{ failedRules }"
