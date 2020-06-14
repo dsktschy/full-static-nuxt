@@ -5,7 +5,7 @@
       <form
         v-if="!completed"
         data-netlify="true"
-        netlify-honeypot="honerpot"
+        netlify-honeypot="honeypot"
         @submit.prevent="handleSubmit(submit)"
       >
         <ValidationProvider>
