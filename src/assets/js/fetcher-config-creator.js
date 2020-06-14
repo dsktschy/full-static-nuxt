@@ -72,6 +72,6 @@ export function createContactFetcherConfig() {
   return {
     timeout: 0,
     // Contact form endpoint of Netlify is site origin
-    baseURL: process.env.BASE_URL
+    baseURL: process.env.NUXT_ENV_BASE_URL
   }
 }

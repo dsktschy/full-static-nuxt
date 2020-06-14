@@ -83,7 +83,7 @@ export default {
       `Page ${this.pageIndex} | ${this.$siteDataContent.title.ja_jp}`,
       this.pageContent.description.ja_jp,
       this.$siteDataContent.ogImage.url,
-      `${process.env.BASE_URL}${this.$route.path}`
+      `${process.env.NUXT_ENV_BASE_URL}${this.$route.path}`
     )
   }
 }

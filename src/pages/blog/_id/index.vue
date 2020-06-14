@@ -58,7 +58,7 @@ export default {
       `${this.postContent.title.ja_jp} | ${this.$siteDataContent.title.ja_jp}`,
       this.postContent.description.ja_jp,
       this.postContent.featuredImage.url,
-      `${process.env.BASE_URL}${this.$route.path}`
+      `${process.env.NUXT_ENV_BASE_URL}${this.$route.path}`
     )
   }
 }
