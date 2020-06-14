@@ -30,7 +30,8 @@ export default {
   plugins: [
     '~/plugins/inject-site-data-content',
     '~/plugins/inject-all-category-contents',
-    '~/plugins/inject-total-posts'
+    '~/plugins/inject-total-posts',
+    '~/plugins/initialize-vee-validate'
   ],
   /*
    ** Nuxt.js dev-modules
@@ -63,7 +64,7 @@ export default {
     /*
      ** Transpiling configuration
      */
-    transpile: ['vue-agile']
+    transpile: ['vue-agile', 'vee-validate/dist/rules']
   },
   /*
    ** Generating configuration

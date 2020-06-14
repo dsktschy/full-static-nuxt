@@ -9,7 +9,7 @@
 
 import { postsPerRequestToPage, categoriesPerRequest } from '../json/variables'
 
-function createBaseFetcherConfig() {
+function createGetFetcherConfig() {
   return {
     timeout: 0,
     headers: { 'X-API-KEY': process.env.NUXT_ENV_API_KEY }
@@ -18,7 +18,7 @@ function createBaseFetcherConfig() {
 
 export function createSiteDataFetcherConfig({ fields } = {}) {
   return {
-    ...createBaseFetcherConfig(),
+    ...createGetFetcherConfig(),
     baseURL: `${process.env.NUXT_ENV_API_URL}/site-data`,
     params: {
       fields: fields || 'title,description,ogImage'
@@ -28,7 +28,7 @@ export function createSiteDataFetcherConfig({ fields } = {}) {
 
 export function createPagesFetcherConfig({ fields } = {}) {
   return {
-    ...createBaseFetcherConfig(),
+    ...createGetFetcherConfig(),
     baseURL: `${process.env.NUXT_ENV_API_URL}/pages`,
     params: {
       fields: fields || 'title,description,ogImage,texts,images'
@@ -43,7 +43,7 @@ export function createPostsFetcherConfig({
   filters
 } = {}) {
   return {
-    ...createBaseFetcherConfig(),
+    ...createGetFetcherConfig(),
     baseURL: `${process.env.NUXT_ENV_API_URL}/posts`,
     params: {
       fields:
@@ -58,12 +58,20 @@ export function createPostsFetcherConfig({
 
 export function createCategoriesFetcherConfig({ fields, offset, limit } = {}) {
   return {
-    ...createBaseFetcherConfig(),
+    ...createGetFetcherConfig(),
     baseURL: `${process.env.NUXT_ENV_API_URL}/categories`,
     params: {
       fields: fields || 'id,name',
       offset: offset || 0,
       limit: limit || categoriesPerRequest
     }
+  }
+}
+
+export function createContactFetcherConfig() {
+  return {
+    timeout: 0,
+    // Contact form endpoint of Netlify is site origin
+    baseURL: process.env.BASE_URL
   }
 }
