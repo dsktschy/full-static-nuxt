@@ -25,7 +25,7 @@
           <div>Category:</div>
           <template v-if="!confirming">
             <select v-model="formValues.category">
-              <option value="">--Please choose--</option>
+              <option value="" disabled selected>--Please choose--</option>
               <option value="products">Products</option>
               <option value="recruitment">Recruitment</option>
               <option value="other">Other</option>
