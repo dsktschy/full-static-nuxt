@@ -4,12 +4,10 @@
     <ValidationObserver v-slot="{ invalid, handleSubmit }" slim>
       <form
         v-if="!completed"
+        :name="formValues['form-name']"
         data-netlify="true"
-        netlify-honeypot="honeypot"
         @submit.prevent="handleSubmit(submit)"
       >
-        <input v-model="formValues.honeypot" name="honeypot" class="honeypot" />
-
         <ValidationProvider
           v-slot="{ failedRules }"
           rules="required"
@@ -116,8 +114,6 @@
           </template>
         </ValidationProvider>
 
-        <div data-netlify-recaptcha="true" />
-
         <button v-show="confirming" :disabled="invalid" type="submit">
           Send
         </button>
@@ -158,7 +154,7 @@ export default {
       confirming: false,
       completed: false,
       formValues: {
-        honeypot: '',
+        'form-name': 'contact',
         category: '',
         name: '',
         email: '',
@@ -175,10 +171,7 @@ export default {
     },
 
     async submit() {
-      const stringifiedValues = stringify({
-        'form-name': 'contact',
-        ...this.formValues
-      })
+      const stringifiedValues = stringify({ ...this.formValues })
       await postContactValues(stringifiedValues)
       this.completed = true
     }
@@ -196,14 +189,6 @@ export default {
 </script>
 
 <style scoped>
-.honeypot {
-  border: 0;
-  padding: 0;
-  display: block;
-  width: 0;
-  height: 0;
-  appearance: none;
-}
 .form-item {
   display: block;
 }
