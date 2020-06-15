@@ -22,7 +22,7 @@
         >
           <div>Category:</div>
           <template v-if="!confirming">
-            <select v-model="formValues.category">
+            <select v-model="formValues.category" name="category">
               <option value="" disabled selected>--Please choose--</option>
               <option value="products">Products</option>
               <option value="recruitment">Recruitment</option>
@@ -41,7 +41,7 @@
         >
           <div>Name:</div>
           <template v-if="!confirming">
-            <input v-model="formValues.name" type="text" />
+            <input v-model="formValues.name" type="text" name="name" />
             <p v-if="failedRules.required">Name is required</p>
             <p v-if="failedRules.max">
               Name may not be greater than 256 characters
@@ -58,7 +58,7 @@
         >
           <div>Email:</div>
           <template v-if="!confirming">
-            <input v-model="formValues.email" type="email" />
+            <input v-model="formValues.email" type="email" name="email" />
             <p v-if="failedRules.required">Email is required</p>
             <p v-if="failedRules.email">Email must be a valid email</p>
           </template>
@@ -69,19 +69,39 @@
           <div>Age:</div>
           <template v-if="!confirming">
             <label class="radio">
-              <input v-model="formValues.age" type="radio" value="-20" />
+              <input
+                v-model="formValues.age"
+                type="radio"
+                value="-20"
+                name="age"
+              />
               <div>-20</div>
             </label>
             <label class="radio">
-              <input v-model="formValues.age" type="radio" value="20-40" />
+              <input
+                v-model="formValues.age"
+                type="radio"
+                value="20-40"
+                name="age"
+              />
               <div>20-40</div>
             </label>
             <label class="radio">
-              <input v-model="formValues.age" type="radio" value="40-60" />
+              <input
+                v-model="formValues.age"
+                type="radio"
+                value="40-60"
+                name="age"
+              />
               <div>40-60</div>
             </label>
             <label class="radio">
-              <input v-model="formValues.age" type="radio" value="60-" />
+              <input
+                v-model="formValues.age"
+                type="radio"
+                value="60-"
+                name="age"
+              />
               <div>60-</div>
             </label>
           </template>
@@ -96,7 +116,7 @@
         >
           <div>Message:</div>
           <template v-if="!confirming">
-            <textarea v-model="formValues.message">
+            <textarea v-model="formValues.message" name="message">
             Input message.
           </textarea
             >
@@ -113,6 +133,7 @@
         >
           <template v-if="!confirming">
             <div class="checkbox">
+              <!-- Input that name attribute is omitted, is not shown in Netlify -->
               <input v-model="formValues.agreement" type="checkbox" />
               <div>Agree to our terms and conditions</div>
             </div>
