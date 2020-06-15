@@ -8,6 +8,12 @@
         data-netlify="true"
         @submit.prevent="handleSubmit(submit)"
       >
+        <!-- To avoid error, insert hidden field that Netlify inserts, in advance -->
+        <input
+          :value="formValues['form-name']"
+          type="hidden"
+          name="form-name"
+        />
         <ValidationProvider
           v-slot="{ failedRules }"
           rules="required"
