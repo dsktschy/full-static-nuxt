@@ -25,7 +25,7 @@
           tag="label"
           class="form-item"
         >
-          <div>Category:</div>
+          <span>Category:</span>
           <template v-if="!confirming">
             <select v-model="formValues.category" name="category">
               <option value="" disabled selected>--Please choose--</option>
@@ -33,9 +33,9 @@
               <option value="recruitment">Recruitment</option>
               <option value="other">Other</option>
             </select>
-            <p v-if="failedRules.required">Category is required</p>
+            <span v-if="failedRules.required">Category is required</span>
           </template>
-          <div v-else>{{ formValues.category }}</div>
+          <span v-else>{{ formValues.category }}</span>
         </ValidationProvider>
 
         <ValidationProvider
@@ -44,15 +44,15 @@
           tag="label"
           class="form-item"
         >
-          <div>Name:</div>
+          <span>Name:</span>
           <template v-if="!confirming">
             <input v-model="formValues.name" type="text" name="name" />
-            <p v-if="failedRules.required">Name is required</p>
-            <p v-if="failedRules.max">
+            <span v-if="failedRules.required">Name is required</span>
+            <span v-if="failedRules.max">
               Name may not be greater than 256 characters
-            </p>
+            </span>
           </template>
-          <div v-else>{{ formValues.name }}</div>
+          <span v-else>{{ formValues.name }}</span>
         </ValidationProvider>
 
         <ValidationProvider
@@ -61,13 +61,13 @@
           tag="label"
           class="form-item"
         >
-          <div>Email:</div>
+          <span>Email:</span>
           <template v-if="!confirming">
             <input v-model="formValues.email" type="email" name="email" />
-            <p v-if="failedRules.required">Email is required</p>
-            <p v-if="failedRules.email">Email must be a valid email</p>
+            <span v-if="failedRules.required">Email is required</span>
+            <span v-if="failedRules.email">Email must be a valid email</span>
           </template>
-          <div v-else>{{ formValues.email }}</div>
+          <span v-else>{{ formValues.email }}</span>
         </ValidationProvider>
 
         <ValidationProvider rules="" tag="div" class="form-item">
@@ -119,15 +119,15 @@
           tag="label"
           class="form-item"
         >
-          <div>Message:</div>
+          <span>Message:</span>
           <template v-if="!confirming">
             <textarea v-model="formValues.message" name="message">
             Input message.
           </textarea
             >
-            <p v-if="failedRules.required">Message is required</p>
+            <span v-if="failedRules.required">Message is required</span>
           </template>
-          <div v-else>{{ formValues.message }}</div>
+          <span v-else>{{ formValues.message }}</span>
         </ValidationProvider>
 
         <ValidationProvider
@@ -137,12 +137,12 @@
           class="form-item"
         >
           <template v-if="!confirming">
-            <div class="checkbox">
+            <span class="checkbox">
               <!-- Input that name attribute is omitted, is not shown in Netlify -->
               <input v-model="formValues.agreement" type="checkbox" />
               <div>Agree to our terms and conditions</div>
-            </div>
-            <p v-if="failedRules.is_true">Agreement is required</p>
+            </span>
+            <span v-if="failedRules.is_true">Agreement is required</span>
           </template>
         </ValidationProvider>
 
