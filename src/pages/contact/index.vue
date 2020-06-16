@@ -6,6 +6,7 @@
         v-if="!completed"
         :name="formValues['form-name']"
         data-netlify="true"
+        data-netlify-honeypot="honeypot"
         @submit.prevent="handleSubmit(submit)"
       >
         <!-- To avoid error, insert hidden field that Netlify inserts, in advance -->
@@ -14,6 +15,10 @@
           type="hidden"
           name="form-name"
         />
+
+        <!-- Trap spam submissions -->
+        <input v-model="formValues.honeypot" name="honeypot" class="honeypot" />
+
         <ValidationProvider
           v-slot="{ failedRules }"
           rules="required"
@@ -149,6 +154,7 @@
           <template v-else>Back</template>
         </button>
       </form>
+
       <div v-else>
         <p>Thank you!</p>
         <NuxtLink to="/">Go to index page</NuxtLink>
@@ -182,6 +188,7 @@ export default {
       completed: false,
       formValues: {
         'form-name': 'contact',
+        honeypot: '',
         category: '',
         name: '',
         email: '',
@@ -216,6 +223,14 @@ export default {
 </script>
 
 <style scoped>
+.honeypot {
+  border: 0;
+  padding: 0;
+  display: block;
+  width: 0;
+  height: 0;
+  appearance: none;
+}
 .form-item {
   display: block;
 }
