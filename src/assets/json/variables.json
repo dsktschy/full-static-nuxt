@@ -1,5 +1,6 @@
 {
   "postsPerRequestToPage": 10,
   "postsPerRequestToGenerate": 100,
-  "categoriesPerRequest": 100
+  "categoriesPerRequest": 100,
+  "richEditorFieldId": "i18nRichEditor"
 }

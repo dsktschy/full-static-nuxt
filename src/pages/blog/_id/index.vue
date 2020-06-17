@@ -1,8 +1,12 @@
 <template>
-  <article>
+  <article class="page-blog-id">
     <h1 class="title">{{ postContent.title.ja_jp }}</h1>
-    <img :src="postContent.featuredImage.url" alt />
-    <div v-html="postContent.content.ja_jp" />
+    <img
+      :src="postContent.featuredImage.url"
+      :alt="postContent.title.ja_jp"
+      class="featured-image"
+    />
+    <div class="content" v-html="postContent.content.ja_jp" />
     <div class="link-list">
       <div class="link-item">
         <NuxtLink
@@ -65,6 +69,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.page-blog-id {
+  width: 864px;
+  margin: 0 auto;
+}
+.featured-image {
+  width: 100%;
+  object-fit: cover;
+}
+.content {
+  & ::v-deep img {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+  }
+  & ::v-deep iframe {
+    display: block;
+    margin: 0 auto;
+  }
+}
 .link-list {
   display: flex;
   justify-content: space-between;

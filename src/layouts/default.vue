@@ -1,16 +1,25 @@
 <template>
   <div>
-    <TheNav />
+    <TheHeader :title-tag="headerTag" />
     <nuxt />
+    <TheFooter />
   </div>
 </template>
 
 <script>
-import TheNav from '~/components/TheNav'
+import TheHeader from '~/components/TheHeader'
+import TheFooter from '~/components/TheFooter'
 
 export default {
   components: {
-    TheNav
+    TheHeader,
+    TheFooter
+  },
+
+  computed: {
+    headerTag() {
+      return this.$route.path === '/' ? 'h1' : 'div'
+    }
   }
 }
 </script>
