@@ -7,7 +7,7 @@
   </ul>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .the-nav {
   display: flex;
 }

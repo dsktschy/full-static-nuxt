@@ -46,7 +46,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .base-pager {
   display: flex;
   justify-content: space-between;

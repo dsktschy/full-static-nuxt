@@ -222,7 +222,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .honeypot {
   border: 0;
   padding: 0;

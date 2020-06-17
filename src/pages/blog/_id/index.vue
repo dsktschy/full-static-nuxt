@@ -64,7 +64,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .link-list {
   display: flex;
   justify-content: space-between;

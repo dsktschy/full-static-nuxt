@@ -58,7 +58,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .slide {
   display: flex;
   justify-content: center;
