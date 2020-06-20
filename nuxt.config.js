@@ -4,6 +4,7 @@ import { createDynamicRoutes } from './src/assets/js/routes-creator'
 config()
 
 export default {
+  target: 'static',
   mode: 'universal',
   srcDir: 'src/',
   /*
