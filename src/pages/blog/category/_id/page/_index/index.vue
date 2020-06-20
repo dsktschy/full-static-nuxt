@@ -26,7 +26,7 @@
         class="post-item"
       >
         <time :datetime="postContent.createdAt" class="post-item-date">{{
-          convertCreatedAtToShow(postContent.createdAt)
+          convertIsoToDotSeparatedYmd(postContent.createdAt)
         }}</time>
         <div class="post-item-category">
           {{ postContent.category.name.ja_jp }}
@@ -54,7 +54,7 @@ import { getPageContent } from '~/assets/js/pages-fetcher'
 import { getPostContentList } from '~/assets/js/posts-fetcher'
 import { getCategoryContent } from '~/assets/js/categories-fetcher'
 import { createHead } from '~/assets/js/head-creator'
-import { convertCreatedAtToShow } from '~/assets/js/posts-utility'
+import { convertIsoToDotSeparatedYmd } from '~/assets/js/utility'
 
 export default {
   components: {
@@ -98,7 +98,7 @@ export default {
   },
 
   methods: {
-    convertCreatedAtToShow,
+    convertIsoToDotSeparatedYmd,
     goToBlogPage({ index: pageIndex }) {
       this.$router.push(`/blog/category/${this.categoryId}/page/${pageIndex}`)
     }

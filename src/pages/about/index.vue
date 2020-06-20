@@ -68,7 +68,7 @@
 <script>
 import { getPageContent } from '~/assets/js/pages-fetcher'
 import { createHead } from '~/assets/js/head-creator'
-import { padWithZero } from '~/assets/js/business-utility'
+import { padWithZero } from '~/assets/js/utility'
 import { richEditorFieldId } from '~/assets/json/variables'
 
 export default {
