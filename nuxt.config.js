@@ -31,6 +31,7 @@ export default {
   plugins: [
     '~/plugins/inject-site-data-content',
     '~/plugins/inject-all-category-contents',
+    '~/plugins/inject-all-page-contents-for-nav',
     '~/plugins/inject-total-posts',
     '~/plugins/initialize-vee-validate'
   ],

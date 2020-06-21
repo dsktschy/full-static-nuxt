@@ -7,32 +7,52 @@
  * So this module exports functions
  */
 
-import { postsPerRequestToPage, categoriesPerRequest } from '../json/variables'
+import {
+  postsPerRequestToPage,
+  pagesPerRequestToPage,
+  categoriesPerRequest,
+  apiGetRequestTimeout,
+  apiGetRequestDepth
+} from '../json/variables'
 
-function createGetFetcherConfig() {
+function createGetFetcherConfig(params) {
   return {
-    timeout: 0,
-    headers: { 'X-API-KEY': process.env.NUXT_ENV_API_KEY }
+    timeout: apiGetRequestTimeout,
+    headers: { 'X-API-KEY': process.env.NUXT_ENV_API_KEY },
+    params: {
+      depth: apiGetRequestDepth,
+      ...params
+    }
   }
 }
 
 export function createSiteDataFetcherConfig({ fields } = {}) {
+  const params = {
+    fields: fields || 'title,description,ogImage'
+  }
   return {
-    ...createGetFetcherConfig(),
-    baseURL: `${process.env.NUXT_ENV_API_URL}/site-data`,
-    params: {
-      fields: fields || 'title,description,ogImage'
-    }
+    ...createGetFetcherConfig(params),
+    baseURL: `${process.env.NUXT_ENV_API_URL}/site-data`
   }
 }
 
-export function createPagesFetcherConfig({ fields } = {}) {
+export function createPagesFetcherConfig({
+  fields,
+  offset,
+  limit,
+  filters
+} = {}) {
+  const params = {
+    fields:
+      fields ||
+      'id,title,description,ogImage,plainText,richText,images,inputFields',
+    offset: offset || 0,
+    limit: limit || pagesPerRequestToPage,
+    filters: filters || null
+  }
   return {
-    ...createGetFetcherConfig(),
-    baseURL: `${process.env.NUXT_ENV_API_URL}/pages`,
-    params: {
-      fields: fields || 'title,description,ogImage,texts,images'
-    }
+    ...createGetFetcherConfig(params),
+    baseURL: `${process.env.NUXT_ENV_API_URL}/pages`
   }
 }
 
@@ -42,29 +62,29 @@ export function createPostsFetcherConfig({
   limit,
   filters
 } = {}) {
+  const params = {
+    fields:
+      fields ||
+      'id,createdAt,title,description,featuredImage,content,category,tags,author',
+    offset: offset || 0,
+    limit: limit || postsPerRequestToPage,
+    filters: filters || null
+  }
   return {
-    ...createGetFetcherConfig(),
-    baseURL: `${process.env.NUXT_ENV_API_URL}/posts`,
-    params: {
-      fields:
-        fields ||
-        'id,createdAt,title,description,featuredImage,content,category,tags,author',
-      offset: offset || 0,
-      limit: limit || postsPerRequestToPage,
-      filters: filters || null
-    }
+    ...createGetFetcherConfig(params),
+    baseURL: `${process.env.NUXT_ENV_API_URL}/posts`
   }
 }
 
 export function createCategoriesFetcherConfig({ fields, offset, limit } = {}) {
+  const params = {
+    fields: fields || 'id,name',
+    offset: offset || 0,
+    limit: limit || categoriesPerRequest
+  }
   return {
-    ...createGetFetcherConfig(),
-    baseURL: `${process.env.NUXT_ENV_API_URL}/categories`,
-    params: {
-      fields: fields || 'id,name',
-      offset: offset || 0,
-      limit: limit || categoriesPerRequest
-    }
+    ...createGetFetcherConfig(params),
+    baseURL: `${process.env.NUXT_ENV_API_URL}/categories`
   }
 }
 

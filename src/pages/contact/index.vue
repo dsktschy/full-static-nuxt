@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="title">{{ pageContent.title.ja_jp }}</h1>
+    <h1 class="title">{{ pageContent.title.value.ja }}</h1>
     <ValidationObserver v-slot="{ invalid, handleSubmit }" slim>
       <form
         v-if="!completed"
@@ -213,9 +213,9 @@ export default {
 
   head() {
     return createHead(
-      `${this.pageContent.title.ja_jp} | ${this.$siteDataContent.title.ja_jp}`,
-      this.pageContent.description.ja_jp,
-      this.$siteDataContent.ogImage.url,
+      `${this.pageContent.title.value.ja} | ${this.$siteDataContent.title.value.ja}`,
+      this.pageContent.description.value.ja,
+      this.$siteDataContent.ogImage.value.url,
       `${process.env.NUXT_ENV_BASE_URL}${this.$route.path}`
     )
   }

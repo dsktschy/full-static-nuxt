@@ -6,30 +6,24 @@
           v-for="(sliderImage, i) of sliderImageList"
           :key="sliderImage.id"
           :style="{
-            'background-image': `url(${sliderImage.values[0].image.url})`
+            'background-image': `url(${sliderImage.value.url})`
           }"
           class="slider-item"
         >
           <p class="slider-item-text">
-            {{ sliderTextList[i].values[0].ja_jp }}
+            {{ sliderTextList[i].value.ja }}
           </p>
         </div>
       </VueAgile>
     </client-only>
 
     <section>
-      <h2>
-        <span>私たちの思い</span>
-        <span>About us</span>
-      </h2>
-      <p>{{ thoughtText.values[0].ja_jp }}</p>
+      <h2>{{ aboutHeadingText.value.ja }}</h2>
+      <p>{{ aboutBodyText.value.ja }}</p>
     </section>
 
     <section>
-      <h2>
-        <span>ブログ</span>
-        <span>Blog</span>
-      </h2>
+      <h2>{{ blogHeadingText.value.ja }}</h2>
       <ul>
         <NuxtLink
           v-for="postContent of postContentList"
@@ -42,13 +36,13 @@
             convertIsoToDotSeparatedYmd(postContent.createdAt)
           }}</time>
           <div class="post-item-category">
-            {{ postContent.category.name.ja_jp }}
+            {{ postContent.category.name.value.ja }}
           </div>
-          <h2 class="post-item-title">{{ postContent.title.ja_jp }}</h2>
+          <h2 class="post-item-title">{{ postContent.title.value.ja }}</h2>
         </NuxtLink>
-        <li v-if="!postContentList.length">No content</li>
+        <li v-if="!postContentList.length">{{ blogNoneText.value.ja }}</li>
       </ul>
-      <NuxtLink to="/blog/page/1">More</NuxtLink>
+      <NuxtLink to="/blog/page/1">{{ blogMoreText.value.ja }}</NuxtLink>
     </section>
   </div>
 </template>
@@ -73,17 +67,51 @@ export default {
   },
 
   computed: {
-    thoughtText() {
-      const id = 'index-thought'
-      return this.pageContent.texts.find((text) => text.id === id) || ''
-    },
     sliderImageList() {
-      const id = 'index-slider-'
-      return this.pageContent.images.filter((image) => image.id.startsWith(id))
+      const prefix = 'page-index-slider-'
+      const sliderImageList = this.pageContent.images.filter((image) =>
+        image.id.startsWith(prefix)
+      )
+      const sortedSliderImageList = []
+      for (let i = 0; i < sliderImageList.length; i++) {
+        const id = `${prefix}${i + 1}`
+        sortedSliderImageList[i] = sliderImageList.find(
+          (image) => image.id === id
+        )
+      }
+      return sortedSliderImageList
     },
     sliderTextList() {
-      const id = 'index-slider-'
-      return this.pageContent.texts.filter((text) => text.id.startsWith(id))
+      const prefix = 'page-index-slider-'
+      const sliderTextList = this.pageContent.plainText.filter((text) =>
+        text.id.startsWith(prefix)
+      )
+      const sortedSliderTextList = []
+      for (let i = 0; i < sliderTextList.length; i++) {
+        const id = `${prefix}${i + 1}`
+        sortedSliderTextList[i] = sliderTextList.find((text) => text.id === id)
+      }
+      return sortedSliderTextList
+    },
+    aboutHeadingText() {
+      const id = 'page-index-about-heading'
+      return this.pageContent.plainText.find((text) => text.id === id)
+    },
+    aboutBodyText() {
+      const id = 'page-index-about-body'
+      return this.pageContent.plainText.find((text) => text.id === id)
+    },
+    blogHeadingText() {
+      const id = 'page-index-blog-heading'
+      return this.pageContent.plainText.find((text) => text.id === id)
+    },
+    blogNoneText() {
+      const id = 'page-index-blog-none'
+      return this.pageContent.plainText.find((text) => text.id === id)
+    },
+    blogMoreText() {
+      const id = 'page-index-blog-more'
+      return this.pageContent.plainText.find((text) => text.id === id)
     }
   },
 
@@ -93,9 +121,9 @@ export default {
 
   head() {
     return createHead(
-      this.$siteDataContent.title.ja_jp,
-      this.$siteDataContent.description.ja_jp,
-      this.$siteDataContent.ogImage.url,
+      this.$siteDataContent.title.value.ja,
+      this.$siteDataContent.description.value.ja,
+      this.$siteDataContent.ogImage.value.url,
       `${process.env.NUXT_ENV_BASE_URL}${this.$route.path}`
     )
   }

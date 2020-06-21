@@ -1,11 +1,36 @@
 <template>
   <footer class="the-footer">
-    <NuxtLink to="/" class="title">株式会社 FSS</NuxtLink>
+    <NuxtLink to="/" class="title">
+      {{ $siteDataContent.title.value.ja }}
+    </NuxtLink>
 
     <ul class="nav">
-      <NuxtLink to="/about" tag="li" class="nav-item">会社紹介</NuxtLink>
-      <NuxtLink to="/blog" tag="li" class="nav-item">ブログ</NuxtLink>
-      <NuxtLink to="/contact" tag="li" class="nav-item">お問い合わせ</NuxtLink>
+      <li class="nav-item">
+        <NuxtLink :to="aboutPageContent.path">
+          {{ aboutPageContent.title.value.ja }}
+        </NuxtLink>
+        <ul>
+          <NuxtLink
+            v-for="aboutLowerPageContent of aboutLowerPageContentList"
+            :key="aboutLowerPageContent.id"
+            :to="aboutLowerPageContent.path"
+            tag="li"
+            class="nav-lower-item"
+          >
+            {{ aboutLowerPageContent.title.value.ja }}
+          </NuxtLink>
+        </ul>
+      </li>
+      <li class="nav-item">
+        <NuxtLink :to="blogPageContent.path">
+          {{ blogPageContent.title.value.ja }}
+        </NuxtLink>
+      </li>
+      <li class="nav-item">
+        <NuxtLink :to="contactPageContent.path">
+          {{ contactPageContent.title.value.ja }}
+        </NuxtLink>
+      </li>
     </ul>
 
     <ul class="sns">
@@ -37,6 +62,33 @@
   </footer>
 </template>
 
+<script>
+export default {
+  computed: {
+    aboutPageContent() {
+      return this.$allPageContentsForNav.find(
+        (pageContent) => pageContent.path === '/about'
+      )
+    },
+    aboutLowerPageContentList() {
+      return this.$allPageContentsForNav.filter((pageContent) =>
+        pageContent.path.startsWith('/about/')
+      )
+    },
+    blogPageContent() {
+      return this.$allPageContentsForNav.find(
+        (pageContent) => pageContent.path === '/blog'
+      )
+    },
+    contactPageContent() {
+      return this.$allPageContentsForNav.find(
+        (pageContent) => pageContent.path === '/contact'
+      )
+    }
+  }
+}
+</script>
+
 <style lang="scss" scoped>
 .the-footer {
   display: flex;
@@ -52,7 +104,7 @@
   align-items: center;
   width: 70%;
 }
-.nav-item {
+.nav-lower-item {
   cursor: pointer;
 }
 .sns {

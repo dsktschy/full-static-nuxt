@@ -1,6 +1,10 @@
 {
   "postsPerRequestToPage": 10,
+  "pagesPerRequestToPage": 10,
   "postsPerRequestToGenerate": 100,
+  "pagesPerRequestToGenerate": 100,
   "categoriesPerRequest": 100,
-  "richEditorFieldId": "i18nRichEditor"
+  "richEditorFieldId": "i18nRichEditor",
+  "apiGetRequestTimeout": 0,
+  "apiGetRequestDepth": 2
 }

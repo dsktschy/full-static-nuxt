@@ -1,6 +1,8 @@
 <template>
   <div>
-    <h1 class="title">Page {{ pageIndex }} | {{ pageContent.title.ja_jp }}</h1>
+    <h1 class="title">
+      Page {{ pageIndex }} | {{ pageContent.title.value.ja }}
+    </h1>
 
     <ul class="category-list">
       <NuxtLink
@@ -10,7 +12,7 @@
         tag="li"
         class="category-item"
       >
-        {{ categoryContent.name.ja_jp }}
+        {{ categoryContent.name.value.ja }}
       </NuxtLink>
     </ul>
 
@@ -26,9 +28,9 @@
           convertIsoToDotSeparatedYmd(postContent.createdAt)
         }}</time>
         <div class="post-item-category">
-          {{ postContent.category.name.ja_jp }}
+          {{ postContent.category.name.value.ja }}
         </div>
-        <h2 class="post-item-title">{{ postContent.title.ja_jp }}</h2>
+        <h2 class="post-item-title">{{ postContent.title.value.ja }}</h2>
       </NuxtLink>
       <li v-if="!postContentList.length">No content</li>
     </ul>
@@ -91,9 +93,9 @@ export default {
 
   head() {
     return createHead(
-      `Page ${this.pageIndex} | ${this.$siteDataContent.title.ja_jp}`,
-      this.pageContent.description.ja_jp,
-      this.$siteDataContent.ogImage.url,
+      `Page ${this.pageIndex} | ${this.$siteDataContent.title.value.ja}`,
+      this.pageContent.description.value.ja,
+      this.$siteDataContent.ogImage.value.url,
       `${process.env.NUXT_ENV_BASE_URL}${this.$route.path}`
     )
   }

@@ -1,12 +1,12 @@
 <template>
   <article class="page-blog-id">
-    <h1 class="title">{{ postContent.title.ja_jp }}</h1>
+    <h1 class="title">{{ postContent.title.value.ja }}</h1>
     <img
-      :src="postContent.featuredImage.url"
-      :alt="postContent.title.ja_jp"
+      :src="postContent.featuredImage.value.url"
+      :alt="postContent.title.value.ja"
       class="featured-image"
     />
-    <div class="content" v-html="postContent.content.ja_jp" />
+    <div class="content" v-html="postContent.content.value.ja" />
     <div class="link-list">
       <div class="link-item">
         <NuxtLink
@@ -14,7 +14,7 @@
           :to="`/blog/${prevPostContent.id}`"
           tag="h2"
         >
-          {{ prevPostContent.title.ja_jp }}
+          {{ prevPostContent.title.value.ja }}
         </NuxtLink>
       </div>
       <NuxtLink :to="`/blog/page/1`" class="link-item">
@@ -26,7 +26,7 @@
           :to="`/blog/${nextPostContent.id}`"
           tag="h2"
         >
-          {{ nextPostContent.title.ja_jp }}
+          {{ nextPostContent.title.value.ja }}
         </NuxtLink>
       </div>
     </div>
@@ -59,9 +59,9 @@ export default {
 
   head() {
     return createHead(
-      `${this.postContent.title.ja_jp} | ${this.$siteDataContent.title.ja_jp}`,
-      this.postContent.description.ja_jp,
-      this.postContent.featuredImage.url,
+      `${this.postContent.title.value.ja} | ${this.$siteDataContent.title.value.ja}`,
+      this.postContent.description.value.ja,
+      this.postContent.featuredImage.value.url,
       `${process.env.NUXT_ENV_BASE_URL}${this.$route.path}`
     )
   }

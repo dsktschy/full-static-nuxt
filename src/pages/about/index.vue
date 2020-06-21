@@ -1,66 +1,46 @@
 <template>
   <div>
     <div class="header">
-      <h1 class="primary-heading">
-        <span>{{ pageContent.title.ja_jp }}</span>
-        <span>{{ pageContent.title.en_us }}</span>
-      </h1>
+      <h1 class="primary-heading">{{ pageContent.title.value.ja }}</h1>
     </div>
 
     <section>
-      <h2>
-        <span>ミッション</span>
-        <span>Mission</span>
-      </h2>
-      <p>{{ missionCopyText.values[0].ja_jp }}</p>
-      <p>{{ missionBodyText.values[0].ja_jp }}</p>
+      <h2>{{ missionHeadingText.value.ja }}</h2>
+      <p>{{ missionSummaryText.value.ja }}</p>
+      <p>{{ missionBodyText.value.ja }}</p>
     </section>
 
     <section>
-      <h2>
-        <span>指針</span>
-        <span>Guideline</span>
-      </h2>
-      <ol>
-        <li
-          v-for="(guidelineText, i) of guidelineTextList"
-          :key="guidelineText.id"
-          class="guideline-item"
-        >
-          <span>{{ padWithZero(i, 2) }}</span>
-          <span>{{ guidelineText.key.ja_jp }}</span>
-          <p>{{ guidelineText.values[0].ja_jp }}</p>
-        </li>
-      </ol>
-    </section>
-
-    <section>
-      <h2>
-        <span>会社概要</span>
-        <span>Company</span>
-      </h2>
+      <h2>{{ companyHeadingText.value.ja }}</h2>
       <dl>
         <div
-          v-for="companyText of companyTextList"
-          :key="companyText.id"
+          v-for="(companyTermText, i) of companyTermTextList"
+          :key="companyTermText.id"
           class="company-item"
         >
-          <dt>{{ companyText.key.ja_jp }}</dt>
-          <template v-if="isRichEditor(companyText.values[0].fieldId)">
-            <dd v-html="companyText.values[0].ja_jp" />
+          <dt>{{ companyTermText.value.ja }}</dt>
+          <template
+            v-if="isRichEditor(companyDefinitionTextList[i].value.fieldId)"
+          >
+            <dd v-html="companyDefinitionTextList[i].value.ja" />
           </template>
           <template v-else>
-            <dd>{{ companyText.values[0].ja_jp }}</dd>
+            <dd>{{ companyDefinitionTextList[i].value.ja }}</dd>
           </template>
         </div>
       </dl>
     </section>
 
     <ul class="nav">
-      <NuxtLink to="/about/message" tag="li" class="nav-item"
-        >代表あいさつ</NuxtLink
+      <NuxtLink
+        v-for="lowerPageContent of lowerPageContentList"
+        :key="lowerPageContent.id"
+        :to="lowerPageContent.path"
+        tag="li"
+        class="nav-item"
       >
-      <NuxtLink to="/about/history" tag="li" class="nav-item">沿革</NuxtLink>
+        {{ lowerPageContent.title.value.ja }}
+      </NuxtLink>
     </ul>
   </div>
 </template>
@@ -72,28 +52,65 @@ import { padWithZero } from '~/assets/js/utility'
 import { richEditorFieldId } from '~/assets/json/variables'
 
 export default {
-  async asyncData({ route }) {
+  async asyncData({ app, route }) {
+    const lowerPageContentList = app.$allPageContentsForNav.filter(
+      (pageContent) => pageContent.path.startsWith('/about/')
+    )
     return {
-      pageContent: await getPageContent(route.name)
+      pageContent: await getPageContent(route.name),
+      lowerPageContentList
     }
   },
 
   computed: {
-    missionCopyText() {
-      const id = 'about-mission-copy'
-      return this.pageContent.texts.find((text) => text.id === id) || ''
+    missionHeadingText() {
+      const id = 'page-about-mission-heading'
+      return this.pageContent.plainText.find((text) => text.id === id)
+    },
+    missionSummaryText() {
+      const id = 'page-about-mission-summary'
+      return this.pageContent.plainText.find((text) => text.id === id)
     },
     missionBodyText() {
-      const id = 'about-mission-body'
-      return this.pageContent.texts.find((text) => text.id === id) || ''
+      const id = 'page-about-mission-body'
+      return this.pageContent.plainText.find((text) => text.id === id)
     },
-    guidelineTextList() {
-      const id = 'about-guideline-'
-      return this.pageContent.texts.filter((text) => text.id.startsWith(id))
+    companyHeadingText() {
+      const id = 'page-about-company-heading'
+      return this.pageContent.plainText.find((text) => text.id === id)
     },
-    companyTextList() {
-      const id = 'about-company-'
-      return this.pageContent.texts.filter((text) => text.id.startsWith(id))
+    companyTermTextList() {
+      const prefix = 'page-about-company-body-term-'
+      const companyTermTextList = this.pageContent.plainText.filter((text) =>
+        text.id.startsWith(prefix)
+      )
+      const sortedCompanyTermTextList = []
+      for (let i = 0; i < companyTermTextList.length; i++) {
+        const id = `${prefix}${i + 1}`
+        sortedCompanyTermTextList[i] = companyTermTextList.find(
+          (text) => text.id === id
+        )
+      }
+      return sortedCompanyTermTextList
+    },
+    companyDefinitionTextList() {
+      const prefix = 'page-about-company-body-definition-'
+      const companyDefinitionTextList = [
+        ...this.pageContent.plainText.filter((text) =>
+          text.id.startsWith(prefix)
+        ),
+        ...this.pageContent.richText.filter((text) =>
+          text.id.startsWith(prefix)
+        )
+      ]
+      const sortedCompanyDefinitionTextList = []
+      for (let i = 0; i < companyDefinitionTextList.length; i++) {
+        const id = `${prefix}${i + 1}`
+        sortedCompanyDefinitionTextList[i] = companyDefinitionTextList.find(
+          (text) => text.id === id
+        )
+      }
+      return sortedCompanyDefinitionTextList
     }
   },
 
@@ -106,9 +123,9 @@ export default {
 
   head() {
     return createHead(
-      `${this.pageContent.title.ja_jp} | ${this.$siteDataContent.title.ja_jp}`,
-      this.pageContent.description.ja_jp,
-      this.$siteDataContent.ogImage.url,
+      `${this.pageContent.title.value.ja} | ${this.$siteDataContent.title.value.ja}`,
+      this.pageContent.description.value.ja,
+      this.$siteDataContent.ogImage.value.url,
       `${process.env.NUXT_ENV_BASE_URL}${this.$route.path}`
     )
   }
