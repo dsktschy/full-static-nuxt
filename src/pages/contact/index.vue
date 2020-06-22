@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="title">{{ pageContent.title.value.ja }}</h1>
-    <ValidationObserver v-slot="{ invalid, handleSubmit }" slim>
+    <ValidationObserver v-slot="{ pristine, invalid, handleSubmit }" slim>
       <form
         v-if="!completed"
         :name="formValues['form-name']"
@@ -20,144 +20,150 @@
         <input v-model="formValues.honeypot" name="honeypot" class="honeypot" />
 
         <ValidationProvider
+          v-for="inputField of pageContent.inputFields"
           v-slot="{ failedRules }"
-          rules="required"
-          tag="label"
+          :key="inputField.id"
+          :rules="getValidationProviderRules(inputField.rules)"
+          :tag="getValidationProviderTag(inputField.type)"
           class="form-item"
         >
-          <span>Category:</span>
-          <template v-if="!confirming">
-            <select v-model="formValues.category" name="category">
-              <option value="" disabled selected>--Please choose--</option>
-              <option value="products">Products</option>
-              <option value="recruitment">Recruitment</option>
-              <option value="other">Other</option>
-            </select>
-            <span v-if="failedRules.required">Category is required</span>
-          </template>
-          <span v-else>{{ formValues.category }}</span>
-        </ValidationProvider>
+          <span>{{ inputField.label.value.ja }}</span>
 
-        <ValidationProvider
-          v-slot="{ failedRules }"
-          rules="required|max:256"
-          tag="label"
-          class="form-item"
-        >
-          <span>Name:</span>
+          <!-- When editing -->
           <template v-if="!confirming">
-            <input v-model="formValues.name" type="text" name="name" />
-            <span v-if="failedRules.required">Name is required</span>
+            <!-- Radio buttons and check boxes -->
+            <template v-if="isRadioOrCheckbox(inputField)">
+              <label
+                v-for="(option, i) of inputField.options"
+                :key="`${inputField.name}-${i}`"
+                :class="inputField.type"
+              >
+                <input
+                  v-model="formValues[inputField.name]"
+                  :name="inputField.name"
+                  :value="option.value"
+                  :checked="option.selected"
+                  :disabled="option.disabled"
+                  :type="inputField.type"
+                />
+                <span v-if="option.label">{{ option.label.value.ja }}</span>
+              </label>
+            </template>
+
+            <!-- Select boxes -->
+            <template v-else-if="isSelect(inputField)">
+              <select
+                v-model="formValues[inputField.name]"
+                :name="inputField.name"
+                class="select"
+              >
+                <option
+                  v-for="(option, i) of inputField.options"
+                  :key="`${inputField.name}-${i}`"
+                  :value="option.value"
+                  :selected="option.selected"
+                  :disabled="option.disabled"
+                >
+                  {{ option.label.value.ja }}
+                </option>
+              </select>
+            </template>
+
+            <!-- Textarea -->
+            <template v-else-if="isTextarea(inputField)">
+              <textarea
+                v-model="formValues[inputField.name]"
+                :name="inputField.name"
+                class="textarea"
+              />
+            </template>
+
+            <!-- Text boxes -->
+            <template v-else>
+              <input
+                v-model="formValues[inputField.name]"
+                :name="inputField.name"
+                type="text"
+                class="text"
+              />
+            </template>
+
+            <!-- Errors -->
+            <span v-if="failedRules.required">
+              {{ inputFieldErrorRequiredText.value.ja }}
+            </span>
+            <span v-if="failedRules.email">
+              {{ inputFieldErrorEmailText.value.ja }}
+            </span>
             <span v-if="failedRules.max">
-              Name may not be greater than 256 characters
+              {{ inputFieldErrorMaxText.value.ja }}
+            </span>
+            <span v-if="failedRules.min">
+              {{ inputFieldErrorMinText.value.ja }}
             </span>
           </template>
-          <span v-else>{{ formValues.name }}</span>
-        </ValidationProvider>
 
-        <ValidationProvider
-          v-slot="{ failedRules }"
-          rules="required|email"
-          tag="label"
-          class="form-item"
-        >
-          <span>Email:</span>
-          <template v-if="!confirming">
-            <input v-model="formValues.email" type="email" name="email" />
-            <span v-if="failedRules.required">Email is required</span>
-            <span v-if="failedRules.email">Email must be a valid email</span>
+          <!-- When confirming -->
+          <template v-else>
+            <span v-if="isTextOrTextarea(inputField)">
+              {{ formValues[inputField.name] }}
+            </span>
+            <template v-else-if="isSingleOptionCheckbox(inputField)">
+              <span v-if="formValues[inputField.name]">
+                {{ inputFieldCheckboxYesText.value.ja }}
+              </span>
+              <span v-else>
+                {{ inputFieldCheckboxNoText.value.ja }}
+              </span>
+            </template>
+            <span v-else>
+              {{
+                getOptionLabelText(inputField, formValues[inputField.name])
+                  .value.ja
+              }}
+            </span>
           </template>
-          <span v-else>{{ formValues.email }}</span>
-        </ValidationProvider>
-
-        <ValidationProvider rules="" tag="div" class="form-item">
-          <div>Age:</div>
-          <template v-if="!confirming">
-            <label class="radio">
-              <input
-                v-model="formValues.age"
-                type="radio"
-                value="-20"
-                name="age"
-              />
-              <div>-20</div>
-            </label>
-            <label class="radio">
-              <input
-                v-model="formValues.age"
-                type="radio"
-                value="20-40"
-                name="age"
-              />
-              <div>20-40</div>
-            </label>
-            <label class="radio">
-              <input
-                v-model="formValues.age"
-                type="radio"
-                value="40-60"
-                name="age"
-              />
-              <div>40-60</div>
-            </label>
-            <label class="radio">
-              <input
-                v-model="formValues.age"
-                type="radio"
-                value="60-"
-                name="age"
-              />
-              <div>60-</div>
-            </label>
-          </template>
-          <div v-else>{{ formValues.age }}</div>
-        </ValidationProvider>
-
-        <ValidationProvider
-          v-slot="{ failedRules }"
-          rules="required"
-          tag="label"
-          class="form-item"
-        >
-          <span>Message:</span>
-          <template v-if="!confirming">
-            <textarea v-model="formValues.message" name="message">
-            Input message.
-          </textarea
-            >
-            <span v-if="failedRules.required">Message is required</span>
-          </template>
-          <span v-else>{{ formValues.message }}</span>
         </ValidationProvider>
 
         <ValidationProvider
           v-slot="{ failedRules }"
           rules="is_true"
-          tag="label"
+          tag="div"
           class="form-item"
         >
           <template v-if="!confirming">
-            <span class="checkbox">
+            <label class="checkbox">
               <!-- Input that name attribute is omitted, is not shown in Netlify -->
               <input v-model="formValues.agreement" type="checkbox" />
-              <div>Agree to our terms and conditions</div>
+              <span v-html="agreementOptionText.value.ja" />
+            </label>
+            <span v-if="failedRules.is_true">
+              {{ inputFieldErrorRequiredText.value.ja }}
             </span>
-            <span v-if="failedRules.is_true">Agreement is required</span>
           </template>
         </ValidationProvider>
 
-        <button v-show="confirming" :disabled="invalid" type="submit">
-          Send
+        <button
+          v-show="confirming"
+          :disabled="pristine || invalid"
+          type="submit"
+        >
+          {{ sendText.value.ja }}
         </button>
-        <button :disabled="invalid" type="button" @click="toggleConfirming">
-          <template v-if="!confirming">Next</template>
-          <template v-else>Back</template>
+        <button
+          :disabled="pristine || invalid"
+          type="button"
+          @click="toggleConfirming"
+        >
+          <template v-if="!confirming">{{ confirmText.value.ja }}</template>
+          <template v-else>{{ editText.value.ja }}</template>
         </button>
       </form>
 
       <div v-else>
-        <p>Thank you!</p>
-        <NuxtLink to="/">Go to index page</NuxtLink>
+        <h2>{{ completedHeadingText.value.ja }}</h2>
+        <p>{{ completedBodyText.value.ja }}</p>
+        <NuxtLink to="/">{{ completedIndexText.value.ja }}</NuxtLink>
       </div>
     </ValidationObserver>
   </div>
@@ -169,6 +175,16 @@ import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import { getPageContent } from '~/assets/js/pages-fetcher'
 import { postContactValues } from '~/assets/js/contact-fetcher'
 import { createHead } from '~/assets/js/head-creator'
+import {
+  isCheckbox,
+  isSelect,
+  isTextarea,
+  isRadioOrCheckbox,
+  isRadioOrSelect,
+  isTextOrTextarea,
+  isSingleOptionCheckbox,
+  createDefaultValue
+} from '~/assets/js/input-fields-utility'
 
 export default {
   components: {
@@ -177,29 +193,115 @@ export default {
   },
 
   async asyncData({ route }) {
+    const pageContent = await getPageContent(route.name)
+    const formValues = {
+      'form-name': 'contact',
+      honeypot: '',
+      agreement: false
+    }
+    for (const inputField of pageContent.inputFields) {
+      formValues[inputField.name] = createDefaultValue(inputField)
+    }
     return {
-      pageContent: await getPageContent(route.name)
+      pageContent,
+      formValues
     }
   },
 
   data() {
     return {
       confirming: false,
-      completed: false,
-      formValues: {
-        'form-name': 'contact',
-        honeypot: '',
-        category: '',
-        name: '',
-        email: '',
-        age: '',
-        message: '',
-        agreement: false
-      }
+      completed: false
+    }
+  },
+
+  computed: {
+    inputFieldErrorRequiredText() {
+      const id = 'input-field-error-required'
+      return this.pageContent.plainText.find((text) => text.id === id)
+    },
+    inputFieldErrorEmailText() {
+      const id = 'input-field-error-email'
+      return this.pageContent.plainText.find((text) => text.id === id)
+    },
+    inputFieldErrorMaxText() {
+      const id = 'input-field-error-max'
+      return this.pageContent.plainText.find((text) => text.id === id)
+    },
+    inputFieldErrorMinText() {
+      const id = 'input-field-error-min'
+      return this.pageContent.plainText.find((text) => text.id === id)
+    },
+    agreementOptionText() {
+      const id = 'page-contact-agreement-option'
+      return this.pageContent.richText.find((text) => text.id === id)
+    },
+    confirmText() {
+      const id = 'page-contact-confirm'
+      return this.pageContent.plainText.find((text) => text.id === id)
+    },
+    editText() {
+      const id = 'page-contact-edit'
+      return this.pageContent.plainText.find((text) => text.id === id)
+    },
+    sendText() {
+      const id = 'page-contact-send'
+      return this.pageContent.plainText.find((text) => text.id === id)
+    },
+    completedHeadingText() {
+      const id = 'page-contact-completed-heading'
+      return this.pageContent.plainText.find((text) => text.id === id)
+    },
+    completedBodyText() {
+      const id = 'page-contact-completed-body'
+      return this.pageContent.plainText.find((text) => text.id === id)
+    },
+    completedIndexText() {
+      const id = 'page-contact-completed-index'
+      return this.pageContent.plainText.find((text) => text.id === id)
+    },
+    inputFieldCheckboxYesText() {
+      const id = 'input-field-checkbox-yes'
+      return this.pageContent.plainText.find((text) => text.id === id)
+    },
+    inputFieldCheckboxNoText() {
+      const id = 'input-field-checkbox-no'
+      return this.pageContent.plainText.find((text) => text.id === id)
     }
   },
 
   methods: {
+    isCheckbox,
+    isSelect,
+    isTextarea,
+    isRadioOrCheckbox,
+    isRadioOrSelect,
+    isTextOrTextarea,
+    isSingleOptionCheckbox,
+
+    getValidationProviderTag(inputFieldType) {
+      return ['radio', 'checkbox'].includes(inputFieldType) ? 'div' : 'label'
+    },
+
+    getValidationProviderRules(inputFieldRules) {
+      if (!inputFieldRules) return ''
+      const ruleList = []
+      if (inputFieldRules.required) ruleList.push('required')
+      if (inputFieldRules.email) ruleList.push('email')
+      if (inputFieldRules.max != null)
+        ruleList.push(`max:${inputFieldRules.max}`)
+      if (inputFieldRules.min != null)
+        ruleList.push(`min:${inputFieldRules.min}`)
+      return ruleList.join('|')
+    },
+
+    getOptionLabelText(inputField, formValue) {
+      const option = inputField.options.find(
+        (option) => option.value === formValue
+      )
+      return option.label
+    },
+
     toggleConfirming() {
       this.confirming = !this.confirming
     },
