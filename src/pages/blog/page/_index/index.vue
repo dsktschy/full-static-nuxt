@@ -52,7 +52,7 @@ import { postsPerRequestToPage } from '~/assets/json/variables'
 import { getPageContent } from '~/assets/js/pages-fetcher'
 import { getPostContentList } from '~/assets/js/posts-fetcher'
 import { createHead } from '~/assets/js/head-creator'
-import { convertIsoToDotSeparatedYmd } from '~/assets/js/utility'
+import { convertIsoToDotSeparatedYmd } from '~/assets/js/common-utility'
 
 export default {
   components: {
