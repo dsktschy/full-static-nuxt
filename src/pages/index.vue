@@ -11,24 +11,24 @@
           class="slider-item"
         >
           <p class="slider-item-text">
-            {{ sliderTextList[i].value.ja }}
+            {{ $t(`page-index-slider-${i + 1}`) }}
           </p>
         </div>
       </VueAgile>
     </client-only>
 
     <section>
-      <h2>{{ aboutHeadingText.value.ja }}</h2>
-      <p>{{ aboutBodyText.value.ja }}</p>
+      <h2>{{ $t('page-index-about-heading') }}</h2>
+      <p>{{ $t('page-index-about-body') }}</p>
     </section>
 
     <section>
-      <h2>{{ blogHeadingText.value.ja }}</h2>
+      <h2>{{ $t('page-index-blog-heading') }}</h2>
       <ul>
         <NuxtLink
           v-for="postContent of postContentList"
           :key="postContent.id"
-          :to="`/blog/${postContent.id}`"
+          :to="localePath(`/blog/${postContent.id}`)"
           tag="li"
           class="post-item"
         >
@@ -36,13 +36,15 @@
             convertIsoToDotSeparatedYmd(postContent.createdAt)
           }}</time>
           <div class="post-item-category">
-            {{ postContent.category.name.value.ja }}
+            {{ $t(postContent.category.name.id) }}
           </div>
-          <h2 class="post-item-title">{{ postContent.title.value.ja }}</h2>
+          <h2 class="post-item-title">{{ $t(postContent.title.id) }}</h2>
         </NuxtLink>
-        <li v-if="!postContentList.length">{{ blogNoneText.value.ja }}</li>
+        <li v-if="!postContentList.length">{{ $t('page-index-blog-none') }}</li>
       </ul>
-      <NuxtLink to="/blog/page/1">{{ blogMoreText.value.ja }}</NuxtLink>
+      <NuxtLink :to="localePath('/blog/page/1')">{{
+        $t('page-index-blog-more')
+      }}</NuxtLink>
     </section>
   </div>
 </template>
@@ -52,6 +54,10 @@ import { VueAgile } from 'vue-agile'
 import { getPageContent } from '~/assets/js/pages-fetcher'
 import { getPostContentList } from '~/assets/js/posts-fetcher'
 import { createHead } from '~/assets/js/head-creator'
+import {
+  createPageMessage,
+  createPostsMessage
+} from '~/assets/js/message-creator'
 import { convertIsoToDotSeparatedYmd } from '~/assets/js/common-utility'
 
 export default {
@@ -59,10 +65,22 @@ export default {
     VueAgile
   },
 
-  async asyncData({ route }) {
+  async asyncData({ app, route }) {
+    const routeName = app.getRouteBaseName()
+    const pageContent = await getPageContent(routeName)
+    const options = { fields: 'id,createdAt,title,category' }
+    const postContentList = await getPostContentList(options)
+    const messages = {}
+    for (const locale of app.i18n.locales) {
+      messages[locale] = {
+        ...createPageMessage(locale, pageContent),
+        ...createPostsMessage(locale, postContentList)
+      }
+    }
     return {
-      pageContent: await getPageContent(route.name),
-      postContentList: await getPostContentList()
+      pageContent,
+      postContentList,
+      messages
     }
   },
 
@@ -80,38 +98,14 @@ export default {
         )
       }
       return sortedSliderImageList
-    },
-    sliderTextList() {
-      const prefix = 'page-index-slider-'
-      const sliderTextList = this.pageContent.plainText.filter((text) =>
-        text.id.startsWith(prefix)
-      )
-      const sortedSliderTextList = []
-      for (let i = 0; i < sliderTextList.length; i++) {
-        const id = `${prefix}${i + 1}`
-        sortedSliderTextList[i] = sliderTextList.find((text) => text.id === id)
-      }
-      return sortedSliderTextList
-    },
-    aboutHeadingText() {
-      const id = 'page-index-about-heading'
-      return this.pageContent.plainText.find((text) => text.id === id)
-    },
-    aboutBodyText() {
-      const id = 'page-index-about-body'
-      return this.pageContent.plainText.find((text) => text.id === id)
-    },
-    blogHeadingText() {
-      const id = 'page-index-blog-heading'
-      return this.pageContent.plainText.find((text) => text.id === id)
-    },
-    blogNoneText() {
-      const id = 'page-index-blog-none'
-      return this.pageContent.plainText.find((text) => text.id === id)
-    },
-    blogMoreText() {
-      const id = 'page-index-blog-more'
-      return this.pageContent.plainText.find((text) => text.id === id)
+    }
+  },
+
+  created() {
+    // Running in fetch causes error in template
+    // Because message ($t) has no fields until running mergeLocaleMessage
+    for (const locale of this.$i18n.locales) {
+      this.$i18n.mergeLocaleMessage(locale, this.messages[locale])
     }
   },
 
@@ -121,8 +115,8 @@ export default {
 
   head() {
     return createHead(
-      this.$siteDataContent.title.value.ja,
-      this.$siteDataContent.description.value.ja,
+      this.$t('site-data-title'),
+      this.$t('site-data-description'),
       this.$siteDataContent.ogImage.value.url,
       `${process.env.NUXT_ENV_BASE_URL}${this.$route.path}`
     )

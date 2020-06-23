@@ -49,7 +49,18 @@ export default {
    */
   modules: [
     // Doc: https://github.com/nuxt-community/dotenv-module
-    ['@nuxtjs/dotenv', { path: __dirname }]
+    ['@nuxtjs/dotenv', { path: __dirname }],
+    // Doc: https://github.com/nuxt-community/nuxt-i18n
+    [
+      'nuxt-i18n',
+      {
+        locales: ['ja', 'en'],
+        defaultLocale: 'ja',
+        vueI18n: {
+          warnHtmlInMessage: 'off'
+        }
+      }
+    ]
   ],
   /*
    ** Build configuration

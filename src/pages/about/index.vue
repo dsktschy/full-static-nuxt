@@ -1,31 +1,28 @@
 <template>
   <div>
-    <div class="header">
-      <h1 class="primary-heading">{{ pageContent.title.value.ja }}</h1>
-    </div>
+    <h1>{{ $t(pageContent.title.id) }}</h1>
 
     <section>
-      <h2>{{ missionHeadingText.value.ja }}</h2>
-      <p>{{ missionSummaryText.value.ja }}</p>
-      <p>{{ missionBodyText.value.ja }}</p>
+      <h2>{{ $t('page-about-mission-heading') }}</h2>
+      <p>{{ $t('page-about-mission-summary') }}</p>
+      <p>{{ $t('page-about-mission-body') }}</p>
     </section>
 
     <section>
-      <h2>{{ companyHeadingText.value.ja }}</h2>
+      <h2>{{ $t('page-about-company-heading') }}</h2>
       <dl>
         <div
           v-for="(companyTermText, i) of companyTermTextList"
           :key="companyTermText.id"
-          class="company-item"
         >
-          <dt>{{ companyTermText.value.ja }}</dt>
+          <dt>{{ $t(companyTermText.id) }}</dt>
           <template
             v-if="isRichEditor(companyDefinitionTextList[i].value.fieldId)"
           >
-            <dd v-html="companyDefinitionTextList[i].value.ja" />
+            <dd v-html="$t(companyDefinitionTextList[i].id)" />
           </template>
           <template v-else>
-            <dd>{{ companyDefinitionTextList[i].value.ja }}</dd>
+            <dd>{{ $t(companyDefinitionTextList[i].id) }}</dd>
           </template>
         </div>
       </dl>
@@ -35,7 +32,7 @@
       <NuxtLink
         v-for="lowerPageContent of lowerPageContentList"
         :key="lowerPageContent.id"
-        :to="lowerPageContent.path"
+        :to="localePath(lowerPageContent.path)"
         tag="li"
         class="nav-item"
       >
@@ -48,37 +45,29 @@
 <script>
 import { getPageContent } from '~/assets/js/pages-fetcher'
 import { createHead } from '~/assets/js/head-creator'
+import { createPageMessage } from '~/assets/js/message-creator'
 import { padWithZero } from '~/assets/js/common-utility'
 import { richEditorFieldId } from '~/assets/json/variables'
 
 export default {
   async asyncData({ app, route }) {
+    const routeName = app.getRouteBaseName()
+    const pageContent = await getPageContent(routeName)
     const lowerPageContentList = app.$allPageContentsForNav.filter(
       (pageContent) => pageContent.path.startsWith('/about/')
     )
+    const messages = {}
+    for (const locale of app.i18n.locales) {
+      messages[locale] = createPageMessage(locale, pageContent)
+    }
     return {
-      pageContent: await getPageContent(route.name),
-      lowerPageContentList
+      pageContent,
+      lowerPageContentList,
+      messages
     }
   },
 
   computed: {
-    missionHeadingText() {
-      const id = 'page-about-mission-heading'
-      return this.pageContent.plainText.find((text) => text.id === id)
-    },
-    missionSummaryText() {
-      const id = 'page-about-mission-summary'
-      return this.pageContent.plainText.find((text) => text.id === id)
-    },
-    missionBodyText() {
-      const id = 'page-about-mission-body'
-      return this.pageContent.plainText.find((text) => text.id === id)
-    },
-    companyHeadingText() {
-      const id = 'page-about-company-heading'
-      return this.pageContent.plainText.find((text) => text.id === id)
-    },
     companyTermTextList() {
       const prefix = 'page-about-company-body-term-'
       const companyTermTextList = this.pageContent.plainText.filter((text) =>
@@ -111,6 +100,14 @@ export default {
         )
       }
       return sortedCompanyDefinitionTextList
+    }
+  },
+
+  created() {
+    // Running in fetch causes error in template
+    // Because message ($t) has no fields until running mergeLocaleMessage
+    for (const locale of this.$i18n.locales) {
+      this.$i18n.mergeLocaleMessage(locale, this.messages[locale])
     }
   },
 

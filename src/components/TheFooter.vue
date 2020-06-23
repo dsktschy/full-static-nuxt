@@ -1,34 +1,34 @@
 <template>
   <footer class="the-footer">
-    <NuxtLink to="/" class="title">
-      {{ $siteDataContent.title.value.ja }}
+    <NuxtLink :to="localePath('/')" class="title">
+      {{ $t('site-data-title') }}
     </NuxtLink>
 
     <ul class="nav">
       <li class="nav-item">
-        <NuxtLink :to="aboutPageContent.path">
-          {{ aboutPageContent.title.value.ja }}
+        <NuxtLink :to="localePath(aboutPageContent.path)">
+          {{ $t(aboutPageContent.title.id) }}
         </NuxtLink>
         <ul>
           <NuxtLink
             v-for="aboutLowerPageContent of aboutLowerPageContentList"
             :key="aboutLowerPageContent.id"
-            :to="aboutLowerPageContent.path"
+            :to="localePath(aboutLowerPageContent.path)"
             tag="li"
             class="nav-lower-item"
           >
-            {{ aboutLowerPageContent.title.value.ja }}
+            {{ $t(aboutLowerPageContent.title.id) }}
           </NuxtLink>
         </ul>
       </li>
       <li class="nav-item">
-        <NuxtLink :to="blogPageContent.path">
-          {{ blogPageContent.title.value.ja }}
+        <NuxtLink :to="localePath(blogPageContent.path)">
+          {{ $t(blogPageContent.title.id) }}
         </NuxtLink>
       </li>
       <li class="nav-item">
-        <NuxtLink :to="contactPageContent.path">
-          {{ contactPageContent.title.value.ja }}
+        <NuxtLink :to="localePath(contactPageContent.path)">
+          {{ $t(contactPageContent.title.id) }}
         </NuxtLink>
       </li>
     </ul>
@@ -84,6 +84,16 @@ export default {
       return this.$allPageContentsForNav.find(
         (pageContent) => pageContent.path === '/contact'
       )
+    }
+  },
+
+  created() {
+    for (const locale of this.$i18n.locales) {
+      const message = {
+        ...this.$siteDataMessages[locale],
+        ...this.$allPageMessagesForNav[locale]
+      }
+      this.$i18n.mergeLocaleMessage(locale, message)
     }
   }
 }

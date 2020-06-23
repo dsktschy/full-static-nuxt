@@ -1,32 +1,33 @@
 <template>
   <article class="page-blog-id">
-    <h1 class="title">{{ postContent.title.value.ja }}</h1>
+    <h1>{{ $t(postContent.title.id) }}</h1>
+
     <img
       :src="postContent.featuredImage.value.url"
-      :alt="postContent.title.value.ja"
+      :alt="$t(postContent.title.id)"
       class="featured-image"
     />
-    <div class="content" v-html="postContent.content.value.ja" />
+    <div class="content" v-html="$t(postContent.content.id)" />
     <div class="link-list">
       <div class="link-item">
         <NuxtLink
           v-if="prevPostContent"
-          :to="`/blog/${prevPostContent.id}`"
+          :to="localePath(`/blog/${prevPostContent.id}`)"
           tag="h2"
         >
-          {{ prevPostContent.title.value.ja }}
+          {{ $t(prevPostContent.title.id) }}
         </NuxtLink>
       </div>
-      <NuxtLink :to="`/blog/page/1`" class="link-item">
-        Go to list
+      <NuxtLink :to="localePath(`/blog/page/1`)" class="link-item">
+        {{ $t('page-blog-post-list') }}
       </NuxtLink>
       <div class="link-item">
         <NuxtLink
           v-if="nextPostContent"
-          :to="`/blog/${nextPostContent.id}`"
+          :to="localePath(`/blog/${nextPostContent.id}`)"
           tag="h2"
         >
-          {{ nextPostContent.title.value.ja }}
+          {{ $t(nextPostContent.title.id) }}
         </NuxtLink>
       </div>
     </div>
@@ -34,14 +35,21 @@
 </template>
 
 <script>
+import { getPageContent } from '~/assets/js/pages-fetcher'
 import { getPostContent, getPostContentList } from '~/assets/js/posts-fetcher'
 import { createHead } from '~/assets/js/head-creator'
+import {
+  createPageMessage,
+  createPostMessage,
+  createPostsMessage
+} from '~/assets/js/message-creator'
 
 export default {
-  async asyncData({ payload, params }) {
+  async asyncData({ app, payload, params }) {
+    const pageContent = await getPageContent('blog')
     const postContent =
       payload?.postContent || (await getPostContent(params.id))
-    const fields = 'id,createdAt,title'
+    const fields = 'id,createdAt,title,category'
     const limit = 1
     const createdAt = postContent.createdAt
     const prevFilters = `createdAt[less_than]${createdAt}`
@@ -50,10 +58,30 @@ export default {
     const prevPostContent = (await getPostContentList(prevOptions))[0]
     const nextOptions = { fields, limit, filters: nextFilters }
     const nextPostContent = (await getPostContentList(nextOptions))[0]
+    const adjacentPostContents = []
+    if (prevPostContent) adjacentPostContents.push(prevPostContent)
+    if (nextPostContent) adjacentPostContents.push(nextPostContent)
+    const messages = {}
+    for (const locale of app.i18n.locales) {
+      messages[locale] = {
+        ...createPageMessage(locale, pageContent),
+        ...createPostMessage(locale, postContent),
+        ...createPostsMessage(locale, adjacentPostContents)
+      }
+    }
     return {
       postContent,
       prevPostContent,
-      nextPostContent
+      nextPostContent,
+      messages
+    }
+  },
+
+  created() {
+    // Running in fetch causes error in template
+    // Because message ($t) has no fields until running mergeLocaleMessage
+    for (const locale of this.$i18n.locales) {
+      this.$i18n.mergeLocaleMessage(locale, this.messages[locale])
     }
   },
 

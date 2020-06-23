@@ -1,36 +1,48 @@
 <template>
   <header class="the-header">
-    <NuxtLink :tag="titleTag" to="/" class="title">
-      {{ $siteDataContent.title.value.ja }}
+    <NuxtLink :tag="titleTag" :to="localePath('/')" class="title">
+      {{ $t('site-data-title') }}
     </NuxtLink>
 
     <ul class="nav">
       <li class="nav-item">
-        <NuxtLink :to="aboutPageContent.path">
-          {{ aboutPageContent.title.value.ja }}
+        <NuxtLink :to="localePath(aboutPageContent.path)">
+          {{ $t(aboutPageContent.title.id) }}
         </NuxtLink>
         <ul>
           <NuxtLink
             v-for="aboutLowerPageContent of aboutLowerPageContentList"
             :key="aboutLowerPageContent.id"
-            :to="aboutLowerPageContent.path"
+            :to="localePath(aboutLowerPageContent.path)"
             tag="li"
             class="nav-lower-item"
           >
-            {{ aboutLowerPageContent.title.value.ja }}
+            {{ $t(aboutLowerPageContent.title.id) }}
           </NuxtLink>
         </ul>
       </li>
       <li class="nav-item">
-        <NuxtLink :to="blogPageContent.path">
-          {{ blogPageContent.title.value.ja }}
+        <NuxtLink :to="localePath(blogPageContent.path)">
+          {{ $t(blogPageContent.title.id) }}
         </NuxtLink>
       </li>
       <li class="nav-item">
-        <NuxtLink :to="contactPageContent.path">
-          {{ contactPageContent.title.value.ja }}
+        <NuxtLink :to="localePath(contactPageContent.path)">
+          {{ $t(contactPageContent.title.id) }}
         </NuxtLink>
       </li>
+    </ul>
+
+    <ul class="language">
+      <NuxtLink
+        v-for="locale of $i18n.locales"
+        :key="locale"
+        :to="switchLocalePath(locale)"
+        tag="li"
+        class="language-item"
+      >
+        {{ locale }}
+      </NuxtLink>
     </ul>
   </header>
 </template>
@@ -62,6 +74,16 @@ export default {
         (pageContent) => pageContent.path === '/contact'
       )
     }
+  },
+
+  created() {
+    for (const locale of this.$i18n.locales) {
+      const message = {
+        ...this.$siteDataMessages[locale],
+        ...this.$allPageMessagesForNav[locale]
+      }
+      this.$i18n.mergeLocaleMessage(locale, message)
+    }
   }
 }
 </script>
@@ -82,6 +104,15 @@ export default {
   width: 70%;
 }
 .nav-lower-item {
+  cursor: pointer;
+}
+.language {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 7%;
+}
+.language-item {
   cursor: pointer;
 }
 </style>

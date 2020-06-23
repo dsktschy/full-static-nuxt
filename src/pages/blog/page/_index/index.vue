@@ -1,18 +1,16 @@
 <template>
   <div>
-    <h1 class="title">
-      Page {{ pageIndex }} | {{ pageContent.title.value.ja }}
-    </h1>
+    <h1>Page {{ pageIndex }} | {{ $t(pageContent.title.id) }}</h1>
 
     <ul class="category-list">
       <NuxtLink
         v-for="categoryContent of $allCategoryContents"
         :key="categoryContent.id"
-        :to="`/blog/category/${categoryContent.id}/page/1`"
+        :to="localePath(`/blog/category/${categoryContent.id}/page/1`)"
         tag="li"
         class="category-item"
       >
-        {{ categoryContent.name.value.ja }}
+        {{ $t(categoryContent.name.id) }}
       </NuxtLink>
     </ul>
 
@@ -20,7 +18,7 @@
       <NuxtLink
         v-for="postContent of postContentList"
         :key="postContent.id"
-        :to="`/blog/${postContent.id}`"
+        :to="localePath(`/blog/${postContent.id}`)"
         tag="li"
         class="post-item"
       >
@@ -28,11 +26,11 @@
           convertIsoToDotSeparatedYmd(postContent.createdAt)
         }}</time>
         <div class="post-item-category">
-          {{ postContent.category.name.value.ja }}
+          {{ $t(postContent.category.name.id) }}
         </div>
-        <h2 class="post-item-title">{{ postContent.title.value.ja }}</h2>
+        <h2 class="post-item-title">{{ $t(postContent.title.id) }}</h2>
       </NuxtLink>
-      <li v-if="!postContentList.length">No content</li>
+      <li v-if="!postContentList.length">{{ $t('page-blog-none') }}</li>
     </ul>
 
     <BasePager
@@ -53,6 +51,10 @@ import { getPageContent } from '~/assets/js/pages-fetcher'
 import { getPostContentList } from '~/assets/js/posts-fetcher'
 import { createHead } from '~/assets/js/head-creator'
 import { convertIsoToDotSeparatedYmd } from '~/assets/js/common-utility'
+import {
+  createPageMessage,
+  createPostsMessage
+} from '~/assets/js/message-creator'
 
 export default {
   components: {
@@ -65,16 +67,26 @@ export default {
     return pageIndex > 0 && (pageIndex <= maxIndex || maxIndex === 0)
   },
 
-  async asyncData({ route, params, payload }) {
+  async asyncData({ app, route, params, payload }) {
+    const pageContent = await getPageContent('/blog')
     const pageIndex = parseInt(params.index, 10)
     const offset = postsPerRequestToPage * (pageIndex - 1)
-    const options = { offset }
+    const fields = 'id,createdAt,title,category'
+    const options = { offset, fields }
     const postContentList =
       payload?.postContentList || (await getPostContentList(options))
+    const messages = {}
+    for (const locale of app.i18n.locales) {
+      messages[locale] = {
+        ...createPageMessage(locale, pageContent),
+        ...createPostsMessage(locale, postContentList)
+      }
+    }
     return {
-      pageContent: await getPageContent('/blog'),
+      pageContent,
       postContentList,
-      pageIndex
+      pageIndex,
+      messages
     }
   },
 
@@ -84,10 +96,18 @@ export default {
     }
   },
 
+  created() {
+    // Running in fetch causes error in template
+    // Because message ($t) has no fields until running mergeLocaleMessage
+    for (const locale of this.$i18n.locales) {
+      this.$i18n.mergeLocaleMessage(locale, this.messages[locale])
+    }
+  },
+
   methods: {
     convertIsoToDotSeparatedYmd,
     goToBlogPage({ index: pageIndex }) {
-      this.$router.push(`/blog/page/${pageIndex}`)
+      this.$router.push(this.localePath(`/blog/page/${pageIndex}`))
     }
   },
 

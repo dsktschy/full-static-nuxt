@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h1 class="title">{{ pageContent.title.value.ja }}</h1>
+    <h1>{{ $t(pageContent.title.id) }}</h1>
+
     <ValidationObserver v-slot="{ pristine, invalid, handleSubmit }" slim>
       <form
         v-if="!completed"
@@ -27,7 +28,7 @@
           :tag="getValidationProviderTag(inputField.type)"
           class="form-item"
         >
-          <span>{{ inputField.label.value.ja }}</span>
+          <span>{{ $t(inputField.label.id) }}</span>
 
           <!-- When editing -->
           <template v-if="!confirming">
@@ -46,7 +47,7 @@
                   :disabled="option.disabled"
                   :type="inputField.type"
                 />
-                <span v-if="option.label">{{ option.label.value.ja }}</span>
+                <span v-if="option.label">{{ $t(option.label.id) }}</span>
               </label>
             </template>
 
@@ -64,7 +65,7 @@
                   :selected="option.selected"
                   :disabled="option.disabled"
                 >
-                  {{ option.label.value.ja }}
+                  {{ $t(option.label.id) }}
                 </option>
               </select>
             </template>
@@ -90,16 +91,16 @@
 
             <!-- Errors -->
             <span v-if="failedRules.required">
-              {{ inputFieldErrorRequiredText.value.ja }}
+              {{ $t('input-field-error-required') }}
             </span>
             <span v-if="failedRules.email">
-              {{ inputFieldErrorEmailText.value.ja }}
+              {{ $t('input-field-error-email') }}
             </span>
             <span v-if="failedRules.max">
-              {{ inputFieldErrorMaxText.value.ja }}
+              {{ $t('input-field-error-max', { n: inputField.rules.max }) }}
             </span>
             <span v-if="failedRules.min">
-              {{ inputFieldErrorMinText.value.ja }}
+              {{ $t('input-field-error-min', { n: inputField.rules.min }) }}
             </span>
           </template>
 
@@ -110,16 +111,17 @@
             </span>
             <template v-else-if="isSingleOptionCheckbox(inputField)">
               <span v-if="formValues[inputField.name]">
-                {{ inputFieldCheckboxYesText.value.ja }}
+                {{ $t('input-field-checkbox-yes') }}
               </span>
               <span v-else>
-                {{ inputFieldCheckboxNoText.value.ja }}
+                {{ $t('input-field-checkbox-no') }}
               </span>
             </template>
             <span v-else>
               {{
-                getOptionLabelText(inputField, formValues[inputField.name])
-                  .value.ja
+                $t(
+                  getOptionLabelText(inputField, formValues[inputField.name]).id
+                )
               }}
             </span>
           </template>
@@ -135,10 +137,10 @@
             <label class="checkbox">
               <!-- Input that name attribute is omitted, is not shown in Netlify -->
               <input v-model="formValues.agreement" type="checkbox" />
-              <span v-html="agreementOptionText.value.ja" />
+              <span v-html="$t('page-contact-agreement-option')" />
             </label>
             <span v-if="failedRules.is_true">
-              {{ inputFieldErrorRequiredText.value.ja }}
+              {{ $t('input-field-error-required') }}
             </span>
           </template>
         </ValidationProvider>
@@ -148,22 +150,26 @@
           :disabled="pristine || invalid"
           type="submit"
         >
-          {{ sendText.value.ja }}
+          {{ $t('page-contact-send') }}
         </button>
         <button
           :disabled="pristine || invalid"
           type="button"
           @click="toggleConfirming"
         >
-          <template v-if="!confirming">{{ confirmText.value.ja }}</template>
-          <template v-else>{{ editText.value.ja }}</template>
+          <template v-if="!confirming">{{
+            $t('page-contact-confirm')
+          }}</template>
+          <template v-else>{{ $t('page-contact-edit') }}</template>
         </button>
       </form>
 
       <div v-else>
-        <h2>{{ completedHeadingText.value.ja }}</h2>
-        <p>{{ completedBodyText.value.ja }}</p>
-        <NuxtLink to="/">{{ completedIndexText.value.ja }}</NuxtLink>
+        <h2>{{ $t('page-contact-completed-heading') }}</h2>
+        <p>{{ $t('page-contact-completed-body') }}</p>
+        <NuxtLink :to="localePath('/')">{{
+          $t('page-contact-completed-index')
+        }}</NuxtLink>
       </div>
     </ValidationObserver>
   </div>
@@ -175,6 +181,7 @@ import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import { getPageContent } from '~/assets/js/pages-fetcher'
 import { postContactValues } from '~/assets/js/contact-fetcher'
 import { createHead } from '~/assets/js/head-creator'
+import { createPageMessage } from '~/assets/js/message-creator'
 import {
   isCheckbox,
   isSelect,
@@ -192,8 +199,13 @@ export default {
     ValidationProvider
   },
 
-  async asyncData({ route }) {
-    const pageContent = await getPageContent(route.name)
+  async asyncData({ app, route }) {
+    const routeName = app.getRouteBaseName()
+    const pageContent = await getPageContent(routeName)
+    const messages = {}
+    for (const locale of app.i18n.locales) {
+      messages[locale] = createPageMessage(locale, pageContent)
+    }
     const formValues = {
       'form-name': 'contact',
       honeypot: '',
@@ -204,7 +216,8 @@ export default {
     }
     return {
       pageContent,
-      formValues
+      formValues,
+      messages
     }
   },
 
@@ -215,58 +228,11 @@ export default {
     }
   },
 
-  computed: {
-    inputFieldErrorRequiredText() {
-      const id = 'input-field-error-required'
-      return this.pageContent.plainText.find((text) => text.id === id)
-    },
-    inputFieldErrorEmailText() {
-      const id = 'input-field-error-email'
-      return this.pageContent.plainText.find((text) => text.id === id)
-    },
-    inputFieldErrorMaxText() {
-      const id = 'input-field-error-max'
-      return this.pageContent.plainText.find((text) => text.id === id)
-    },
-    inputFieldErrorMinText() {
-      const id = 'input-field-error-min'
-      return this.pageContent.plainText.find((text) => text.id === id)
-    },
-    agreementOptionText() {
-      const id = 'page-contact-agreement-option'
-      return this.pageContent.richText.find((text) => text.id === id)
-    },
-    confirmText() {
-      const id = 'page-contact-confirm'
-      return this.pageContent.plainText.find((text) => text.id === id)
-    },
-    editText() {
-      const id = 'page-contact-edit'
-      return this.pageContent.plainText.find((text) => text.id === id)
-    },
-    sendText() {
-      const id = 'page-contact-send'
-      return this.pageContent.plainText.find((text) => text.id === id)
-    },
-    completedHeadingText() {
-      const id = 'page-contact-completed-heading'
-      return this.pageContent.plainText.find((text) => text.id === id)
-    },
-    completedBodyText() {
-      const id = 'page-contact-completed-body'
-      return this.pageContent.plainText.find((text) => text.id === id)
-    },
-    completedIndexText() {
-      const id = 'page-contact-completed-index'
-      return this.pageContent.plainText.find((text) => text.id === id)
-    },
-    inputFieldCheckboxYesText() {
-      const id = 'input-field-checkbox-yes'
-      return this.pageContent.plainText.find((text) => text.id === id)
-    },
-    inputFieldCheckboxNoText() {
-      const id = 'input-field-checkbox-no'
-      return this.pageContent.plainText.find((text) => text.id === id)
+  created() {
+    // Running in fetch causes error in template
+    // Because message ($t) has no fields until running mergeLocaleMessage
+    for (const locale of this.$i18n.locales) {
+      this.$i18n.mergeLocaleMessage(locale, this.messages[locale])
     }
   },
 

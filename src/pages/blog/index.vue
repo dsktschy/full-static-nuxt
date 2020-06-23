@@ -1,7 +1,7 @@
 <script>
 export default {
-  asyncData({ redirect }) {
-    redirect(301, '/blog/page/1')
+  asyncData({ app, redirect }) {
+    redirect(301, app.localePath('/blog/page/1'))
     return {}
   }
 }
