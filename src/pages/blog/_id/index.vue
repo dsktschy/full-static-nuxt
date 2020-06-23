@@ -98,7 +98,7 @@ export default {
 
 <style lang="scss" scoped>
 .page-blog-id {
-  width: 864px;
+  width: 764px;
   margin: 0 auto;
 }
 .featured-image {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page-privacy">
     <h1>{{ $t(pageContent.title.id) }}</h1>
 
     <div v-html="$t('page-privacy-body')" />
@@ -43,3 +43,10 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.page-privacy {
+  width: 764px;
+  margin: 0 auto;
+}
+</style>

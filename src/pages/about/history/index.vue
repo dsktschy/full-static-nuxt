@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page-about-history">
     <h1>{{ $t(pageContent.title.id) }}</h1>
 
     <dl>
@@ -101,3 +101,10 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.page-about-history {
+  width: 764px;
+  margin: 0 auto;
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page-about">
     <h1>{{ $t(pageContent.title.id) }}</h1>
 
     <section>
@@ -130,6 +130,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.page-about {
+  width: 764px;
+  margin: 0 auto;
+}
 .nav-item {
   cursor: pointer;
 }

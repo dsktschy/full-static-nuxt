@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page-contact">
     <h1>{{ $t(pageContent.title.id) }}</h1>
 
     <ValidationObserver v-slot="{ pristine, invalid, handleSubmit }" slim>
@@ -117,13 +117,9 @@
                 {{ $t('input-field-checkbox-no') }}
               </span>
             </template>
-            <span v-else>
-              {{
-                $t(
-                  getOptionLabelText(inputField, formValues[inputField.name]).id
-                )
-              }}
-            </span>
+            <span v-else>{{
+              $t(getOptionLabelText(inputField, formValues[inputField.name]).id)
+            }}</span>
           </template>
         </ValidationProvider>
 
@@ -134,14 +130,17 @@
           class="form-item"
         >
           <template v-if="!confirming">
-            <label class="checkbox">
+            <div class="checkbox">
               <!-- Input that name attribute is omitted, is not shown in Netlify -->
               <input v-model="formValues.agreement" type="checkbox" />
-              <span v-html="$t('page-contact-agreement-option')" />
-            </label>
-            <span v-if="failedRules.is_true">
+              <div
+                ref="agreementOption"
+                v-html="$t('page-contact-agreement-option')"
+              />
+            </div>
+            <div v-if="failedRules.is_true">
               {{ $t('input-field-error-required') }}
-            </span>
+            </div>
           </template>
         </ValidationProvider>
 
@@ -236,6 +235,16 @@ export default {
     }
   },
 
+  mounted() {
+    const elAnchor = this.$refs.agreementOption.querySelector('a')
+    elAnchor.addEventListener('click', this.goToPrivacyPage)
+  },
+
+  beforeDestroy() {
+    const elAnchor = this.$refs.agreementOption.querySelector('a')
+    elAnchor.removeEventListener('click', this.goToPrivacyPage)
+  },
+
   methods: {
     isCheckbox,
     isSelect,
@@ -276,6 +285,11 @@ export default {
       const stringifiedValues = stringify({ ...this.formValues })
       await postContactValues(stringifiedValues)
       this.completed = true
+    },
+
+    goToPrivacyPage(event) {
+      event.preventDefault()
+      this.$router.push(this.localePath('/privacy'))
     }
   },
 
@@ -291,6 +305,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.page-contact {
+  width: 764px;
+  margin: 0 auto;
+}
 .honeypot {
   border: 0;
   padding: 0;

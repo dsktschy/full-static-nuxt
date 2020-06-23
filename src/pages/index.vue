@@ -17,35 +17,39 @@
       </VueAgile>
     </client-only>
 
-    <section>
-      <h2>{{ $t('page-index-about-heading') }}</h2>
-      <p>{{ $t('page-index-about-body') }}</p>
-    </section>
+    <div class="body">
+      <section>
+        <h2>{{ $t('page-index-about-heading') }}</h2>
+        <p>{{ $t('page-index-about-body') }}</p>
+      </section>
 
-    <section>
-      <h2>{{ $t('page-index-blog-heading') }}</h2>
-      <ul>
-        <NuxtLink
-          v-for="postContent of postContentList"
-          :key="postContent.id"
-          :to="localePath(`/blog/${postContent.id}`)"
-          tag="li"
-          class="post-item"
-        >
-          <time :datetime="postContent.createdAt" class="post-item-date">{{
-            convertIsoToDotSeparatedYmd(postContent.createdAt)
-          }}</time>
-          <div class="post-item-category">
-            {{ $t(postContent.category.name.id) }}
-          </div>
-          <h2 class="post-item-title">{{ $t(postContent.title.id) }}</h2>
-        </NuxtLink>
-        <li v-if="!postContentList.length">{{ $t('page-index-blog-none') }}</li>
-      </ul>
-      <NuxtLink :to="localePath('/blog/page/1')">{{
-        $t('page-index-blog-more')
-      }}</NuxtLink>
-    </section>
+      <section>
+        <h2>{{ $t('page-index-blog-heading') }}</h2>
+        <ul>
+          <NuxtLink
+            v-for="postContent of postContentList"
+            :key="postContent.id"
+            :to="localePath(`/blog/${postContent.id}`)"
+            tag="li"
+            class="post-item"
+          >
+            <time :datetime="postContent.createdAt" class="post-item-date">{{
+              convertIsoToDotSeparatedYmd(postContent.createdAt)
+            }}</time>
+            <div class="post-item-category">
+              {{ $t(postContent.category.name.id) }}
+            </div>
+            <h2 class="post-item-title">{{ $t(postContent.title.id) }}</h2>
+          </NuxtLink>
+          <li v-if="!postContentList.length">
+            {{ $t('page-index-blog-none') }}
+          </li>
+        </ul>
+        <NuxtLink :to="localePath('/blog/page/1')">{{
+          $t('page-index-blog-more')
+        }}</NuxtLink>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -138,6 +142,10 @@ export default {
   font-size: 30px;
   font-weight: bold;
   color: #fff;
+}
+.body {
+  width: 764px;
+  margin: 0 auto;
 }
 .post-item {
   display: flex;

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page-blog-page-_index">
     <h1>Page {{ pageIndex }} | {{ $t(pageContent.title.id) }}</h1>
 
     <ul class="category-list">
@@ -123,6 +123,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.page-blog-page-_index {
+  width: 764px;
+  margin: 0 auto;
+}
 .category-list {
   display: flex;
 }
