@@ -11,6 +11,7 @@ import {
   postsPerRequestToPage,
   pagesPerRequestToPage,
   categoriesPerRequest,
+  inputFieldsPerRequest,
   apiGetRequestTimeout,
   apiGetRequestDepth
 } from '../json/variables'
@@ -85,6 +86,18 @@ export function createCategoriesFetcherConfig({ fields, offset, limit } = {}) {
   return {
     ...createGetFetcherConfig(params),
     baseURL: `${process.env.NUXT_ENV_API_URL}/categories`
+  }
+}
+
+export function createInputFieldsFetcherConfig({ fields, offset, limit } = {}) {
+  const params = {
+    fields: fields || 'id,label,name,type,options,rules',
+    offset: offset || 0,
+    limit: limit || inputFieldsPerRequest
+  }
+  return {
+    ...createGetFetcherConfig(params),
+    baseURL: `${process.env.NUXT_ENV_API_URL}/input-fields`
   }
 }
 

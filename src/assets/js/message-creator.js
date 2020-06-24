@@ -28,11 +28,6 @@ export function createPageMessage(locale, pageContent) {
     trySettingProperty(locale, message, plainText)
   for (const richText of pageContent.richText)
     trySettingProperty(locale, message, richText)
-  for (const inputField of pageContent.inputFields) {
-    trySettingProperty(locale, message, inputField.label)
-    for (const option of inputField.options)
-      if (option.label) trySettingProperty(locale, message, option.label)
-  }
   for (const image of pageContent.images)
     if (image.alt) trySettingProperty(locale, message, image.alt)
   return message
@@ -61,6 +56,16 @@ export function createPostsMessage(locale, postContentList) {
 export function createCategoryMessage(locale, categoryContent) {
   const message = {}
   trySettingProperty(locale, message, categoryContent.name)
+  return message
+}
+
+export function createInputFieldsMessage(locale, inputFieldContentList) {
+  const message = {}
+  for (const inputFieldContent of inputFieldContentList) {
+    trySettingProperty(locale, message, inputFieldContent.label)
+    for (const option of inputFieldContent.options)
+      if (option.label) trySettingProperty(locale, message, option.label)
+  }
   return message
 }
 
