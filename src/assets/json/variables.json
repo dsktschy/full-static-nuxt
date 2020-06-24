@@ -1,4 +1,6 @@
 {
+  "locales": ["ja", "en"],
+  "defaultLocale": "ja",
   "postsPerRequestToPage": 10,
   "pagesPerRequestToPage": 10,
   "postsPerRequestToGenerate": 100,

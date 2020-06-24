@@ -1,6 +1,15 @@
-import { postsPerRequestToPage } from '../json/variables'
+import {
+  postsPerRequestToPage,
+  locales,
+  defaultLocale
+} from '../json/variables'
 import { getAllPostContents } from './posts-fetcher'
 import { getAllCategoryContents } from './categories-fetcher'
+
+const localePathList = []
+for (const locale of locales) {
+  localePathList.push(locale === defaultLocale ? '' : `/${locale}`)
+}
 
 function createBlogPostPageRoute(postContent, i, postContentList) {
   const prevPostContent = i ? postContentList[i - 1] : null
@@ -33,7 +42,7 @@ function createCategorizedBlogIndexPageRoute(categoryContent) {
 function createCategorizedBlogPostListPageRoute(postContentList, i) {
   const categoryId = postContentList[0].category.id
   return {
-    route: `/blog/category/${categoryId}/page/${i + 1}/`,
+    route: `/blog/category/${categoryId}/page/${i + 1}`,
     payload: { postContentList }
   }
 }
@@ -89,6 +98,18 @@ function createCategorizedBlogPostListPageRoutes(
   return categorizedBlogPostListPageRoutes
 }
 
+function localizeRoutes(routes) {
+  const localizedRoutes = []
+  for (const route of routes) {
+    for (const localePath of localePathList) {
+      const localizedRoute = { ...route }
+      localizedRoute.route = localePath + localizedRoute.route
+      localizedRoutes.push(localizedRoute)
+    }
+  }
+  return localizedRoutes
+}
+
 export async function createDynamicRoutes() {
   let create, params
   const allPostContents = await getAllPostContents()
@@ -111,10 +132,11 @@ export async function createDynamicRoutes() {
   create = createCategorizedBlogPostListPageRoutes
   params = [allPostContents, allCategoryContents]
   const categorizedBlogPostListPageRoutes = create(...params)
-  return [
+  // Localize routes because are not executed automatically
+  return localizeRoutes([
     ...blogPostPageRoutes,
     ...blogPostListPageRoutes,
     ...categorizedBlogIndexPageRoutes,
     ...categorizedBlogPostListPageRoutes
-  ]
+  ])
 }

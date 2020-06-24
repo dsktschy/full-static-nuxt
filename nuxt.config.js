@@ -1,4 +1,5 @@
 import { config } from 'dotenv'
+import { locales, defaultLocale } from './src/assets/json/variables'
 import { createDynamicRoutes } from './src/assets/js/routes-creator'
 
 config()
@@ -54,8 +55,8 @@ export default {
     [
       'nuxt-i18n',
       {
-        locales: ['ja', 'en'],
-        defaultLocale: 'ja',
+        locales,
+        defaultLocale,
         vueI18n: {
           warnHtmlInMessage: 'off'
         }
