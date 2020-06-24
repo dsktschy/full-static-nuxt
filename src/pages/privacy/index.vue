@@ -34,9 +34,10 @@ export default {
   },
 
   head() {
+    const siteTitle = this.$t(this.$siteDataContent.title.id)
     return createHead(
-      `${this.pageContent.title.value.ja} | ${this.$siteDataContent.title.value.ja}`,
-      this.pageContent.description.value.ja,
+      `${this.$t(this.pageContent.title.id)} | ${siteTitle}`,
+      this.$t(this.pageContent.description.id),
       this.$siteDataContent.ogImage.value.url,
       `${process.env.NUXT_ENV_BASE_URL}${this.$route.path}`
     )

@@ -39,7 +39,9 @@
             <div class="post-item-category">
               {{ $t(postContent.category.name.id) }}
             </div>
-            <h2 class="post-item-title">{{ $t(postContent.title.id) }}</h2>
+            <h2 class="post-item-title">
+              {{ postContent.title[$i18n.locale] }}
+            </h2>
           </NuxtLink>
           <li v-if="!postContentList.length">
             {{ $t('page-index-blog-none') }}

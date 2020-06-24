@@ -40,11 +40,6 @@ export function createPageMessage(locale, pageContent) {
 
 export function createPostMessage(locale, postContent) {
   const message = {}
-  trySettingProperty(locale, message, postContent.title)
-  trySettingProperty(locale, message, postContent.description)
-  if (postContent.featuredImage.alt)
-    trySettingProperty(locale, message, postContent.featuredImage.alt)
-  trySettingProperty(locale, message, postContent.content)
   trySettingProperty(locale, message, postContent.category.name)
   for (const tag of postContent.tags)
     trySettingProperty(locale, message, tag.name)
@@ -59,7 +54,6 @@ export function createPostsMessage(locale, postContentList) {
   const message = {}
   for (const postContent of postContentList) {
     trySettingProperty(locale, message, postContent.category.name)
-    trySettingProperty(locale, message, postContent.title)
   }
   return message
 }

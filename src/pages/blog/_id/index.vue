@@ -1,13 +1,13 @@
 <template>
   <article class="page-blog-id">
-    <h1>{{ $t(postContent.title.id) }}</h1>
+    <h1>{{ postContent.title[$i18n.locale] }}</h1>
 
     <img
-      :src="postContent.featuredImage.value.url"
-      :alt="$t(postContent.title.id)"
+      :src="postContent.featuredImage.url"
+      :alt="postContent.title[$i18n.locale]"
       class="featured-image"
     />
-    <div class="content" v-html="$t(postContent.content.id)" />
+    <div class="content" v-html="postContent.content[$i18n.locale]" />
     <div class="link-list">
       <div class="link-item">
         <NuxtLink
@@ -15,7 +15,7 @@
           :to="localePath(`/blog/${prevPostContent.id}`)"
           tag="h2"
         >
-          {{ $t(prevPostContent.title.id) }}
+          {{ prevPostContent.title[$i18n.locale] }}
         </NuxtLink>
       </div>
       <NuxtLink :to="localePath(`/blog/page/1`)" class="link-item">
@@ -27,7 +27,7 @@
           :to="localePath(`/blog/${nextPostContent.id}`)"
           tag="h2"
         >
-          {{ $t(nextPostContent.title.id) }}
+          {{ nextPostContent.title[$i18n.locale] }}
         </NuxtLink>
       </div>
     </div>
@@ -86,10 +86,11 @@ export default {
   },
 
   head() {
+    const siteTitle = this.$t(this.$siteDataContent.title.id)
     return createHead(
-      `${this.postContent.title.value.ja} | ${this.$siteDataContent.title.value.ja}`,
-      this.postContent.description.value.ja,
-      this.postContent.featuredImage.value.url,
+      `${this.postContent.title[this.$i18n.locale]} | ${siteTitle}`,
+      this.postContent.description[this.$i18n.locale],
+      this.postContent.featuredImage.url,
       `${process.env.NUXT_ENV_BASE_URL}${this.$route.path}`
     )
   }

@@ -31,7 +31,7 @@
         <div class="post-item-category">
           {{ $t(postContent.category.name.id) }}
         </div>
-        <h2 class="post-item-title">{{ $t(postContent.title.id) }}</h2>
+        <h2 class="post-item-title">{{ postContent.title[$i18n.locale] }}</h2>
       </NuxtLink>
       <li v-if="!postContentList.length">{{ $t('page-blog-none') }}</li>
     </ul>
@@ -132,9 +132,11 @@ export default {
   },
 
   head() {
+    const siteTitle = this.$t(this.$siteDataContent.title.id)
+    const categoryName = this.$t(this.categoryContent.name.id)
     return createHead(
-      `Page ${this.pageIndex} - ${this.categoryContent.name.value.ja} | ${this.$siteDataContent.title.value.ja}`,
-      this.pageContent.description.value.ja,
+      `Page ${this.pageIndex} - ${categoryName} | ${siteTitle}`,
+      this.$t(this.pageContent.description.id),
       this.$siteDataContent.ogImage.value.url,
       `${process.env.NUXT_ENV_BASE_URL}${this.$route.path}`
     )
