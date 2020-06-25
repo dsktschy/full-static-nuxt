@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { postsPerRequestToGenerate } from '../json/variables'
+import { postsPerRequestToGenerate, locales } from '../json/variables'
 import { createPostsFetcherConfig } from './fetcher-config-creator'
 
 export async function getPostContent(id) {
@@ -35,6 +35,19 @@ export async function getAllPostContents() {
     allPostContents.push(...postContentList)
   } while (postContentList.length === postsPerRequestToGenerate)
   return allPostContents
+}
+
+export async function getAllPostContentsPerLocale() {
+  const allPostContents = await getAllPostContents()
+  const allPostContentsPerLocale = {}
+  for (const locale of locales) {
+    const postContentsPerLocale = []
+    for (const postContent of allPostContents) {
+      if (locale in postContent.title) postContentsPerLocale.push(postContent)
+    }
+    allPostContentsPerLocale[locale] = postContentsPerLocale
+  }
+  return allPostContentsPerLocale
 }
 
 export async function getTotalPosts({ filters } = {}) {

@@ -3,18 +3,18 @@ import {
   locales,
   defaultLocale
 } from '../json/variables'
-import { getAllPostContents } from './posts-fetcher'
+import { getAllPostContentsPerLocale } from './posts-fetcher'
 import { getAllCategoryContents } from './categories-fetcher'
 
-const localePathList = []
+const localePaths = {}
 for (const locale of locales) {
-  localePathList.push(locale === defaultLocale ? '' : `/${locale}`)
+  localePaths[locale] = locale === defaultLocale ? '' : `/${locale}`
 }
 
 function createBlogPostPageRoute(postContent, i, postContentList) {
   const prevPostContent = i ? postContentList[i - 1] : null
   const nextPostContent =
-    i === postContentList.length - 1 ? postContentList[i + 1] : null
+    i === postContentList.length - 1 ? null : postContentList[i + 1]
   return {
     route: `/blog/${postContent.id}`,
     payload: {
@@ -29,13 +29,6 @@ function createBlogPostListPageRoute(postContentList, i) {
   return {
     route: `/blog/page/${i + 1}`,
     payload: { postContentList }
-  }
-}
-
-function createCategorizedBlogIndexPageRoute(categoryContent) {
-  const categoryId = categoryContent.id
-  return {
-    route: `/blog/category/${categoryId}`
   }
 }
 
@@ -69,10 +62,6 @@ function createBlogPostListPageRoutes(postContentList) {
   )
 }
 
-function createCategorizedBlogIndexPageRoutes(categoryContentList) {
-  return categoryContentList.map(createCategorizedBlogIndexPageRoute)
-}
-
 function createCategorizedBlogPostListPageRoutes(
   postContentList,
   categoryContentList
@@ -93,50 +82,48 @@ function createCategorizedBlogPostListPageRoutes(
       categorizedPostContentList,
       createCategorizedBlogPostListPageRoute
     )
+    // Route for path doesn't have '/page/{n}'
+    if (blogPostListPageRoutes.length) {
+      const route = blogPostListPageRoutes[0].route.replace('/page/1', '')
+      blogPostListPageRoutes.push({ route })
+    }
     categorizedBlogPostListPageRoutes.push(...blogPostListPageRoutes)
   }
   return categorizedBlogPostListPageRoutes
 }
 
-function localizeRoutes(routes) {
-  const localizedRoutes = []
-  for (const route of routes) {
-    for (const localePath of localePathList) {
-      const localizedRoute = { ...route }
-      localizedRoute.route = localePath + localizedRoute.route
-      localizedRoutes.push(localizedRoute)
-    }
-  }
-  return localizedRoutes
-}
-
 export async function createDynamicRoutes() {
   let create, params
-  const allPostContents = await getAllPostContents()
-  create = createBlogPostPageRoutes
-  params = [allPostContents]
-  const blogPostPageRoutes = create(...params)
-  // Show blog post list pages without generating
-  if (process.env.NUXT_ENV_GENERATING_BLOG_POST_LIST_PAGES == null)
-    return blogPostPageRoutes
-  // Generate blog post list pages
-  create = createBlogPostListPageRoutes
-  params = [allPostContents]
-  const blogPostListPageRoutes = create(...params)
-  // Generate categorized blog index pages
-  const allCategoryContents = await getAllCategoryContents()
-  create = createCategorizedBlogIndexPageRoutes
-  params = [allCategoryContents]
-  const categorizedBlogIndexPageRoutes = create(...params)
-  // Generate categorized blog post list pages
-  create = createCategorizedBlogPostListPageRoutes
-  params = [allPostContents, allCategoryContents]
-  const categorizedBlogPostListPageRoutes = create(...params)
-  // Localize routes because are not executed automatically
-  return localizeRoutes([
-    ...blogPostPageRoutes,
-    ...blogPostListPageRoutes,
-    ...categorizedBlogIndexPageRoutes,
-    ...categorizedBlogPostListPageRoutes
-  ])
+  // If flase, blog post list pages are shown with SPA fallback
+  const generatingBlogPostListPages =
+    process.env.NUXT_ENV_GENERATING_BLOG_POST_LIST_PAGES != null
+  /** @type {{ [locale: string]: PostContent[] }} */
+  const allPostContentsPerLocale = await getAllPostContentsPerLocale()
+  const allCategoryContents = generatingBlogPostListPages
+    ? await getAllCategoryContents()
+    : []
+  /** @type { NuxtConfigurationGenerateRoute[] } */
+  const localizedPageRoutes = []
+  for (const locale of locales) {
+    // Generate blog post pages
+    create = createBlogPostPageRoutes
+    params = [allPostContentsPerLocale[locale]]
+    const pageRoutes = create(...params)
+    if (generatingBlogPostListPages) {
+      // Generate blog post list pages
+      create = createBlogPostListPageRoutes
+      params = [allPostContentsPerLocale[locale]]
+      pageRoutes.push(...create(...params))
+      // Generate categorized blog post list pages
+      create = createCategorizedBlogPostListPageRoutes
+      params = [allPostContentsPerLocale[locale], allCategoryContents]
+      pageRoutes.push(...create(...params))
+    }
+    // Make route property localized
+    for (const pageRoute of pageRoutes) {
+      const route = localePaths[locale] + pageRoute.route
+      localizedPageRoutes.push({ ...pageRoute, ...{ route } })
+    }
+  }
+  return localizedPageRoutes
 }
