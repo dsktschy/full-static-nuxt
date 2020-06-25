@@ -27,7 +27,7 @@ export async function getPageContentList({
 
 export async function getAllPageContentsForNav() {
   const limit = pagesPerRequestToGenerate
-  const fields = 'id,path,title'
+  const fields = 'id,path,title.id'
   const allPageContentsForNav = []
   let pageContentList = []
   do {

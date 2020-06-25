@@ -55,11 +55,6 @@ import { getPostContentList } from '~/assets/js/posts-fetcher'
 import { getCategoryContent } from '~/assets/js/categories-fetcher'
 import { createHead } from '~/assets/js/head-creator'
 import { convertIsoToDotSeparatedYmd } from '~/assets/js/common-utility'
-import {
-  createPageMessage,
-  createPostsMessage,
-  createCategoryMessage
-} from '~/assets/js/message-creator'
 
 export default {
   components: {
@@ -84,26 +79,17 @@ export default {
     const pageIndex = parseInt(params.index, 10)
     const offset = postsPerRequestToPage * (pageIndex - 1)
     const filters = `category[equals]${categoryId}`
-    const fields = 'id,createdAt,title,category'
+    const fields = 'id,createdAt,title,category.name'
     const options = { offset, filters, fields }
     const postContentList =
       payload?.postContentList || (await getPostContentList(options))
     const categoryContent = await getCategoryContent(categoryId)
-    const messages = {}
-    for (const locale of app.i18n.locales) {
-      messages[locale.code] = {
-        ...createPageMessage(locale.code, pageContent),
-        ...createPostsMessage(locale.code, postContentList),
-        ...createCategoryMessage(locale.code, categoryContent)
-      }
-    }
     return {
       pageContent,
       postContentList,
       categoryContent,
       categoryId,
-      pageIndex,
-      messages
+      pageIndex
     }
   },
 
@@ -111,14 +97,6 @@ export default {
     maxIndex() {
       const totalPosts = this.$totalCategorizedPosts[this.categoryId]
       return Math.ceil(totalPosts / postsPerRequestToPage)
-    }
-  },
-
-  created() {
-    // Running in fetch causes error in template
-    // Because message ($t) has no fields until running mergeLocaleMessage
-    for (const locale of this.$i18n.locales) {
-      this.$i18n.mergeLocaleMessage(locale.code, this.messages[locale.code])
     }
   },
 

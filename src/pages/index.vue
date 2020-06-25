@@ -60,10 +60,6 @@ import { VueAgile } from 'vue-agile'
 import { getPageContent } from '~/assets/js/pages-fetcher'
 import { getPostContentList } from '~/assets/js/posts-fetcher'
 import { createHead } from '~/assets/js/head-creator'
-import {
-  createPageMessage,
-  createPostsMessage
-} from '~/assets/js/message-creator'
 import { convertIsoToDotSeparatedYmd } from '~/assets/js/common-utility'
 
 export default {
@@ -74,19 +70,11 @@ export default {
   async asyncData({ app, route }) {
     const routeName = app.getRouteBaseName()
     const pageContent = await getPageContent(routeName)
-    const options = { fields: 'id,createdAt,title,category' }
+    const options = { fields: 'id,createdAt,title,category.name' }
     const postContentList = await getPostContentList(options)
-    const messages = {}
-    for (const locale of app.i18n.locales) {
-      messages[locale.code] = {
-        ...createPageMessage(locale.code, pageContent),
-        ...createPostsMessage(locale.code, postContentList)
-      }
-    }
     return {
       pageContent,
-      postContentList,
-      messages
+      postContentList
     }
   },
 
@@ -104,14 +92,6 @@ export default {
         )
       }
       return sortedSliderImageList
-    }
-  },
-
-  created() {
-    // Running in fetch causes error in template
-    // Because message ($t) has no fields until running mergeLocaleMessage
-    for (const locale of this.$i18n.locales) {
-      this.$i18n.mergeLocaleMessage(locale.code, this.messages[locale.code])
     }
   },
 

@@ -85,16 +85,6 @@ export default {
         (pageContent) => pageContent.path === '/contact'
       )
     }
-  },
-
-  created() {
-    for (const locale of this.$i18n.locales) {
-      const message = {
-        ...this.$siteDataMessages[locale.code],
-        ...this.$allPageMessagesForNav[locale.code]
-      }
-      this.$i18n.mergeLocaleMessage(locale.code, message)
-    }
   }
 }
 </script>

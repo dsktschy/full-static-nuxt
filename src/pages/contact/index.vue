@@ -191,10 +191,6 @@ import { getAllInputFieldContents } from '~/assets/js/input-fields-fetcher'
 import { postContactValues } from '~/assets/js/contact-fetcher'
 import { createHead } from '~/assets/js/head-creator'
 import {
-  createPageMessage,
-  createInputFieldsMessage
-} from '~/assets/js/message-creator'
-import {
   isCheckbox,
   isSelect,
   isTextarea,
@@ -215,13 +211,6 @@ export default {
     const routeName = app.getRouteBaseName()
     const pageContent = await getPageContent(routeName)
     const allInputFieldContents = await getAllInputFieldContents()
-    const messages = {}
-    for (const locale of app.i18n.locales) {
-      messages[locale.code] = {
-        ...createPageMessage(locale.code, pageContent),
-        ...createInputFieldsMessage(locale.code, allInputFieldContents)
-      }
-    }
     const formValues = {
       'form-name': 'contact',
       honeypot: '',
@@ -233,8 +222,7 @@ export default {
     return {
       pageContent,
       allInputFieldContents,
-      formValues,
-      messages
+      formValues
     }
   },
 
@@ -242,14 +230,6 @@ export default {
     return {
       confirming: false,
       completed: false
-    }
-  },
-
-  created() {
-    // Running in fetch causes error in template
-    // Because message ($t) has no fields until running mergeLocaleMessage
-    for (const locale of this.$i18n.locales) {
-      this.$i18n.mergeLocaleMessage(locale.code, this.messages[locale.code])
     }
   },
 

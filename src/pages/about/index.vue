@@ -16,14 +16,7 @@
           :key="companyTermText.id"
         >
           <dt>{{ $t(companyTermText.id) }}</dt>
-          <template
-            v-if="isRichEditor(companyDefinitionTextList[i].value.fieldId)"
-          >
-            <dd v-html="$t(companyDefinitionTextList[i].id)" />
-          </template>
-          <template v-else>
-            <dd>{{ $t(companyDefinitionTextList[i].id) }}</dd>
-          </template>
+          <dd v-html="$t(companyDefinitionTextList[i].id)" />
         </div>
       </dl>
     </section>
@@ -36,7 +29,7 @@
         tag="li"
         class="nav-item"
       >
-        {{ lowerPageContent.title.value.ja }}
+        {{ $t(lowerPageContent.title.id) }}
       </NuxtLink>
     </ul>
   </div>
@@ -45,9 +38,7 @@
 <script>
 import { getPageContent } from '~/assets/js/pages-fetcher'
 import { createHead } from '~/assets/js/head-creator'
-import { createPageMessage } from '~/assets/js/message-creator'
 import { padWithZero } from '~/assets/js/common-utility'
-import { richEditorFieldId } from '~/assets/json/variables'
 
 export default {
   async asyncData({ app, route }) {
@@ -56,14 +47,9 @@ export default {
     const lowerPageContentList = app.$allPageContentsForNav.filter(
       (pageContent) => pageContent.path.startsWith('/about/')
     )
-    const messages = {}
-    for (const locale of app.i18n.locales) {
-      messages[locale.code] = createPageMessage(locale.code, pageContent)
-    }
     return {
       pageContent,
-      lowerPageContentList,
-      messages
+      lowerPageContentList
     }
   },
 
@@ -103,19 +89,8 @@ export default {
     }
   },
 
-  created() {
-    // Running in fetch causes error in template
-    // Because message ($t) has no fields until running mergeLocaleMessage
-    for (const locale of this.$i18n.locales) {
-      this.$i18n.mergeLocaleMessage(locale.code, this.messages[locale.code])
-    }
-  },
-
   methods: {
-    padWithZero,
-    isRichEditor(fieldId) {
-      return fieldId === richEditorFieldId
-    }
+    padWithZero
   },
 
   head() {

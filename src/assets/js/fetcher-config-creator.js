@@ -12,6 +12,8 @@ import {
   pagesPerRequestToPage,
   categoriesPerRequest,
   inputFieldsPerRequest,
+  plainTextPerRequest,
+  richTextPerRequest,
   apiGetRequestTimeout,
   apiGetRequestDepth
 } from '../json/variables'
@@ -29,7 +31,7 @@ function createGetFetcherConfig(params) {
 
 export function createSiteDataFetcherConfig({ fields } = {}) {
   const params = {
-    fields: fields || 'title,description,ogImage'
+    fields: fields || 'title.id,description.id,ogImage.value'
   }
   return {
     ...createGetFetcherConfig(params),
@@ -46,7 +48,7 @@ export function createPagesFetcherConfig({
   const params = {
     fields:
       fields ||
-      'id,title,description,ogImage,plainText,richText,images,inputFields',
+      'id,title.id,description.id,ogImage.value,plainText.id,richText.id,images',
     offset: offset || 0,
     limit: limit || pagesPerRequestToPage,
     filters: filters || null
@@ -66,7 +68,7 @@ export function createPostsFetcherConfig({
   const params = {
     fields:
       fields ||
-      'id,createdAt,title,description,featuredImage,content,category,tags,author',
+      'id,createdAt,title,description,featuredImage,content,category,tags.name,author',
     offset: offset || 0,
     limit: limit || postsPerRequestToPage,
     filters: filters || null
@@ -79,7 +81,7 @@ export function createPostsFetcherConfig({
 
 export function createCategoriesFetcherConfig({ fields, offset, limit } = {}) {
   const params = {
-    fields: fields || 'id,name',
+    fields: fields || 'id,name.id',
     offset: offset || 0,
     limit: limit || categoriesPerRequest
   }
@@ -91,13 +93,37 @@ export function createCategoriesFetcherConfig({ fields, offset, limit } = {}) {
 
 export function createInputFieldsFetcherConfig({ fields, offset, limit } = {}) {
   const params = {
-    fields: fields || 'id,label,name,type,options,rules',
+    fields: fields || 'id,label.id,name,type,options,rules',
     offset: offset || 0,
     limit: limit || inputFieldsPerRequest
   }
   return {
     ...createGetFetcherConfig(params),
     baseURL: `${process.env.NUXT_ENV_API_URL}/input-fields`
+  }
+}
+
+export function createPlainTextFetcherConfig({ fields, offset, limit } = {}) {
+  const params = {
+    fields: fields || 'id,value',
+    offset: offset || 0,
+    limit: limit || plainTextPerRequest
+  }
+  return {
+    ...createGetFetcherConfig(params),
+    baseURL: `${process.env.NUXT_ENV_API_URL}/plain-text`
+  }
+}
+
+export function createRichTextFetcherConfig({ fields, offset, limit } = {}) {
+  const params = {
+    fields: fields || 'id,value',
+    offset: offset || 0,
+    limit: limit || richTextPerRequest
+  }
+  return {
+    ...createGetFetcherConfig(params),
+    baseURL: `${process.env.NUXT_ENV_API_URL}/rich-text`
   }
 }
 

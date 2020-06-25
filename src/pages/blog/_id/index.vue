@@ -35,21 +35,14 @@
 </template>
 
 <script>
-import { getPageContent } from '~/assets/js/pages-fetcher'
 import { getPostContent, getPostContentList } from '~/assets/js/posts-fetcher'
 import { createHead } from '~/assets/js/head-creator'
-import {
-  createPageMessage,
-  createPostMessage,
-  createPostsMessage
-} from '~/assets/js/message-creator'
 
 export default {
   async asyncData({ app, payload, params }) {
-    const pageContent = await getPageContent('blog')
     const postContent =
       payload?.postContent || (await getPostContent(params.id))
-    const fields = 'id,createdAt,title,category'
+    const fields = 'id,createdAt,title,category.name'
     const limit = 1
     const createdAt = postContent.createdAt
     const prevFilters = `createdAt[less_than]${createdAt}`
@@ -58,30 +51,10 @@ export default {
     const prevPostContent = (await getPostContentList(prevOptions))[0]
     const nextOptions = { fields, limit, filters: nextFilters }
     const nextPostContent = (await getPostContentList(nextOptions))[0]
-    const adjacentPostContents = []
-    if (prevPostContent) adjacentPostContents.push(prevPostContent)
-    if (nextPostContent) adjacentPostContents.push(nextPostContent)
-    const messages = {}
-    for (const locale of app.i18n.locales) {
-      messages[locale.code] = {
-        ...createPageMessage(locale.code, pageContent),
-        ...createPostMessage(locale.code, postContent),
-        ...createPostsMessage(locale.code, adjacentPostContents)
-      }
-    }
     return {
       postContent,
       prevPostContent,
-      nextPostContent,
-      messages
-    }
-  },
-
-  created() {
-    // Running in fetch causes error in template
-    // Because message ($t) has no fields until running mergeLocaleMessage
-    for (const locale of this.$i18n.locales) {
-      this.$i18n.mergeLocaleMessage(locale.code, this.messages[locale.code])
+      nextPostContent
     }
   },
 

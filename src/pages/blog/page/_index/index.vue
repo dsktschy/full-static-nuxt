@@ -51,10 +51,6 @@ import { getPageContent } from '~/assets/js/pages-fetcher'
 import { getPostContentList } from '~/assets/js/posts-fetcher'
 import { createHead } from '~/assets/js/head-creator'
 import { convertIsoToDotSeparatedYmd } from '~/assets/js/common-utility'
-import {
-  createPageMessage,
-  createPostsMessage
-} from '~/assets/js/message-creator'
 
 export default {
   components: {
@@ -71,36 +67,20 @@ export default {
     const pageContent = await getPageContent('/blog')
     const pageIndex = parseInt(params.index, 10)
     const offset = postsPerRequestToPage * (pageIndex - 1)
-    const fields = 'id,createdAt,title,category'
+    const fields = 'id,createdAt,title,category.name'
     const options = { offset, fields }
     const postContentList =
       payload?.postContentList || (await getPostContentList(options))
-    const messages = {}
-    for (const locale of app.i18n.locales) {
-      messages[locale.code] = {
-        ...createPageMessage(locale.code, pageContent),
-        ...createPostsMessage(locale.code, postContentList)
-      }
-    }
     return {
       pageContent,
       postContentList,
-      pageIndex,
-      messages
+      pageIndex
     }
   },
 
   computed: {
     maxIndex() {
       return Math.ceil(this.$totalPosts / postsPerRequestToPage)
-    }
-  },
-
-  created() {
-    // Running in fetch causes error in template
-    // Because message ($t) has no fields until running mergeLocaleMessage
-    for (const locale of this.$i18n.locales) {
-      this.$i18n.mergeLocaleMessage(locale.code, this.messages[locale.code])
     }
   },
 

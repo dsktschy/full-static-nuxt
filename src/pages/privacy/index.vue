@@ -9,27 +9,13 @@
 <script>
 import { getPageContent } from '~/assets/js/pages-fetcher'
 import { createHead } from '~/assets/js/head-creator'
-import { createPageMessage } from '~/assets/js/message-creator'
 
 export default {
   async asyncData({ app, route }) {
     const routeName = app.getRouteBaseName()
     const pageContent = await getPageContent(routeName)
-    const messages = {}
-    for (const locale of app.i18n.locales) {
-      messages[locale.code] = createPageMessage(locale.code, pageContent)
-    }
     return {
-      pageContent,
-      messages
-    }
-  },
-
-  created() {
-    // Running in fetch causes error in template
-    // Because message ($t) has no fields until running mergeLocaleMessage
-    for (const locale of this.$i18n.locales) {
-      this.$i18n.mergeLocaleMessage(locale.code, this.messages[locale.code])
+      pageContent
     }
   },
 

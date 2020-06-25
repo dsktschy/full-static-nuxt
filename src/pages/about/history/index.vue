@@ -8,14 +8,7 @@
         :key="historyTermText.id"
       >
         <dt>{{ $t(historyTermText.id) }}</dt>
-        <template
-          v-if="isRichEditor(historyDefinitionTextList[i].value.fieldId)"
-        >
-          <dd v-html="$t(historyDefinitionTextList[i].id)" />
-        </template>
-        <template v-else>
-          <dd>{{ $t(historyDefinitionTextList[i].id) }}</dd>
-        </template>
+        <dd v-html="$t(historyDefinitionTextList[i].id)" />
       </div>
     </dl>
   </div>
@@ -24,20 +17,13 @@
 <script>
 import { getPageContent } from '~/assets/js/pages-fetcher'
 import { createHead } from '~/assets/js/head-creator'
-import { createPageMessage } from '~/assets/js/message-creator'
-import { richEditorFieldId } from '~/assets/json/variables'
 
 export default {
   async asyncData({ app, route }) {
     const routeName = app.getRouteBaseName()
     const pageContent = await getPageContent(routeName)
-    const messages = {}
-    for (const locale of app.i18n.locales) {
-      messages[locale.code] = createPageMessage(locale.code, pageContent)
-    }
     return {
-      pageContent,
-      messages
+      pageContent
     }
   },
 
@@ -74,20 +60,6 @@ export default {
         )
       }
       return sortedHistoryDefinitionTextList
-    }
-  },
-
-  created() {
-    // Running in fetch causes error in template
-    // Because message ($t) has no fields until running mergeLocaleMessage
-    for (const locale of this.$i18n.locales) {
-      this.$i18n.mergeLocaleMessage(locale.code, this.messages[locale.code])
-    }
-  },
-
-  methods: {
-    isRichEditor(fieldId) {
-      return fieldId === richEditorFieldId
     }
   },
 
