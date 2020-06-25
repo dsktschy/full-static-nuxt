@@ -8,7 +8,8 @@ import { getAllCategoryContents } from './categories-fetcher'
 
 const localePaths = {}
 for (const locale of locales) {
-  localePaths[locale] = locale === defaultLocale ? '' : `/${locale}`
+  localePaths[locale.code] =
+    locale.code === defaultLocale ? '' : `/${locale.code}`
 }
 
 function createBlogPostPageRoute(postContent, i, postContentList) {
@@ -107,21 +108,21 @@ export async function createDynamicRoutes() {
   for (const locale of locales) {
     // Generate blog post pages
     create = createBlogPostPageRoutes
-    params = [allPostContentsPerLocale[locale]]
+    params = [allPostContentsPerLocale[locale.code]]
     const pageRoutes = create(...params)
     if (generatingBlogPostListPages) {
       // Generate blog post list pages
       create = createBlogPostListPageRoutes
-      params = [allPostContentsPerLocale[locale]]
+      params = [allPostContentsPerLocale[locale.code]]
       pageRoutes.push(...create(...params))
       // Generate categorized blog post list pages
       create = createCategorizedBlogPostListPageRoutes
-      params = [allPostContentsPerLocale[locale], allCategoryContents]
+      params = [allPostContentsPerLocale[locale.code], allCategoryContents]
       pageRoutes.push(...create(...params))
     }
     // Make route property localized
     for (const pageRoute of pageRoutes) {
-      const route = localePaths[locale] + pageRoute.route
+      const route = localePaths[locale.code] + pageRoute.route
       localizedPageRoutes.push({ ...pageRoute, ...{ route } })
     }
   }

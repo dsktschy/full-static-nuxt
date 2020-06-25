@@ -55,6 +55,8 @@ export default {
     [
       'nuxt-i18n',
       {
+        lazy: true,
+        langDir: 'lang/',
         locales,
         defaultLocale,
         vueI18n: {

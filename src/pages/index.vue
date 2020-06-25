@@ -78,9 +78,9 @@ export default {
     const postContentList = await getPostContentList(options)
     const messages = {}
     for (const locale of app.i18n.locales) {
-      messages[locale] = {
-        ...createPageMessage(locale, pageContent),
-        ...createPostsMessage(locale, postContentList)
+      messages[locale.code] = {
+        ...createPageMessage(locale.code, pageContent),
+        ...createPostsMessage(locale.code, postContentList)
       }
     }
     return {
@@ -111,7 +111,7 @@ export default {
     // Running in fetch causes error in template
     // Because message ($t) has no fields until running mergeLocaleMessage
     for (const locale of this.$i18n.locales) {
-      this.$i18n.mergeLocaleMessage(locale, this.messages[locale])
+      this.$i18n.mergeLocaleMessage(locale.code, this.messages[locale.code])
     }
   },
 

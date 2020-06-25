@@ -43,9 +43,10 @@ export async function getAllPostContentsPerLocale() {
   for (const locale of locales) {
     const postContentsPerLocale = []
     for (const postContent of allPostContents) {
-      if (locale in postContent.title) postContentsPerLocale.push(postContent)
+      if (locale.code in postContent.title)
+        postContentsPerLocale.push(postContent)
     }
-    allPostContentsPerLocale[locale] = postContentsPerLocale
+    allPostContentsPerLocale[locale.code] = postContentsPerLocale
   }
   return allPostContentsPerLocale
 }

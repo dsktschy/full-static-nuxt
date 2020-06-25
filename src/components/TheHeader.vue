@@ -36,12 +36,12 @@
     <ul class="language">
       <NuxtLink
         v-for="locale of $i18n.locales"
-        :key="locale"
-        :to="switchLocalePath(locale)"
+        :key="locale.code"
+        :to="switchLocalePath(locale.code)"
         tag="li"
         class="language-item"
       >
-        {{ locale }}
+        {{ locale.code }}
       </NuxtLink>
     </ul>
   </header>
@@ -79,10 +79,10 @@ export default {
   created() {
     for (const locale of this.$i18n.locales) {
       const message = {
-        ...this.$siteDataMessages[locale],
-        ...this.$allPageMessagesForNav[locale]
+        ...this.$siteDataMessages[locale.code],
+        ...this.$allPageMessagesForNav[locale.code]
       }
-      this.$i18n.mergeLocaleMessage(locale, message)
+      this.$i18n.mergeLocaleMessage(locale.code, message)
     }
   }
 }

@@ -7,7 +7,10 @@ export default async ({ app }, inject) => {
 
   const messages = {}
   for (const locale of app.i18n.locales) {
-    messages[locale] = createAllCategoriesMessage(locale, allCategoryContents)
+    messages[locale.code] = createAllCategoriesMessage(
+      locale.code,
+      allCategoryContents
+    )
   }
   inject('allCategoryMessages', messages)
 }

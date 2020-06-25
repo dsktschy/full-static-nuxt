@@ -7,7 +7,7 @@ export default async ({ app }, inject) => {
 
   const messages = {}
   for (const locale of app.i18n.locales) {
-    messages[locale] = createSiteDataMessage(locale, siteDataContent)
+    messages[locale.code] = createSiteDataMessage(locale.code, siteDataContent)
   }
   inject('siteDataMessages', messages)
 }

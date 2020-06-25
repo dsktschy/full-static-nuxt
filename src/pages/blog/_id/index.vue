@@ -63,10 +63,10 @@ export default {
     if (nextPostContent) adjacentPostContents.push(nextPostContent)
     const messages = {}
     for (const locale of app.i18n.locales) {
-      messages[locale] = {
-        ...createPageMessage(locale, pageContent),
-        ...createPostMessage(locale, postContent),
-        ...createPostsMessage(locale, adjacentPostContents)
+      messages[locale.code] = {
+        ...createPageMessage(locale.code, pageContent),
+        ...createPostMessage(locale.code, postContent),
+        ...createPostsMessage(locale.code, adjacentPostContents)
       }
     }
     return {
@@ -81,7 +81,7 @@ export default {
     // Running in fetch causes error in template
     // Because message ($t) has no fields until running mergeLocaleMessage
     for (const locale of this.$i18n.locales) {
-      this.$i18n.mergeLocaleMessage(locale, this.messages[locale])
+      this.$i18n.mergeLocaleMessage(locale.code, this.messages[locale.code])
     }
   },
 

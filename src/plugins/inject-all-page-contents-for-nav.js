@@ -7,8 +7,8 @@ export default async ({ app }, inject) => {
 
   const messages = {}
   for (const locale of app.i18n.locales) {
-    messages[locale] = createAllPagesMessageForNav(
-      locale,
+    messages[locale.code] = createAllPagesMessageForNav(
+      locale.code,
       allPageContentsForNav
     )
   }
