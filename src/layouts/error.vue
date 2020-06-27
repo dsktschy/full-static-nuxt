@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1 v-if="error.statusCode === 404">Page not found</h1>
-    <h1 v-else>An error occurred</h1>
+    <h1 v-if="error.statusCode === 404">{{ $t('error-404-title') }}</h1>
+    <h1 v-else>{{ $t('error-default-title') }}</h1>
   </div>
 </template>
 
