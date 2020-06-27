@@ -56,6 +56,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { VueAgile } from 'vue-agile'
 import { getPageContent } from '~/assets/js/pages-fetcher'
 import { getPostContentList } from '~/assets/js/posts-fetcher'
@@ -79,6 +80,8 @@ export default {
   },
 
   computed: {
+    ...mapState(['siteDataContent']),
+
     sliderImageList() {
       const prefix = 'page-index-slider-'
       const sliderImageList = this.pageContent.images.filter((image) =>
@@ -103,7 +106,7 @@ export default {
     return createHead(
       this.$t('site-data-title'),
       this.$t('site-data-description'),
-      this.$siteDataContent.ogImage.value.url,
+      this.siteDataContent.ogImage.value.url,
       `${process.env.NUXT_ENV_BASE_URL}${this.$route.path}`
     )
   }

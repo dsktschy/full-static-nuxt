@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { getPostContent, getPostContentList } from '~/assets/js/posts-fetcher'
 import { createHead } from '~/assets/js/head-creator'
 
@@ -58,8 +59,12 @@ export default {
     }
   },
 
+  computed: {
+    ...mapState(['siteDataContent'])
+  },
+
   head() {
-    const siteTitle = this.$t(this.$siteDataContent.title.id)
+    const siteTitle = this.$t(this.siteDataContent.title.id)
     return createHead(
       `${this.postContent.title[this.$i18n.locale]} | ${siteTitle}`,
       this.postContent.description[this.$i18n.locale],

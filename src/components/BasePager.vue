@@ -33,12 +33,15 @@ export default {
     prevIndex() {
       return this.currentIndex - 1
     },
+
     nextIndex() {
       return this.currentIndex + 1
     },
+
     prevDisabled() {
       return this.currentIndex <= 1 || this.maxIndex === 0
     },
+
     nextDisabled() {
       return this.currentIndex >= this.maxIndex || this.maxIndex === 0
     }

@@ -48,32 +48,20 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   props: {
     titleTag: { type: String, default: 'div' }
   },
 
   computed: {
-    aboutPageContent() {
-      return this.$allPageContentsForNav.find(
-        (pageContent) => pageContent.path === '/about'
-      )
-    },
-    aboutLowerPageContentList() {
-      return this.$allPageContentsForNav.filter((pageContent) =>
-        pageContent.path.startsWith('/about/')
-      )
-    },
-    blogPageContent() {
-      return this.$allPageContentsForNav.find(
-        (pageContent) => pageContent.path === '/blog'
-      )
-    },
-    contactPageContent() {
-      return this.$allPageContentsForNav.find(
-        (pageContent) => pageContent.path === '/contact'
-      )
-    }
+    ...mapGetters([
+      'aboutPageContent',
+      'blogPageContent',
+      'contactPageContent',
+      'aboutLowerPageContentList'
+    ])
   }
 }
 </script>

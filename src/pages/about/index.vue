@@ -36,15 +36,16 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { getPageContent } from '~/assets/js/pages-fetcher'
 import { createHead } from '~/assets/js/head-creator'
 import { padWithZero } from '~/assets/js/common-utility'
 
 export default {
-  async asyncData({ app, route }) {
+  async asyncData({ app, route, store }) {
     const routeName = app.getRouteBaseName()
     const pageContent = await getPageContent(routeName)
-    const lowerPageContentList = app.$allPageContentsForNav.filter(
+    const lowerPageContentList = store.state.allPageContentsForNav.filter(
       (pageContent) => pageContent.path.startsWith('/about/')
     )
     return {
@@ -54,6 +55,8 @@ export default {
   },
 
   computed: {
+    ...mapState(['siteDataContent']),
+
     companyTermTextList() {
       const prefix = 'page-about-company-body-term-'
       const companyTermTextList = this.pageContent.plainText.filter((text) =>
@@ -68,6 +71,7 @@ export default {
       }
       return sortedCompanyTermTextList
     },
+
     companyDefinitionTextList() {
       const prefix = 'page-about-company-body-definition-'
       const companyDefinitionTextList = [
@@ -94,11 +98,11 @@ export default {
   },
 
   head() {
-    const siteTitle = this.$t(this.$siteDataContent.title.id)
+    const siteTitle = this.$t(this.siteDataContent.title.id)
     return createHead(
       `${this.$t(this.pageContent.title.id)} | ${siteTitle}`,
       this.$t(this.pageContent.description.id),
-      this.$siteDataContent.ogImage.value.url,
+      this.siteDataContent.ogImage.value.url,
       `${process.env.NUXT_ENV_BASE_URL}${this.$route.path}`
     )
   }

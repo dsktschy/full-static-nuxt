@@ -7,7 +7,7 @@
 
     <ul class="category-list">
       <NuxtLink
-        v-for="categoryContent of $allCategoryContents"
+        v-for="categoryContent of allCategoryContents"
         :key="categoryContent.id"
         :to="localePath(`/blog/category/${categoryContent.id}/page/1`)"
         tag="li"
@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import BasePager from '~/components/BasePager'
 import { postsPerRequestToPage } from '~/assets/json/variables'
 import { getPageContent } from '~/assets/js/pages-fetcher'
@@ -61,14 +62,14 @@ export default {
     BasePager
   },
 
-  validate({ app, params }) {
+  validate({ app, params, store }) {
     const categoryId = params.id
-    const categoryValid = app.$allCategoryContents.some(
+    const categoryValid = store.state.allCategoryContents.some(
       (categoryContent) => categoryContent.id === categoryId
     )
     if (!categoryValid) return false
     const pageIndex = parseInt(params.index, 10)
-    const totalPosts = app.$totalCategorizedPosts[categoryId]
+    const totalPosts = store.state.totalCategorizedPosts[categoryId]
     const maxIndex = Math.ceil(totalPosts / postsPerRequestToPage)
     return pageIndex > 0 && (pageIndex <= maxIndex || maxIndex === 0)
   },
@@ -94,14 +95,21 @@ export default {
   },
 
   computed: {
+    ...mapState([
+      'siteDataContent',
+      'totalCategorizedPosts',
+      'allCategoryContents'
+    ]),
+
     maxIndex() {
-      const totalPosts = this.$totalCategorizedPosts[this.categoryId]
+      const totalPosts = this.totalCategorizedPosts[this.categoryId]
       return Math.ceil(totalPosts / postsPerRequestToPage)
     }
   },
 
   methods: {
     convertIsoToDotSeparatedYmd,
+
     goToBlogPage({ index: pageIndex }) {
       this.$router.push(
         this.localePath(`/blog/category/${this.categoryId}/page/${pageIndex}`)
@@ -110,12 +118,12 @@ export default {
   },
 
   head() {
-    const siteTitle = this.$t(this.$siteDataContent.title.id)
+    const siteTitle = this.$t(this.siteDataContent.title.id)
     const categoryName = this.$t(this.categoryContent.name.id)
     return createHead(
       `Page ${this.pageIndex} - ${categoryName} | ${siteTitle}`,
       this.$t(this.pageContent.description.id),
-      this.$siteDataContent.ogImage.value.url,
+      this.siteDataContent.ogImage.value.url,
       `${process.env.NUXT_ENV_BASE_URL}${this.$route.path}`
     )
   }

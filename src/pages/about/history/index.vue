@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { getPageContent } from '~/assets/js/pages-fetcher'
 import { createHead } from '~/assets/js/head-creator'
 
@@ -28,6 +29,8 @@ export default {
   },
 
   computed: {
+    ...mapState(['siteDataContent']),
+
     historyTermTextList() {
       const prefix = 'page-about-history-body-term-'
       const historyTermTextList = this.pageContent.plainText.filter((text) =>
@@ -42,6 +45,7 @@ export default {
       }
       return sortedHistoryTermTextList
     },
+
     historyDefinitionTextList() {
       const prefix = 'page-about-history-body-definition-'
       const historyDefinitionTextList = [
@@ -64,11 +68,11 @@ export default {
   },
 
   head() {
-    const siteTitle = this.$t(this.$siteDataContent.title.id)
+    const siteTitle = this.$t(this.siteDataContent.title.id)
     return createHead(
       `${this.$t(this.pageContent.title.id)} | ${siteTitle}`,
       this.$t(this.pageContent.description.id),
-      this.$siteDataContent.ogImage.value.url,
+      this.siteDataContent.ogImage.value.url,
       `${process.env.NUXT_ENV_BASE_URL}${this.$route.path}`
     )
   }

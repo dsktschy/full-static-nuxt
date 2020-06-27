@@ -29,13 +29,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [
-    '~/plugins/inject-site-data-content',
-    '~/plugins/inject-all-category-contents',
-    '~/plugins/inject-all-page-contents-for-nav',
-    '~/plugins/inject-total-posts',
-    '~/plugins/initialize-vee-validate'
-  ],
+  plugins: ['~/plugins/initialize-vee-validate'],
   /*
    ** Nuxt.js dev-modules
    */

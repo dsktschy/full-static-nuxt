@@ -4,7 +4,7 @@
 
     <ul class="category-list">
       <NuxtLink
-        v-for="categoryContent of $allCategoryContents"
+        v-for="categoryContent of allCategoryContents"
         :key="categoryContent.id"
         :to="localePath(`/blog/category/${categoryContent.id}/page/1`)"
         tag="li"
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import BasePager from '~/components/BasePager'
 import { postsPerRequestToPage } from '~/assets/json/variables'
 import { getPageContent } from '~/assets/js/pages-fetcher'
@@ -57,9 +58,9 @@ export default {
     BasePager
   },
 
-  validate({ app, params }) {
+  validate({ app, params, store }) {
     const pageIndex = parseInt(params.index, 10)
-    const maxIndex = Math.ceil(app.$totalPosts / postsPerRequestToPage)
+    const maxIndex = Math.ceil(store.state.totalPosts / postsPerRequestToPage)
     return pageIndex > 0 && (pageIndex <= maxIndex || maxIndex === 0)
   },
 
@@ -79,24 +80,27 @@ export default {
   },
 
   computed: {
+    ...mapState(['siteDataContent', 'totalPosts', 'allCategoryContents']),
+
     maxIndex() {
-      return Math.ceil(this.$totalPosts / postsPerRequestToPage)
+      return Math.ceil(this.totalPosts / postsPerRequestToPage)
     }
   },
 
   methods: {
     convertIsoToDotSeparatedYmd,
+
     goToBlogPage({ index: pageIndex }) {
       this.$router.push(this.localePath(`/blog/page/${pageIndex}`))
     }
   },
 
   head() {
-    const siteTitle = this.$t(this.$siteDataContent.title.id)
+    const siteTitle = this.$t(this.siteDataContent.title.id)
     return createHead(
       `Page ${this.pageIndex} | ${siteTitle}`,
       this.$t(this.pageContent.description.id),
-      this.$siteDataContent.ogImage.value.url,
+      this.siteDataContent.ogImage.value.url,
       `${process.env.NUXT_ENV_BASE_URL}${this.$route.path}`
     )
   }
