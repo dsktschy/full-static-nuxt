@@ -45,11 +45,15 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import BasePager from '~/components/BasePager'
 import { postsPerRequestToPage } from '~/assets/json/variables'
-import { getPageContent } from '~/assets/js/pages-fetcher'
-import { getPostContentList } from '~/assets/js/posts-fetcher'
+import { getSiteDataContent } from '~/assets/js/site-data-fetcher'
+import {
+  getAllPageContentsForNav,
+  getPageContent
+} from '~/assets/js/pages-fetcher'
+import { getTotalPosts, getPostContentList } from '~/assets/js/posts-fetcher'
+import { getAllCategoryContents } from '~/assets/js/categories-fetcher'
 import { createHead } from '~/assets/js/head-creator'
 import { convertIsoToDotSeparatedYmd } from '~/assets/js/common-utility'
 
@@ -58,33 +62,49 @@ export default {
     BasePager
   },
 
-  validate({ app, params, store }) {
+  async asyncData({ app, params, payload, error }) {
+    // Validation
     const pageIndex = parseInt(params.index, 10)
-    const maxIndex = Math.ceil(store.state.totalPosts / postsPerRequestToPage)
-    return pageIndex > 0 && (pageIndex <= maxIndex || maxIndex === 0)
-  },
+    const totalPosts = await getTotalPosts()
+    const maxIndex = Math.ceil(totalPosts / postsPerRequestToPage)
+    if (pageIndex < 1 || (pageIndex > maxIndex && maxIndex !== 0)) {
+      error({ statusCode: 404, message: '' })
+      return {}
+    }
 
-  async asyncData({ app, route, params, payload }) {
+    // For global
+    const allPageContentsForNav = await getAllPageContentsForNav()
+
+    // For page
+    const siteDataContent = await getSiteDataContent()
     const pageContent = await getPageContent('/blog')
-    const pageIndex = parseInt(params.index, 10)
     const offset = postsPerRequestToPage * (pageIndex - 1)
     const fields = 'id,createdAt,title,category.name'
     const options = { offset, fields }
     const postContentList =
       payload?.postContentList || (await getPostContentList(options))
+    const allCategoryContents = await getAllCategoryContents()
+
     return {
+      totalPosts,
+      siteDataContent,
+      allPageContentsForNav,
       pageContent,
       postContentList,
-      pageIndex
+      pageIndex,
+      allCategoryContents
     }
   },
 
   computed: {
-    ...mapState(['siteDataContent', 'totalPosts', 'allCategoryContents']),
-
     maxIndex() {
       return Math.ceil(this.totalPosts / postsPerRequestToPage)
     }
+  },
+
+  created() {
+    // Assign value to global
+    this.$global.allPageContentsForNav = this.allPageContentsForNav
   },
 
   methods: {

@@ -36,27 +36,36 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { getPageContent } from '~/assets/js/pages-fetcher'
+import { getSiteDataContent } from '~/assets/js/site-data-fetcher'
+import {
+  getAllPageContentsForNav,
+  getPageContent
+} from '~/assets/js/pages-fetcher'
 import { createHead } from '~/assets/js/head-creator'
 import { padWithZero } from '~/assets/js/common-utility'
 
 export default {
-  async asyncData({ app, route, store }) {
+  async asyncData({ app }) {
+    // For global
+    const allPageContentsForNav = await getAllPageContentsForNav()
+
+    // For page
+    const siteDataContent = await getSiteDataContent()
     const routeName = app.getRouteBaseName()
     const pageContent = await getPageContent(routeName)
-    const lowerPageContentList = store.state.allPageContentsForNav.filter(
-      (pageContent) => pageContent.path.startsWith('/about/')
+    const lowerPageContentList = allPageContentsForNav.filter((pageContent) =>
+      pageContent.path.startsWith('/about/')
     )
+
     return {
+      siteDataContent,
+      allPageContentsForNav,
       pageContent,
       lowerPageContentList
     }
   },
 
   computed: {
-    ...mapState(['siteDataContent']),
-
     companyTermTextList() {
       const prefix = 'page-about-company-body-term-'
       const companyTermTextList = this.pageContent.plainText.filter((text) =>
@@ -91,6 +100,11 @@ export default {
       }
       return sortedCompanyDefinitionTextList
     }
+  },
+
+  created() {
+    // Assign value to global
+    this.$global.allPageContentsForNav = this.allPageContentsForNav
   },
 
   methods: {

@@ -185,9 +185,12 @@
 
 <script>
 import { stringify } from 'querystring'
-import { mapState } from 'vuex'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
-import { getPageContent } from '~/assets/js/pages-fetcher'
+import { getSiteDataContent } from '~/assets/js/site-data-fetcher'
+import {
+  getAllPageContentsForNav,
+  getPageContent
+} from '~/assets/js/pages-fetcher'
 import { getAllInputFieldContents } from '~/assets/js/input-fields-fetcher'
 import { postContactValues } from '~/assets/js/contact-fetcher'
 import { createHead } from '~/assets/js/head-creator'
@@ -208,7 +211,12 @@ export default {
     ValidationProvider
   },
 
-  async asyncData({ app, route }) {
+  async asyncData({ app }) {
+    // For global
+    const allPageContentsForNav = await getAllPageContentsForNav()
+
+    // For page
+    const siteDataContent = await getSiteDataContent()
     const routeName = app.getRouteBaseName()
     const pageContent = await getPageContent(routeName)
     const allInputFieldContents = await getAllInputFieldContents()
@@ -220,7 +228,10 @@ export default {
     for (const inputFieldContent of allInputFieldContents) {
       formValues[inputFieldContent.name] = createDefaultValue(inputFieldContent)
     }
+
     return {
+      siteDataContent,
+      allPageContentsForNav,
       pageContent,
       allInputFieldContents,
       formValues
@@ -234,8 +245,9 @@ export default {
     }
   },
 
-  computed: {
-    ...mapState(['siteDataContent'])
+  created() {
+    // Assign value to global
+    this.$global.allPageContentsForNav = this.allPageContentsForNav
   },
 
   mounted() {

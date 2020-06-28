@@ -48,12 +48,18 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import BasePager from '~/components/BasePager'
 import { postsPerRequestToPage } from '~/assets/json/variables'
-import { getPageContent } from '~/assets/js/pages-fetcher'
-import { getPostContentList } from '~/assets/js/posts-fetcher'
-import { getCategoryContent } from '~/assets/js/categories-fetcher'
+import { getSiteDataContent } from '~/assets/js/site-data-fetcher'
+import {
+  getAllPageContentsForNav,
+  getPageContent
+} from '~/assets/js/pages-fetcher'
+import { getTotalPosts, getPostContentList } from '~/assets/js/posts-fetcher'
+import {
+  getAllCategoryContents,
+  getCategoryContent
+} from '~/assets/js/categories-fetcher'
 import { createHead } from '~/assets/js/head-creator'
 import { convertIsoToDotSeparatedYmd } from '~/assets/js/common-utility'
 
@@ -62,22 +68,37 @@ export default {
     BasePager
   },
 
-  validate({ app, params, store }) {
+  async asyncData({ app, params, payload, error }) {
+    // Validation
     const categoryId = params.id
-    const categoryValid = store.state.allCategoryContents.some(
+    const allCategoryContents = await getAllCategoryContents()
+    const categoryValid = allCategoryContents.some(
       (categoryContent) => categoryContent.id === categoryId
     )
-    if (!categoryValid) return false
+    if (!categoryValid) {
+      error({ statusCode: 404, message: '' })
+      return {}
+    }
     const pageIndex = parseInt(params.index, 10)
-    const totalPosts = store.state.totalCategorizedPosts[categoryId]
-    const maxIndex = Math.ceil(totalPosts / postsPerRequestToPage)
-    return pageIndex > 0 && (pageIndex <= maxIndex || maxIndex === 0)
-  },
+    const totalCategorizedPosts = {}
+    for (const categoryContent of allCategoryContents) {
+      const filters = `category[equals]${categoryContent.id}`
+      const options = { filters }
+      totalCategorizedPosts[categoryContent.id] = await getTotalPosts(options)
+    }
+    const totalCategorizedPost = totalCategorizedPosts[categoryId]
+    const maxIndex = Math.ceil(totalCategorizedPost / postsPerRequestToPage)
+    if (pageIndex < 1 || (pageIndex > maxIndex && maxIndex !== 0)) {
+      error({ statusCode: 404, message: '' })
+      return {}
+    }
 
-  async asyncData({ app, route, params, payload }) {
+    // For global
+    const allPageContentsForNav = await getAllPageContentsForNav()
+
+    // For page
+    const siteDataContent = await getSiteDataContent()
     const pageContent = await getPageContent('/blog')
-    const categoryId = params.id
-    const pageIndex = parseInt(params.index, 10)
     const offset = postsPerRequestToPage * (pageIndex - 1)
     const filters = `category[equals]${categoryId}`
     const fields = 'id,createdAt,title,category.name'
@@ -85,26 +106,23 @@ export default {
     const postContentList =
       payload?.postContentList || (await getPostContentList(options))
     const categoryContent = await getCategoryContent(categoryId)
+
     return {
+      allCategoryContents,
+      siteDataContent,
+      allPageContentsForNav,
       pageContent,
       postContentList,
       categoryContent,
       categoryId,
-      pageIndex
+      pageIndex,
+      maxIndex
     }
   },
 
-  computed: {
-    ...mapState([
-      'siteDataContent',
-      'totalCategorizedPosts',
-      'allCategoryContents'
-    ]),
-
-    maxIndex() {
-      const totalPosts = this.totalCategorizedPosts[this.categoryId]
-      return Math.ceil(totalPosts / postsPerRequestToPage)
-    }
+  created() {
+    // Assign value to global
+    this.$global.allPageContentsForNav = this.allPageContentsForNav
   },
 
   methods: {

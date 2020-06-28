@@ -1,8 +1,12 @@
 <template>
   <div>
-    <TheHeader :title-tag="headerTag" />
+    <!--
+    When accessed page that doesn't exist as first page,
+    $global has no value, because payload.js doesn't exist too
+    -->
+    <TheHeader v-if="!$global.showingError" :title-tag="headerTag" />
     <nuxt />
-    <TheFooter />
+    <TheFooter v-if="!$global.showingError" />
   </div>
 </template>
 

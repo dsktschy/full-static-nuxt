@@ -15,22 +15,31 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { getPageContent } from '~/assets/js/pages-fetcher'
+import { getSiteDataContent } from '~/assets/js/site-data-fetcher'
+import {
+  getAllPageContentsForNav,
+  getPageContent
+} from '~/assets/js/pages-fetcher'
 import { createHead } from '~/assets/js/head-creator'
 
 export default {
-  async asyncData({ app, route }) {
+  async asyncData({ app }) {
+    // For global
+    const allPageContentsForNav = await getAllPageContentsForNav()
+
+    // For page
+    const siteDataContent = await getSiteDataContent()
     const routeName = app.getRouteBaseName()
     const pageContent = await getPageContent(routeName)
+
     return {
+      siteDataContent,
+      allPageContentsForNav,
       pageContent
     }
   },
 
   computed: {
-    ...mapState(['siteDataContent']),
-
     historyTermTextList() {
       const prefix = 'page-about-history-body-term-'
       const historyTermTextList = this.pageContent.plainText.filter((text) =>
@@ -65,6 +74,11 @@ export default {
       }
       return sortedHistoryDefinitionTextList
     }
+  },
+
+  created() {
+    // Assign value to global
+    this.$global.allPageContentsForNav = this.allPageContentsForNav
   },
 
   head() {

@@ -35,12 +35,26 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { getSiteDataContent } from '~/assets/js/site-data-fetcher'
+import { getAllPageContentsForNav } from '~/assets/js/pages-fetcher'
 import { getPostContent, getPostContentList } from '~/assets/js/posts-fetcher'
 import { createHead } from '~/assets/js/head-creator'
 
 export default {
-  async asyncData({ app, payload, params }) {
+  async asyncData({ app, payload, params, error, isDev }) {
+    // Validation
+    // If requested path has a generated static HTML file, asyncData is not run on client
+    // So 404 error, if asyncData is run on client
+    if (!isDev && process.client) {
+      error({ statusCode: 404, message: '' })
+      return {}
+    }
+
+    // For global
+    const allPageContentsForNav = await getAllPageContentsForNav()
+
+    // For page
+    const siteDataContent = await getSiteDataContent()
     const postContent =
       payload?.postContent || (await getPostContent(params.id))
     const fields = 'id,createdAt,title,category.name'
@@ -52,15 +66,19 @@ export default {
     const prevPostContent = (await getPostContentList(prevOptions))[0]
     const nextOptions = { fields, limit, filters: nextFilters }
     const nextPostContent = (await getPostContentList(nextOptions))[0]
+
     return {
+      siteDataContent,
+      allPageContentsForNav,
       postContent,
       prevPostContent,
       nextPostContent
     }
   },
 
-  computed: {
-    ...mapState(['siteDataContent'])
+  created() {
+    // Assign value to global
+    this.$global.allPageContentsForNav = this.allPageContentsForNav
   },
 
   head() {

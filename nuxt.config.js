@@ -29,7 +29,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/plugins/initialize-vee-validate'],
+  plugins: ['~/plugins/initialize-vee-validate', '~/plugins/inject-global'],
   /*
    ** Nuxt.js dev-modules
    */

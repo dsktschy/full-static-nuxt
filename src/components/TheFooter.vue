@@ -4,7 +4,7 @@
       {{ $t('site-data-title') }}
     </NuxtLink>
 
-    <ul class="nav">
+    <ul v-if="showingNav" class="nav">
       <li class="nav-item">
         <NuxtLink :to="localePath(aboutPageContent.path)">
           {{ $t(aboutPageContent.title.id) }}
@@ -63,16 +63,39 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
   computed: {
-    ...mapGetters([
-      'aboutPageContent',
-      'blogPageContent',
-      'contactPageContent',
-      'aboutLowerPageContentList'
-    ])
+    showingNav() {
+      return (
+        this.aboutPageContent != null &&
+        this.blogPageContent != null &&
+        this.contactPageContent != null
+      )
+    },
+
+    aboutPageContent() {
+      return this.$global.allPageContentsForNav.find(
+        (pageContent) => pageContent.path === '/about'
+      )
+    },
+
+    blogPageContent(state) {
+      return this.$global.allPageContentsForNav.find(
+        (pageContent) => pageContent.path === '/blog'
+      )
+    },
+
+    contactPageContent(state) {
+      return this.$global.allPageContentsForNav.find(
+        (pageContent) => pageContent.path === '/contact'
+      )
+    },
+
+    aboutLowerPageContentList(state) {
+      return this.$global.allPageContentsForNav.filter((pageContent) =>
+        pageContent.path.startsWith('/about/')
+      )
+    }
   }
 }
 </script>

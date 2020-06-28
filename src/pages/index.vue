@@ -56,9 +56,12 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import { VueAgile } from 'vue-agile'
-import { getPageContent } from '~/assets/js/pages-fetcher'
+import { getSiteDataContent } from '~/assets/js/site-data-fetcher'
+import {
+  getAllPageContentsForNav,
+  getPageContent
+} from '~/assets/js/pages-fetcher'
 import { getPostContentList } from '~/assets/js/posts-fetcher'
 import { createHead } from '~/assets/js/head-creator'
 import { convertIsoToDotSeparatedYmd } from '~/assets/js/common-utility'
@@ -68,20 +71,26 @@ export default {
     VueAgile
   },
 
-  async asyncData({ app, route }) {
+  async asyncData({ app }) {
+    // For global
+    const allPageContentsForNav = await getAllPageContentsForNav()
+
+    // For page
+    const siteDataContent = await getSiteDataContent()
     const routeName = app.getRouteBaseName()
     const pageContent = await getPageContent(routeName)
     const options = { fields: 'id,createdAt,title,category.name' }
     const postContentList = await getPostContentList(options)
+
     return {
+      siteDataContent,
+      allPageContentsForNav,
       pageContent,
       postContentList
     }
   },
 
   computed: {
-    ...mapState(['siteDataContent']),
-
     sliderImageList() {
       const prefix = 'page-index-slider-'
       const sliderImageList = this.pageContent.images.filter((image) =>
@@ -96,6 +105,11 @@ export default {
       }
       return sortedSliderImageList
     }
+  },
+
+  created() {
+    // Assign value to global
+    this.$global.allPageContentsForNav = this.allPageContentsForNav
   },
 
   methods: {
