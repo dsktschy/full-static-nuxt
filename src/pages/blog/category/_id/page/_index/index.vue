@@ -1,13 +1,13 @@
 <template>
   <div class="page-blog-category-_id-page-_index">
     <h1>
-      Page {{ pageIndex }} - {{ $t(categoryContent.name.id) }} |
+      Page {{ currentIndex }} - {{ $t(currentCategoryContent.name.id) }} |
       {{ $t(pageContent.title.id) }}
     </h1>
 
     <ul class="category-list">
       <NuxtLink
-        v-for="categoryContent of allCategoryContents"
+        v-for="categoryContent of allCurrentLocaleCategoryContents"
         :key="categoryContent.id"
         :to="localePath(`/blog/category/${categoryContent.id}/page/1`)"
         tag="li"
@@ -38,7 +38,7 @@
 
     <BasePager
       v-if="maxIndex"
-      :current-index="pageIndex"
+      :current-index="currentIndex"
       :max-index="maxIndex"
       class="pager"
       @click-prev="goToBlogPage"
@@ -55,11 +55,11 @@ import {
   getAllPageContentsForNav,
   getPageContent
 } from '~/assets/js/pages-fetcher'
-import { getTotalPosts, getPostContentList } from '~/assets/js/posts-fetcher'
 import {
-  getAllCategoryContents,
-  getCategoryContent
-} from '~/assets/js/categories-fetcher'
+  getTotalPostsPerLocale,
+  getPostContentList
+} from '~/assets/js/posts-fetcher'
+import { getAllCategoryContents } from '~/assets/js/categories-fetcher'
 import { createHead } from '~/assets/js/head-creator'
 import { convertIsoToDotSeparatedYmd } from '~/assets/js/common-utility'
 
@@ -72,23 +72,28 @@ export default {
     // Validation
     const categoryId = params.id
     const allCategoryContents = await getAllCategoryContents()
-    const categoryValid = allCategoryContents.some(
-      (categoryContent) => categoryContent.id === categoryId
-    )
-    if (!categoryValid) {
-      error({ statusCode: 404, message: '' })
-      return {}
-    }
-    const pageIndex = parseInt(params.index, 10)
-    const totalCategorizedPosts = {}
+    const allCurrentLocaleCategoryContents = []
+    let currentCategoryContent = null
+    let totalCurrentLocaleCategorizedPosts = 0
     for (const categoryContent of allCategoryContents) {
-      const filters = `category[equals]${categoryContent.id}`
-      const options = { filters }
-      totalCategorizedPosts[categoryContent.id] = await getTotalPosts(options)
+      if (categoryContent.id === categoryId)
+        currentCategoryContent = categoryContent
+      const categorizedTotalPostsPerLocale = await getTotalPostsPerLocale({
+        filters: `category[equals]${categoryContent.id}`
+      })
+      const totalPosts = categorizedTotalPostsPerLocale[app.i18n.locale]
+      if (!totalPosts) continue
+      if (categoryContent.id === categoryId)
+        totalCurrentLocaleCategorizedPosts = totalPosts
+      allCurrentLocaleCategoryContents.push(categoryContent)
     }
-    const totalCategorizedPost = totalCategorizedPosts[categoryId]
-    const maxIndex = Math.ceil(totalCategorizedPost / postsPerRequestToPage)
-    if (pageIndex < 1 || (pageIndex > maxIndex && maxIndex !== 0)) {
+    const currentIndex = parseInt(params.index, 10)
+    const maxIndex = Math.ceil(
+      totalCurrentLocaleCategorizedPosts / postsPerRequestToPage
+    )
+    const currentIndexValid =
+      currentIndex > 0 && (currentIndex <= maxIndex || maxIndex === 0)
+    if (!totalCurrentLocaleCategorizedPosts || !currentIndexValid) {
       error({ statusCode: 404, message: '' })
       return {}
     }
@@ -99,24 +104,23 @@ export default {
     // For page
     const siteDataContent = await getSiteDataContent()
     const pageContent = await getPageContent('/blog')
-    const offset = postsPerRequestToPage * (pageIndex - 1)
+    const offset = postsPerRequestToPage * (currentIndex - 1)
     const filters = `category[equals]${categoryId}`
     const fields = 'id,createdAt,title,category.name'
     const options = { offset, filters, fields }
     const postContentList =
       payload?.postContentList || (await getPostContentList(options))
-    const categoryContent = await getCategoryContent(categoryId)
 
     return {
-      allCategoryContents,
-      siteDataContent,
-      allPageContentsForNav,
-      pageContent,
-      postContentList,
-      categoryContent,
       categoryId,
-      pageIndex,
-      maxIndex
+      allCurrentLocaleCategoryContents,
+      currentCategoryContent,
+      currentIndex,
+      maxIndex,
+      allPageContentsForNav,
+      siteDataContent,
+      pageContent,
+      postContentList
     }
   },
 
@@ -128,18 +132,20 @@ export default {
   methods: {
     convertIsoToDotSeparatedYmd,
 
-    goToBlogPage({ index: pageIndex }) {
+    goToBlogPage({ index: currentIndex }) {
       this.$router.push(
-        this.localePath(`/blog/category/${this.categoryId}/page/${pageIndex}`)
+        this.localePath(
+          `/blog/category/${this.categoryId}/page/${currentIndex}`
+        )
       )
     }
   },
 
   head() {
     const siteTitle = this.$t(this.siteDataContent.title.id)
-    const categoryName = this.$t(this.categoryContent.name.id)
+    const categoryName = this.$t(this.currentCategoryContent.name.id)
     return createHead(
-      `Page ${this.pageIndex} - ${categoryName} | ${siteTitle}`,
+      `Page ${this.currentIndex} - ${categoryName} | ${siteTitle}`,
       this.$t(this.pageContent.description.id),
       this.siteDataContent.ogImage.value.url,
       `${process.env.NUXT_ENV_BASE_URL}${this.$route.path}`
