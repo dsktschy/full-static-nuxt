@@ -24,8 +24,8 @@
           v-for="inputFieldContent of allInputFieldContents"
           v-slot="{ failedRules }"
           :key="inputFieldContent.id"
-          :rules="getValidationProviderRules(inputFieldContent)"
-          :tag="getValidationProviderTag(inputFieldContent)"
+          :rules="createValidationProviderRules(inputFieldContent)"
+          :tag="createValidationProviderTag(inputFieldContent)"
           class="form-item"
         >
           <span>{{ $t(inputFieldContent.label.id) }}</span>
@@ -123,7 +123,7 @@
             </template>
             <span v-else>{{
               $t(
-                getOptionLabelText(
+                createOptionLabelText(
                   inputFieldContent,
                   formValues[inputFieldContent.name]
                 ).id
@@ -264,12 +264,12 @@ export default {
     isTextOrTextarea,
     isSingleOptionCheckbox,
 
-    getValidationProviderTag(inputFieldContent) {
+    createValidationProviderTag(inputFieldContent) {
       const type = inputFieldContent.type
       return ['radio', 'checkbox'].includes(type) ? 'div' : 'label'
     },
 
-    getValidationProviderRules(inputFieldContent) {
+    createValidationProviderRules(inputFieldContent) {
       const rules = inputFieldContent.rules
       if (!rules) return ''
       const ruleList = []
@@ -280,7 +280,7 @@ export default {
       return ruleList.join('|')
     },
 
-    getOptionLabelText(inputFieldContent, formValue) {
+    createOptionLabelText(inputFieldContent, formValue) {
       const option = inputFieldContent.options.find(
         (option) => option.value === formValue
       )
