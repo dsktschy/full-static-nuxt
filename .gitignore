@@ -88,3 +88,6 @@ sw.*
 
 # Vim swap files
 *.swp
+
+# Payload json file for development mode
+src/assets/json/payload

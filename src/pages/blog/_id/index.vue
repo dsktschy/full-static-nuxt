@@ -37,11 +37,10 @@
 <script>
 import { getSiteDataContent } from '~/assets/js/site-data-fetcher'
 import { getAllPageContentsForNav } from '~/assets/js/pages-fetcher'
-import { getPostContent, getPostContentList } from '~/assets/js/posts-fetcher'
 import { createHead } from '~/assets/js/head-creator'
 
 export default {
-  async asyncData({ app, payload, params, error, isDev }) {
+  async asyncData({ app, payload, params, isDev, error }) {
     // Validation
     // If requested path has a generated static HTML file, asyncData is not run on client
     // So 404 error, if asyncData is run on client
@@ -55,17 +54,11 @@ export default {
 
     // For page
     const siteDataContent = await getSiteDataContent()
-    const postContent =
-      payload?.postContent || (await getPostContent(params.id))
-    const fields = 'id,createdAt,title,category.name'
-    const limit = 1
-    const createdAt = postContent.createdAt
-    const prevFilters = `createdAt[less_than]${createdAt}`
-    const nextFilters = `createdAt[greater_than]${createdAt}`
-    const prevOptions = { fields, limit, filters: prevFilters }
-    const prevPostContent = (await getPostContentList(prevOptions))[0]
-    const nextOptions = { fields, limit, filters: nextFilters }
-    const nextPostContent = (await getPostContentList(nextOptions))[0]
+    const { postContent, prevPostContent, nextPostContent } =
+      payload ||
+      (await import(
+        `~/assets/json/payload/${app.i18n.locale}-blog-post-page-payload.json`
+      ))
 
     return {
       siteDataContent,

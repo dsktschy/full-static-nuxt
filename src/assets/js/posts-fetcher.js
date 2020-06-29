@@ -2,17 +2,6 @@ import axios from 'axios'
 import { postsPerRequestToGenerate, locales } from '../json/variables'
 import { createPostsFetcherConfig } from './fetcher-config-creator'
 
-export async function getPostContent(id) {
-  if (!id) {
-    const error = new Error('Page ID to request is missing.')
-    return Promise.reject(error)
-  }
-  const config = createPostsFetcherConfig()
-  const response = await axios.get(id, config)
-  if (!response.data) throw new Error('API response is invalid.')
-  return response.data
-}
-
 export async function getPostContentList({
   fields,
   offset,
@@ -25,20 +14,20 @@ export async function getPostContentList({
   return response.data.contents
 }
 
-export async function getAllPostContents({ filters } = {}) {
+export async function getAllPostContents() {
   const allPostContents = []
   let postContentList = []
   do {
     const offset = allPostContents.length
-    const options = { limit: postsPerRequestToGenerate, offset, filters }
+    const options = { limit: postsPerRequestToGenerate, offset }
     postContentList = await getPostContentList(options)
     allPostContents.push(...postContentList)
   } while (postContentList.length === postsPerRequestToGenerate)
   return allPostContents
 }
 
-export async function getAllPostContentsPerLocale({ filters } = {}) {
-  const allPostContents = await getAllPostContents({ filters })
+export async function getAllPostContentsPerLocale() {
+  const allPostContents = await getAllPostContents()
   const allPostContentsPerLocale = {}
   for (const locale of locales) {
     const postContentList = []
@@ -48,17 +37,4 @@ export async function getAllPostContentsPerLocale({ filters } = {}) {
     allPostContentsPerLocale[locale.code] = postContentList
   }
   return allPostContentsPerLocale
-}
-
-export async function getTotalPostsPerLocale({ filters } = {}) {
-  const allPostContentsPerLocale = await getAllPostContentsPerLocale({
-    fields: 'id',
-    filters
-  })
-  const totalPostsPerLocale = {}
-  for (const locale of locales) {
-    totalPostsPerLocale[locale.code] =
-      allPostContentsPerLocale[locale.code].length
-  }
-  return totalPostsPerLocale
 }

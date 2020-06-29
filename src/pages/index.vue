@@ -62,7 +62,6 @@ import {
   getAllPageContentsForNav,
   getPageContent
 } from '~/assets/js/pages-fetcher'
-import { getPostContentList } from '~/assets/js/posts-fetcher'
 import { createHead } from '~/assets/js/head-creator'
 import { convertIsoToDotSeparatedYmd } from '~/assets/js/common-utility'
 
@@ -71,7 +70,7 @@ export default {
     VueAgile
   },
 
-  async asyncData({ app }) {
+  async asyncData({ app, payload }) {
     // For global
     const allPageContentsForNav = await getAllPageContentsForNav()
 
@@ -79,8 +78,11 @@ export default {
     const siteDataContent = await getSiteDataContent()
     const routeName = app.getRouteBaseName()
     const pageContent = await getPageContent(routeName)
-    const options = { fields: 'id,createdAt,title,category.name' }
-    const postContentList = await getPostContentList(options)
+    const { postContentList } =
+      payload ||
+      (await import(
+        `~/assets/json/payload/${app.i18n.locale}-blog-index-page-payload.json`
+      ))
 
     return {
       siteDataContent,

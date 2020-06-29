@@ -7,7 +7,7 @@
 
     <ul class="category-list">
       <NuxtLink
-        v-for="categoryContent of allCurrentLocaleCategoryContents"
+        v-for="categoryContent of allLocalizedCategoryContents"
         :key="categoryContent.id"
         :to="localePath(`/blog/category/${categoryContent.id}/page/1`)"
         tag="li"
@@ -49,17 +49,11 @@
 
 <script>
 import BasePager from '~/components/BasePager'
-import { postsPerRequestToPage } from '~/assets/json/variables'
 import { getSiteDataContent } from '~/assets/js/site-data-fetcher'
 import {
   getAllPageContentsForNav,
   getPageContent
 } from '~/assets/js/pages-fetcher'
-import {
-  getTotalPostsPerLocale,
-  getPostContentList
-} from '~/assets/js/posts-fetcher'
-import { getAllCategoryContents } from '~/assets/js/categories-fetcher'
 import { createHead } from '~/assets/js/head-creator'
 import { convertIsoToDotSeparatedYmd } from '~/assets/js/common-utility'
 
@@ -68,32 +62,28 @@ export default {
     BasePager
   },
 
-  async asyncData({ app, params, payload, error }) {
+  async asyncData({ app, params, payload, isDev, error }) {
     // Validation
-    const categoryId = params.id
-    const allCategoryContents = await getAllCategoryContents()
-    const allCurrentLocaleCategoryContents = []
-    let currentCategoryContent = null
-    let totalCurrentLocaleCategorizedPosts = 0
-    for (const categoryContent of allCategoryContents) {
-      if (categoryContent.id === categoryId)
-        currentCategoryContent = categoryContent
-      const categorizedTotalPostsPerLocale = await getTotalPostsPerLocale({
-        filters: `category[equals]${categoryContent.id}`
-      })
-      const totalPosts = categorizedTotalPostsPerLocale[app.i18n.locale]
-      if (!totalPosts) continue
-      if (categoryContent.id === categoryId)
-        totalCurrentLocaleCategorizedPosts = totalPosts
-      allCurrentLocaleCategoryContents.push(categoryContent)
+    // If requested path has a generated static HTML file, asyncData is not run on client
+    // So 404 error, if asyncData is run on client
+    if (!isDev && process.client) {
+      error({ statusCode: 404, message: '' })
+      return {}
     }
+
+    const {
+      postContentList,
+      maxLocalizedCategorizedPageIndex: maxIndex,
+      allLocalizedCategoryContents,
+      categoryContent: currentCategoryContent
+    } =
+      payload ||
+      (await import(
+        `~/assets/json/payload/${app.i18n.locale}-blog-categorized-index-page-payload.json`
+      ))
+
     const currentIndex = parseInt(params.index, 10)
-    const maxIndex = Math.ceil(
-      totalCurrentLocaleCategorizedPosts / postsPerRequestToPage
-    )
-    const currentIndexValid =
-      currentIndex > 0 && (currentIndex <= maxIndex || maxIndex === 0)
-    if (!totalCurrentLocaleCategorizedPosts || !currentIndexValid) {
+    if (currentIndex < 1 || currentIndex > maxIndex) {
       error({ statusCode: 404, message: '' })
       return {}
     }
@@ -104,23 +94,18 @@ export default {
     // For page
     const siteDataContent = await getSiteDataContent()
     const pageContent = await getPageContent('/blog')
-    const offset = postsPerRequestToPage * (currentIndex - 1)
-    const filters = `category[equals]${categoryId}`
-    const fields = 'id,createdAt,title,category.name'
-    const options = { offset, filters, fields }
-    const postContentList =
-      payload?.postContentList || (await getPostContentList(options))
+    const categoryId = params.id
 
     return {
-      categoryId,
-      allCurrentLocaleCategoryContents,
+      postContentList,
+      maxIndex,
+      allLocalizedCategoryContents,
       currentCategoryContent,
       currentIndex,
-      maxIndex,
       allPageContentsForNav,
       siteDataContent,
       pageContent,
-      postContentList
+      categoryId
     }
   },
 
