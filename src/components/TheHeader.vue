@@ -37,7 +37,7 @@
       <NuxtLink
         v-for="locale of $i18n.locales"
         :key="locale.code"
-        :to="switchLocalePath(locale.code)"
+        :to="createLanguageLink(locale.code)"
         tag="li"
         class="language-item"
       >
@@ -84,6 +84,16 @@ export default {
       return this.$global.allPageContentsForNav.filter((pageContent) =>
         pageContent.path.startsWith('/about/')
       )
+    }
+  },
+
+  methods: {
+    createLanguageLink(localeCode) {
+      return localeCode === this.$i18n.locale
+        ? this.$route.path
+        : localeCode === this.$i18n.defaultLocale
+        ? '/'
+        : `/${localeCode}`
     }
   }
 }
