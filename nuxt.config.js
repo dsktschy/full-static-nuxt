@@ -1,5 +1,6 @@
 import { config } from 'dotenv'
-import { locales, defaultLocale } from './src/assets/json/variables'
+import { langDir, locales, defaultLocale } from './src/assets/json/variables'
+import { createMessages } from './src/assets/js/messages-creator'
 import { createDynamicRoutes } from './src/assets/js/routes-creator'
 
 config()
@@ -50,7 +51,7 @@ export default {
       'nuxt-i18n',
       {
         lazy: true,
-        langDir: 'lang/',
+        langDir,
         locales,
         defaultLocale,
         vueI18n: {
@@ -80,8 +81,13 @@ export default {
    ** Generating configuration
    */
   generate: {
-    // Generate dynamic routes
-    routes: createDynamicRoutes,
+    async routes() {
+      // Generate languale files
+      await createMessages()
+      // Generate dynamic routes
+      const dynamicRoutes = await createDynamicRoutes()
+      return dynamicRoutes
+    },
     // To show blog post list pages without generating
     // If no file matches, request must be redirected to 404.html
     fallback: process.env.NUXT_ENV_GENERATE_FALLBACK_FILE_NAME || true

@@ -1,12 +1,13 @@
 {
+  "langDir": "lang/",
   "locales": [
     {
       "code": "ja",
-      "file": "ja.js"
+      "file": "ja.json"
     },
     {
       "code": "en",
-      "file": "en.js"
+      "file": "en.json"
     }
   ],
   "defaultLocale": "ja",
