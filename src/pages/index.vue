@@ -37,7 +37,7 @@
               convertIsoToDotSeparatedYmd(postContent.createdAt)
             }}</time>
             <div class="post-item-category">
-              {{ $t(postContent.category.name.id) }}
+              {{ capitalize($t(postContent.category.name.id)) }}
             </div>
             <h2 class="post-item-title">
               {{ postContent.title[$i18n.locale] }}
@@ -63,7 +63,10 @@ import {
   getPageContent
 } from '~/assets/js/pages-fetcher'
 import { createHead } from '~/assets/js/head-creator'
-import { convertIsoToDotSeparatedYmd } from '~/assets/js/common-utility'
+import {
+  convertIsoToDotSeparatedYmd,
+  capitalize
+} from '~/assets/js/common-utility'
 
 export default {
   components: {
@@ -115,7 +118,8 @@ export default {
   },
 
   methods: {
-    convertIsoToDotSeparatedYmd
+    convertIsoToDotSeparatedYmd,
+    capitalize
   },
 
   head() {

@@ -3,7 +3,7 @@
     <h1 v-if="error.statusCode === 404">{{ $t('error-404-title') }}</h1>
     <h1 v-else>{{ $t('error-default-title') }}</h1>
 
-    <NuxtLink :to="localePath('/')">{{ $t('error-index') }}</NuxtLink>
+    <NuxtLink :to="localePath('/')">{{ $t('error-back') }}</NuxtLink>
   </div>
 </template>
 

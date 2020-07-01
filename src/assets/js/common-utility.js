@@ -9,6 +9,14 @@ export function padWithZero(number, length) {
 /**
  * Convert from ISO to YYYY.MM.DD
  */
-export function convertIsoToDotSeparatedYmd(createdAt) {
-  return createdAt.slice(0, 10).replace(/-/g, '.')
+export function convertIsoToDotSeparatedYmd(iso) {
+  return iso.slice(0, 10).replace(/-/g, '.')
+}
+
+/**
+ * Capitalize
+ */
+export function capitalize(string) {
+  if (!string) return string
+  return string.charAt(0).toUpperCase() + string.slice(1)
 }

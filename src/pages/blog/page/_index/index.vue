@@ -1,6 +1,6 @@
 <template>
   <div class="page-blog-page-_index">
-    <h1>Page {{ currentIndex }} | {{ $t(pageContent.title.id) }}</h1>
+    <h1>{{ $t(pageContent.title.id) }}</h1>
 
     <ul class="category-list">
       <NuxtLink
@@ -10,7 +10,7 @@
         tag="li"
         class="category-item"
       >
-        {{ $t(categoryContent.name.id) }}
+        {{ capitalize($t(categoryContent.name.id)) }}
       </NuxtLink>
     </ul>
 
@@ -26,7 +26,7 @@
           convertIsoToDotSeparatedYmd(postContent.createdAt)
         }}</time>
         <div class="post-item-category">
-          {{ $t(postContent.category.name.id) }}
+          {{ capitalize($t(postContent.category.name.id)) }}
         </div>
         <h2 class="post-item-title">{{ postContent.title[$i18n.locale] }}</h2>
       </NuxtLink>
@@ -52,7 +52,10 @@ import {
   getPageContent
 } from '~/assets/js/pages-fetcher'
 import { createHead } from '~/assets/js/head-creator'
-import { convertIsoToDotSeparatedYmd } from '~/assets/js/common-utility'
+import {
+  convertIsoToDotSeparatedYmd,
+  capitalize
+} from '~/assets/js/common-utility'
 
 export default {
   components: {
@@ -89,7 +92,7 @@ export default {
 
     // For page
     const siteDataContent = await getSiteDataContent()
-    const pageContent = await getPageContent('/blog')
+    const pageContent = await getPageContent('blog-page-_index')
 
     return {
       postContentList,
@@ -109,6 +112,7 @@ export default {
 
   methods: {
     convertIsoToDotSeparatedYmd,
+    capitalize,
 
     goToBlogPage({ index: currentIndex }) {
       this.$router.push(this.localePath(`/blog/page/${currentIndex}`))
@@ -118,7 +122,7 @@ export default {
   head() {
     const siteTitle = this.$t(this.siteDataContent.title.id)
     return createHead(
-      `Page ${this.currentIndex} | ${siteTitle}`,
+      `${this.$t(this.pageContent.title.id)} | ${siteTitle}`,
       this.$t(this.pageContent.description.id),
       this.siteDataContent.ogImage.value.url,
       `${process.env.NUXT_ENV_BASE_URL}${this.$route.path}`

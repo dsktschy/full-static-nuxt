@@ -1,8 +1,11 @@
 <template>
   <div class="page-blog-category-_id-page-_index">
     <h1>
-      Page {{ currentIndex }} - {{ $t(currentCategoryContent.name.id) }} |
-      {{ $t(pageContent.title.id) }}
+      {{
+        $t(pageContent.title.id, {
+          categoryName: $t(currentCategoryContent.name.id)
+        })
+      }}
     </h1>
 
     <ul class="category-list">
@@ -13,7 +16,7 @@
         tag="li"
         class="category-item"
       >
-        {{ $t(categoryContent.name.id) }}
+        {{ capitalize($t(categoryContent.name.id)) }}
       </NuxtLink>
     </ul>
 
@@ -29,7 +32,7 @@
           convertIsoToDotSeparatedYmd(postContent.createdAt)
         }}</time>
         <div class="post-item-category">
-          {{ $t(postContent.category.name.id) }}
+          {{ capitalize($t(postContent.category.name.id)) }}
         </div>
         <h2 class="post-item-title">{{ postContent.title[$i18n.locale] }}</h2>
       </NuxtLink>
@@ -55,7 +58,10 @@ import {
   getPageContent
 } from '~/assets/js/pages-fetcher'
 import { createHead } from '~/assets/js/head-creator'
-import { convertIsoToDotSeparatedYmd } from '~/assets/js/common-utility'
+import {
+  convertIsoToDotSeparatedYmd,
+  capitalize
+} from '~/assets/js/common-utility'
 
 export default {
   components: {
@@ -93,7 +99,7 @@ export default {
 
     // For page
     const siteDataContent = await getSiteDataContent()
-    const pageContent = await getPageContent('/blog')
+    const pageContent = await getPageContent('blog-category-_id-page-_index')
     const categoryId = params.id
 
     return {
@@ -116,6 +122,7 @@ export default {
 
   methods: {
     convertIsoToDotSeparatedYmd,
+    capitalize,
 
     goToBlogPage({ index: currentIndex }) {
       this.$router.push(
@@ -129,9 +136,10 @@ export default {
   head() {
     const siteTitle = this.$t(this.siteDataContent.title.id)
     const categoryName = this.$t(this.currentCategoryContent.name.id)
+    const pageTitle = this.$t(this.pageContent.title.id, { categoryName })
     return createHead(
-      `Page ${this.currentIndex} - ${categoryName} | ${siteTitle}`,
-      this.$t(this.pageContent.description.id),
+      `${pageTitle} | ${siteTitle}`,
+      this.$t(this.pageContent.description.id, { categoryName }),
       this.siteDataContent.ogImage.value.url,
       `${process.env.NUXT_ENV_BASE_URL}${this.$route.path}`
     )

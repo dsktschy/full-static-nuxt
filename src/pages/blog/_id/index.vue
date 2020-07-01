@@ -19,7 +19,7 @@
         </NuxtLink>
       </div>
       <NuxtLink :to="localePath(`/blog/page/1`)" class="link-item">
-        {{ $t('page-blog-post-list') }}
+        {{ $t('page-blog-_id-back') }}
       </NuxtLink>
       <div class="link-item">
         <NuxtLink
