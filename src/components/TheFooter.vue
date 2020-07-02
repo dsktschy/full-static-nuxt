@@ -81,7 +81,7 @@ export default {
 
     blogPageContent() {
       return this.$global.allPageContentsForNav.find(
-        (pageContent) => pageContent.path === '/blog/page/_index'
+        (pageContent) => pageContent.path === '/blog'
       )
     },
 
