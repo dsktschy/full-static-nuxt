@@ -6,8 +6,8 @@ import { createDynamicRoutes } from './src/assets/js/routes-creator'
 config()
 
 export default {
-  target: 'static',
   mode: 'universal',
+  target: 'static',
   srcDir: 'src/',
   /*
    ** Headers of the page
@@ -35,6 +35,8 @@ export default {
    ** Nuxt.js dev-modules
    */
   buildModules: [
+    // Doc: https://typescript.nuxtjs.org/ja/
+    '@nuxt/typescript-build',
     // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
     // Doc: https://github.com/nuxt-community/stylelint-module
@@ -67,7 +69,7 @@ export default {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {
+    extend(config) {
       config.node = {
         fs: 'empty'
       }
