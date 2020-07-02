@@ -68,19 +68,19 @@ export default {
       )
     },
 
-    blogPageContent(state) {
+    blogPageContent() {
       return this.$global.allPageContentsForNav.find(
         (pageContent) => pageContent.path === '/blog/page/_index'
       )
     },
 
-    contactPageContent(state) {
+    contactPageContent() {
       return this.$global.allPageContentsForNav.find(
         (pageContent) => pageContent.path === '/contact'
       )
     },
 
-    aboutLowerPageContentList(state) {
+    aboutLowerPageContentList() {
       return this.$global.allPageContentsForNav.filter((pageContent) =>
         pageContent.path.startsWith('/about/')
       )
