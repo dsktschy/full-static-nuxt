@@ -70,7 +70,7 @@ export default {
 
     blogPageContent(state) {
       return this.$global.allPageContentsForNav.find(
-        (pageContent) => pageContent.path === '/blog'
+        (pageContent) => pageContent.path === '/blog/page/_index'
       )
     },
 

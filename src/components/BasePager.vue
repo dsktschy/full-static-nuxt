@@ -5,7 +5,7 @@
       class="prev"
       @click="$emit('click-prev', { index: prevIndex })"
     >
-      {{ $t('page-blog-previous') }}
+      {{ $t('page-blog-page-_index-previous') }}
     </button>
     <div class="current">
       <div class="numerator">{{ currentIndex }}</div>
@@ -17,7 +17,7 @@
       class="next"
       @click="$emit('click-next', { index: nextIndex })"
     >
-      {{ $t('page-blog-next') }}
+      {{ $t('page-blog-page-_index-next') }}
     </button>
   </div>
 </template>

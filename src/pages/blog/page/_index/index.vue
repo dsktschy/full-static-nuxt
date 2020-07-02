@@ -30,7 +30,9 @@
         </div>
         <h2 class="post-item-title">{{ postContent.title[$i18n.locale] }}</h2>
       </NuxtLink>
-      <li v-if="!postContentList.length">{{ $t('page-blog-none') }}</li>
+      <li v-if="!postContentList.length">
+        {{ $t('page-blog-page-_index-none') }}
+      </li>
     </ul>
 
     <BasePager
