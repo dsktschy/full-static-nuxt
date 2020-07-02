@@ -20,5 +20,5 @@
   "plainTextPerRequest": 100,
   "richTextPerRequest": 100,
   "apiGetRequestTimeout": 0,
-  "apiGetRequestDepth": 2
+  "apiGetRequestDepth": 1
 }
