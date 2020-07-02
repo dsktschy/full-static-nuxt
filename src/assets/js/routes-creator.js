@@ -52,7 +52,7 @@ export async function createDynamicRoutes() {
       if (!i) {
         // For development mode, output payload as json file
         outputJsonParamsList.push([
-          path.resolve(`src/assets/json/payload/${locale.code}-blog-post-page-payload.json`),
+          path.resolve(`src/assets/json/payloads/${locale.code}-blog-post-page.json`),
           payload
         ])
       }
@@ -90,7 +90,7 @@ export async function createDynamicRoutes() {
         })
         // For development mode, output payload as json file
         outputJsonParamsList.push([
-          path.resolve(`src/assets/json/payload/${locale.code}-blog-index-page-payload.json`),
+          path.resolve(`src/assets/json/payloads/${locale.code}-blog-index-page.json`),
           payload
         ])
       }
@@ -135,7 +135,7 @@ export async function createDynamicRoutes() {
         if (!i && !j) {
           // For development mode, output payload as json file
           outputJsonParamsList.push([
-            path.resolve(`src/assets/json/payload/${locale.code}-blog-categorized-index-page-payload.json`),
+            path.resolve(`src/assets/json/payloads/${locale.code}-blog-categorized-index-page.json`),
             payload
           ])
         }
