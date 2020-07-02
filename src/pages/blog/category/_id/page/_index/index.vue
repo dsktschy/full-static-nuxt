@@ -3,7 +3,7 @@
     <h1>
       {{
         $t(pageContent.title.id, {
-          categoryName: $t(currentCategoryContent.name.id)
+          categoryName: capitalize($t(currentCategoryContent.name.id))
         })
       }}
     </h1>
@@ -138,7 +138,9 @@ export default {
   head() {
     const siteTitle = this.$t(this.siteDataContent.title.id)
     const categoryName = this.$t(this.currentCategoryContent.name.id)
-    const pageTitle = this.$t(this.pageContent.title.id, { categoryName })
+    const pageTitle = this.$t(this.pageContent.title.id, {
+      categoryName: capitalize(categoryName)
+    })
     return createHead(
       `${pageTitle} | ${siteTitle}`,
       this.$t(this.pageContent.description.id, { categoryName }),
