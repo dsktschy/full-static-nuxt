@@ -3,7 +3,7 @@
     <h1>
       {{
         $t(pageContent.title.id, {
-          categoryName: $t(currentCategoryContent.name.id)
+          categoryName: capitalize($t(currentCategoryContent.name.id))
         })
       }}
     </h1>
@@ -36,7 +36,9 @@
         </div>
         <h2 class="post-item-title">{{ postContent.title[$i18n.locale] }}</h2>
       </NuxtLink>
-      <li v-if="!postContentList.length">{{ $t('page-blog-none') }}</li>
+      <li v-if="!postContentList.length">
+        {{ $t('page-blog-page-_index-none') }}
+      </li>
     </ul>
 
     <BasePager
@@ -136,7 +138,9 @@ export default {
   head() {
     const siteTitle = this.$t(this.siteDataContent.title.id)
     const categoryName = this.$t(this.currentCategoryContent.name.id)
-    const pageTitle = this.$t(this.pageContent.title.id, { categoryName })
+    const pageTitle = this.$t(this.pageContent.title.id, {
+      categoryName: capitalize(categoryName)
+    })
     return createHead(
       `${pageTitle} | ${siteTitle}`,
       this.$t(this.pageContent.description.id, { categoryName }),
