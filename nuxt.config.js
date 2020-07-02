@@ -1,6 +1,5 @@
 import { config } from 'dotenv'
 import { langDir, locales, defaultLocale } from './src/assets/json/variables'
-import { createMessages } from './src/assets/js/messages-creator'
 import { createDynamicRoutes } from './src/assets/js/routes-creator'
 
 config()
@@ -59,6 +58,9 @@ export default {
     // Doc: https://github.com/nuxt-community/dotenv-module
     ['@nuxtjs/dotenv', { path: __dirname }],
 
+    // Create message files before building
+    '~/modules/create-messages',
+
     // Doc: https://github.com/nuxt-community/nuxt-i18n
     [
       'nuxt-i18n',
@@ -97,16 +99,7 @@ export default {
    ** Generating configuration
    */
   generate: {
-    async routes() {
-      // Generate languale files
-      await createMessages()
-      // Generate dynamic routes
-      const dynamicRoutes = await createDynamicRoutes()
-      return dynamicRoutes
-    },
-
-    // If true, /blog/page/_index route will be generated with params { index: _index }
-    crawler: false,
+    routes: createDynamicRoutes,
 
     // To show blog post list pages without generating
     // If no file matches, request must be redirected to 404.html

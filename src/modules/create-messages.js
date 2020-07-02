@@ -1,15 +1,18 @@
 import path from 'path'
 import fs from 'fs-extra'
-import { langDir, locales } from '../json/variables'
-import { getAllPlainTextContents } from './plain-text-fetcher'
-import { getAllRichTextContents } from './rich-text-fetcher'
+import { langDir, locales } from '../assets/json/variables'
+import { getAllPlainTextContents } from '../assets/js/plain-text-fetcher'
+import { getAllRichTextContents } from '../assets/js/rich-text-fetcher'
 
-export async function createMessages() {
+async function createMessages() {
   const [allPlainTextContents, allRichTextContents] = await Promise.all([
     getAllPlainTextContents(),
     getAllRichTextContents()
   ])
   const allTextContents = [...allPlainTextContents, ...allRichTextContents]
+
+  await fs.ensureDir(`src/${langDir}`)
+
   const outputJsonPromiseList = []
   for (const locale of locales) {
     const message = {}
@@ -22,4 +25,8 @@ export async function createMessages() {
     )
   }
   await Promise.all(outputJsonPromiseList)
+}
+
+export default function() {
+  this.nuxt.hook('build:compile', createMessages)
 }
