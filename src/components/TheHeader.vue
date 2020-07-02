@@ -70,7 +70,7 @@ export default {
 
     blogPageContent() {
       return this.$global.allPageContentsForNav.find(
-        (pageContent) => pageContent.path === '/blog/page/_index'
+        (pageContent) => pageContent.path === '/blog'
       )
     },
 
@@ -81,8 +81,9 @@ export default {
     },
 
     aboutLowerPageContentList() {
-      return this.$global.allPageContentsForNav.filter((pageContent) =>
-        pageContent.path.startsWith('/about/')
+      return this.$global.allPageContentsForNav.filter(
+        (pageContent) =>
+          pageContent.path && pageContent.path.startsWith('/about/')
       )
     }
   },
