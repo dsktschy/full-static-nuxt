@@ -81,8 +81,9 @@ export default {
     },
 
     aboutLowerPageContentList() {
-      return this.$global.allPageContentsForNav.filter((pageContent) =>
-        pageContent.path.startsWith('/about/')
+      return this.$global.allPageContentsForNav.filter(
+        (pageContent) =>
+          pageContent.path && pageContent.path.startsWith('/about/')
       )
     }
   },

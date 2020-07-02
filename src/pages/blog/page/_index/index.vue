@@ -80,7 +80,7 @@ export default {
     } =
       payload ||
       (await import(
-        `~/assets/json/payload/${app.i18n.locale}-blog-index-page-payload.json`
+        `~/assets/json/payloads/${app.i18n.locale}-blog-index-page.json`
       ))
 
     const currentIndex = parseInt(params.index, 10)

@@ -90,7 +90,7 @@ sw.*
 *.swp
 
 # Payload json file for development mode
-src/assets/json/payload/
+src/assets/json/payloads/
 
 # Language files
-src/lang/
+src/assets/json/languages/

@@ -57,7 +57,7 @@ export default {
     const { postContent, prevPostContent, nextPostContent } =
       payload ||
       (await import(
-        `~/assets/json/payload/${app.i18n.locale}-blog-post-page-payload.json`
+        `~/assets/json/payloads/${app.i18n.locale}-blog-post-page.json`
       ))
 
     return {

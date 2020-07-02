@@ -53,8 +53,9 @@ export default {
     const siteDataContent = await getSiteDataContent()
     const routeName = app.getRouteBaseName()
     const pageContent = await getPageContent(routeName)
-    const lowerPageContentList = allPageContentsForNav.filter((pageContent) =>
-      pageContent.path.startsWith('/about/')
+    const lowerPageContentList = allPageContentsForNav.filter(
+      (pageContent) =>
+        pageContent.path && pageContent.path.startsWith('/about/')
     )
 
     return {
