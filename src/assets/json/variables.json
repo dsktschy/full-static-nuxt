@@ -1,5 +1,5 @@
 {
-  "langDir": "lang/",
+  "langDir": "assets/json/languages/",
   "locales": [
     {
       "code": "ja",

@@ -93,4 +93,4 @@ sw.*
 src/assets/json/payload/
 
 # Language files
-src/lang/
+src/assets/json/languages/
