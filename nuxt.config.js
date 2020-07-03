@@ -42,19 +42,14 @@ export default {
    ** Nuxt.js dev-modules
    */
   buildModules: [
+    // Doc: https://github.com/nuxt-community/dotenv-module
+    ['@nuxtjs/dotenv', { path: __dirname }],
+
     // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
 
     // Doc: https://github.com/nuxt-community/stylelint-module
-    '@nuxtjs/stylelint-module'
-  ],
-
-  /*
-   ** Nuxt.js modules
-   */
-  modules: [
-    // Doc: https://github.com/nuxt-community/dotenv-module
-    ['@nuxtjs/dotenv', { path: __dirname }],
+    '@nuxtjs/stylelint-module',
 
     // Create message files before building
     '~/modules/create-messages',
