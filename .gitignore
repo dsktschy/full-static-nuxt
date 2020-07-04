@@ -90,7 +90,7 @@ sw.*
 *.swp
 
 # Route files
-src/assets/json/routes
+src/assets/json/routes/
 
 # Payload files
 src/assets/json/payloads/
