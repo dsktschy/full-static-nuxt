@@ -16,7 +16,7 @@ import {
   richTextPerRequest,
   apiGetRequestTimeout,
   apiGetRequestDepth
-} from '../json/variables'
+} from '../json/variables.json'
 
 function createGetFetcherConfig(params) {
   return {

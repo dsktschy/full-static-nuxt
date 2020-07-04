@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { postsPerRequestToGenerate, locales } from '../json/variables'
+import { postsPerRequestToGenerate, locales } from '../json/variables.json'
 import { createPostsFetcherConfig } from './fetcher-config-creator'
 
 export async function getPostContentList({

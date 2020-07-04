@@ -3,7 +3,7 @@ import {
   postsPerRequestToPage,
   locales,
   defaultLocale
-} from '../assets/json/variables'
+} from '../assets/json/variables.json'
 import { getAllPostContentsPerLocale } from '../assets/scripts/posts-fetcher'
 import { getAllCategoryContents } from '../assets/scripts/categories-fetcher'
 

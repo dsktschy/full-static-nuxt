@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { plainTextPerRequest } from '../json/variables'
+import { plainTextPerRequest } from '../json/variables.json'
 import { createPlainTextFetcherConfig } from './fetcher-config-creator'
 
 export async function getPlainTextContentList({ fields, offset, limit } = {}) {

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { categoriesPerRequest } from '../json/variables'
+import { categoriesPerRequest } from '../json/variables.json'
 import { createCategoriesFetcherConfig } from './fetcher-config-creator'
 
 export async function getCategoryContentList({ fields, offset, limit } = {}) {

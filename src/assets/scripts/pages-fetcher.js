@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { pagesPerRequestToGenerate } from '../json/variables'
+import { pagesPerRequestToGenerate } from '../json/variables.json'
 import { createPagesFetcherConfig } from './fetcher-config-creator'
 
 export async function getPageContent(id) {

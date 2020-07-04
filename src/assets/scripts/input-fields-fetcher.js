@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { inputFieldsPerRequest } from '../json/variables'
+import { inputFieldsPerRequest } from '../json/variables.json'
 import { createInputFieldsFetcherConfig } from './fetcher-config-creator'
 
 export async function getInputFieldContentList({ fields, offset, limit } = {}) {

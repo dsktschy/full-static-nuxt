@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { richTextPerRequest } from '../json/variables'
+import { richTextPerRequest } from '../json/variables.json'
 import { createRichTextFetcherConfig } from './fetcher-config-creator'
 
 export async function getRichTextContentList({ fields, offset, limit } = {}) {

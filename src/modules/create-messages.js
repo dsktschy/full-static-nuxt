@@ -1,6 +1,6 @@
 import path from 'path'
 import fs from 'fs-extra'
-import { langDir, locales } from '../assets/json/variables'
+import { langDir, locales } from '../assets/json/variables.json'
 import { getAllPlainTextContents } from '../assets/scripts/plain-text-fetcher'
 import { getAllRichTextContents } from '../assets/scripts/rich-text-fetcher'
 
