@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { categoriesPerRequest } from '../json/variables.json'
-import { createCategoriesFetcherConfig } from './fetcher-config-creator'
+import { createCategoriesFetcherConfig } from './fetcher-config-creator.ts'
 
 export async function getCategoryContentList({ fields, offset, limit } = {}) {
   const config = createCategoriesFetcherConfig({ fields, offset, limit })

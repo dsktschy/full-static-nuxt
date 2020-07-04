@@ -9,7 +9,7 @@ import {
 
 configureDotenv()
 
-const configuration: NuxtConfiguration = {
+export default {
   target: 'static',
 
   mode: 'universal',
@@ -116,6 +116,4 @@ const configuration: NuxtConfiguration = {
     // If no file matches, request must be redirected to 404.html
     fallback: process.env.NUXT_ENV_GENERATE_FALLBACK_FILE_NAME || true
   }
-}
-
-export default configuration
+} as NuxtConfiguration

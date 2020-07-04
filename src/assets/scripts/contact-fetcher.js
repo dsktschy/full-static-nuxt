@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { createContactFetcherConfig } from './fetcher-config-creator'
+import { createContactFetcherConfig } from './fetcher-config-creator.ts'
 
 export async function postContactValues(stringifiedValues) {
   if (!stringifiedValues) {

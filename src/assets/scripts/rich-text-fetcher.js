@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { richTextPerRequest } from '../json/variables.json'
-import { createRichTextFetcherConfig } from './fetcher-config-creator'
+import { createRichTextFetcherConfig } from './fetcher-config-creator.ts'
 
 export async function getRichTextContentList({ fields, offset, limit } = {}) {
   const config = createRichTextFetcherConfig({ fields, offset, limit })

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { pagesPerRequestToGenerate } from '../json/variables.json'
-import { createPagesFetcherConfig } from './fetcher-config-creator'
+import { createPagesFetcherConfig } from './fetcher-config-creator.ts'
 
 export async function getPageContent(id) {
   if (!id) {
