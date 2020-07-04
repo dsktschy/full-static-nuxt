@@ -1,6 +1,5 @@
 import { config } from 'dotenv'
 import { langDir, locales, defaultLocale } from './src/assets/json/variables'
-import { createDynamicRoutes } from './src/assets/js/routes-creator'
 
 config()
 
@@ -54,6 +53,9 @@ export default {
     // Create message files before building
     '~/modules/create-messages',
 
+    // Create route files before building
+    '~/modules/create-routes',
+
     // Doc: https://github.com/nuxt-community/nuxt-i18n
     [
       'nuxt-i18n',
@@ -92,7 +94,14 @@ export default {
    ** Generating configuration
    */
   generate: {
-    routes: createDynamicRoutes,
+    async routes() {
+      // JSON file doesn't exist before building
+      const { default: routes } = await import(
+        /* webpackChunkName: "[request]" */
+        './src/assets/json/routes/dynamic.json'
+      )
+      return routes
+    },
 
     // To show blog post list pages without generating
     // If no file matches, request must be redirected to 404.html

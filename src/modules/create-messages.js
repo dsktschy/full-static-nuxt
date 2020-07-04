@@ -5,13 +5,13 @@ import { getAllPlainTextContents } from '../assets/js/plain-text-fetcher'
 import { getAllRichTextContents } from '../assets/js/rich-text-fetcher'
 
 async function createMessages() {
+  await fs.emptyDir(`src/${langDir}`)
+
   const [allPlainTextContents, allRichTextContents] = await Promise.all([
     getAllPlainTextContents(),
     getAllRichTextContents()
   ])
   const allTextContents = [...allPlainTextContents, ...allRichTextContents]
-
-  await fs.ensureDir(`src/${langDir}`)
 
   const outputJsonPromiseList = []
   for (const locale of locales) {

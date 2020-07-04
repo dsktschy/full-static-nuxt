@@ -70,7 +70,7 @@ export default {
     BasePager
   },
 
-  async asyncData({ app, params, payload, isDev, error }) {
+  async asyncData({ app, params, route, isDev, error }) {
     // Validation
     // If requested path has a generated static HTML file, asyncData is not run on client
     // So 404 error, if asyncData is run on client
@@ -79,18 +79,18 @@ export default {
       return {}
     }
 
+    const categoryId = params.id
+    const currentIndex = parseInt(params.index, 10)
     const {
       postContentList,
       maxLocalizedCategorizedPageIndex: maxIndex,
       allLocalizedCategoryContents,
       categoryContent: currentCategoryContent
-    } =
-      payload ||
-      (await import(
-        `~/assets/json/payloads/${app.i18n.locale}-blog-categorized-index-page.json`
-      ))
+    } = await import(
+      /* webpackChunkName: "[request]" */
+      `~/assets/json/payloads/${route.name}-${categoryId}-${currentIndex}.json`
+    )
 
-    const currentIndex = parseInt(params.index, 10)
     if (currentIndex < 1 || currentIndex > maxIndex) {
       error({ statusCode: 404, message: '' })
       return {}
@@ -102,7 +102,6 @@ export default {
     // For page
     const siteDataContent = await getSiteDataContent()
     const pageContent = await getPageContent('blog-category-_id-page-_index')
-    const categoryId = params.id
 
     return {
       postContentList,
