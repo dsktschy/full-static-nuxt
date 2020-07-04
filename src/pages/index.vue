@@ -73,7 +73,7 @@ export default {
     VueAgile
   },
 
-  async asyncData({ app, payload }) {
+  async asyncData({ app, route }) {
     // For global
     const allPageContentsForNav = await getAllPageContentsForNav()
 
@@ -81,11 +81,10 @@ export default {
     const siteDataContent = await getSiteDataContent()
     const routeName = app.getRouteBaseName()
     const pageContent = await getPageContent(routeName)
-    const { postContentList } =
-      payload ||
-      (await import(
-        `~/assets/json/payloads/${app.i18n.locale}-blog-index-page.json`
-      ))
+    const { postContentList } = await import(
+      /* webpackChunkName: "[request]" */
+      `~/assets/json/payloads/${route.name}.json`
+    )
 
     return {
       siteDataContent,

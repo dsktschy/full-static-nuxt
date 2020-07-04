@@ -1,21 +1,22 @@
-import path from 'path'
 import fs from 'fs-extra'
 import {
   postsPerRequestToPage,
   locales,
   defaultLocale
-} from '../json/variables'
-import { getAllPostContentsPerLocale } from './posts-fetcher'
-import { getAllCategoryContents } from './categories-fetcher'
+} from '../assets/json/variables'
+import { getAllPostContentsPerLocale } from '../assets/js/posts-fetcher'
+import { getAllCategoryContents } from '../assets/js/categories-fetcher'
 
 // prettier-ignore
-export async function createDynamicRoutes() {
+async function createDynamicRoutes() {
+  await fs.emptyDir(`src/assets/json/payloads/`)
+  await fs.emptyDir(`src/assets/json/routes/`)
+
   const [allPostContentsPerLocale, allCategoryContents] = await Promise.all([
     getAllPostContentsPerLocale(),
     getAllCategoryContents()
   ])
   const localizedPageRoutes = []
-  const outputJsonParamsList = []
 
   for (const locale of locales) {
     const allLocalizedPostContents = allPostContentsPerLocale[locale.code]
@@ -39,23 +40,14 @@ export async function createDynamicRoutes() {
         i === allLocalizedPostContents.length - 1
           ? null
           : allLocalizedPostContents[i + 1]
+      const route = `${localePath}/blog/${postContent.id}`
       const payload = {
         postContent,
         prevPostContent,
         nextPostContent
       }
-      localizedPageRoutes.push({
-        route: `${localePath}/blog/${postContent.id}`,
-        payload
-      })
-
-      if (!i) {
-        // For development mode, output payload as json file
-        outputJsonParamsList.push([
-          path.resolve(`src/assets/json/payloads/${locale.code}-blog-post-page.json`),
-          payload
-        ])
-      }
+      const payloadPath = `src/assets/json/payloads/blog-id___${locale.code}-${postContent.id}.json`
+      localizedPageRoutes.push({ route, payload, payloadPath })
 
       // Create blog index page routes
       const pageIndex = Math.floor(i / postsPerRequestToPage)
@@ -72,27 +64,21 @@ export async function createDynamicRoutes() {
     for (let i = 0; i < localizedPostContentListsPerPage.length; i++) {
       const postContentList = localizedPostContentListsPerPage[i]
 
+      const pageIndex = i + 1
+      const route = `${localePath}/blog/page/${pageIndex}`
       const payload = {
         postContentList,
         maxLocalizedPageIndex,
         allLocalizedCategoryContents
       }
-      localizedPageRoutes.push({
-        route: `${localePath}/blog/page/${i + 1}`,
-        payload
-      })
+      const payloadPath = `src/assets/json/payloads/blog-page-index___${locale.code}-${pageIndex}.json`
+      localizedPageRoutes.push({ route, payload, payloadPath })
 
+      // Create index page route
       if (!i) {
-        // Create index page route
-        localizedPageRoutes.push({
-          route: localePath || '/',
-          payload
-        })
-        // For development mode, output payload as json file
-        outputJsonParamsList.push([
-          path.resolve(`src/assets/json/payloads/${locale.code}-blog-index-page.json`),
-          payload
-        ])
+        const route = localePath || '/'
+        const payloadPath = `src/assets/json/payloads/index___${locale.code}.json`
+        localizedPageRoutes.push({ route, payload, payloadPath })
       }
     }
 
@@ -121,33 +107,30 @@ export async function createDynamicRoutes() {
       for (let j = 0; j < localizedCategorizedPostContentListsPerPage.length; j++) {
         const postContentList = localizedCategorizedPostContentListsPerPage[j]
 
+        const pageIndex = j + 1
+        const route = `${localePath}/blog/category/${categoryId}/page/${pageIndex}`
         const payload = {
           postContentList,
           maxLocalizedCategorizedPageIndex,
           allLocalizedCategoryContents,
           categoryContent
         }
-        localizedPageRoutes.push({
-          route: `${localePath}/blog/category/${categoryId}/page/${j + 1}`,
-          payload
-        })
-
-        if (!i && !j) {
-          // For development mode, output payload as json file
-          outputJsonParamsList.push([
-            path.resolve(`src/assets/json/payloads/${locale.code}-blog-categorized-index-page.json`),
-            payload
-          ])
-        }
+        const payloadPath = `src/assets/json/payloads/blog-category-id-page-index___${locale.code}-${categoryId}-${pageIndex}.json`
+        localizedPageRoutes.push({ route, payload, payloadPath })
       }
     }
   }
 
-  // For development mode, output payload as json file
-  const outputJsonPromiseList = outputJsonParamsList.map(
-    outputJsonParams => fs.outputJson(...outputJsonParams)
-  )
-  await Promise.all(outputJsonPromiseList)
+  const promises = []
+  const dynamicRoutes = []
+  for (const { route, payload, payloadPath } of localizedPageRoutes) {
+    promises.push(fs.outputJSON(payloadPath, payload))
+    dynamicRoutes.push(route)
+  }
+  promises.push(fs.outputJSON('src/assets/json/routes/dynamic.json', dynamicRoutes))
+  await Promise.all(promises)
+}
 
-  return localizedPageRoutes
+export default function() {
+  this.nuxt.hook('build:compile', createDynamicRoutes)
 }

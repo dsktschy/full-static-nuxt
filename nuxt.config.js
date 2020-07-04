@@ -1,6 +1,5 @@
 import { config } from 'dotenv'
 import { langDir, locales, defaultLocale } from './src/assets/json/variables'
-import { createDynamicRoutes } from './src/assets/js/routes-creator'
 
 config()
 
@@ -44,22 +43,21 @@ export default {
   buildModules: [
     // Doc: https://typescript.nuxtjs.org/ja/
     '@nuxt/typescript-build',
+
+    // Doc: https://github.com/nuxt-community/dotenv-module
+    ['@nuxtjs/dotenv', { path: __dirname }],
+
     // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
 
     // Doc: https://github.com/nuxt-community/stylelint-module
-    '@nuxtjs/stylelint-module'
-  ],
-
-  /*
-   ** Nuxt.js modules
-   */
-  modules: [
-    // Doc: https://github.com/nuxt-community/dotenv-module
-    ['@nuxtjs/dotenv', { path: __dirname }],
+    '@nuxtjs/stylelint-module',
 
     // Create message files before building
     '~/modules/create-messages',
+
+    // Create route files before building
+    '~/modules/create-routes',
 
     // Doc: https://github.com/nuxt-community/nuxt-i18n
     [
@@ -99,7 +97,14 @@ export default {
    ** Generating configuration
    */
   generate: {
-    routes: createDynamicRoutes,
+    async routes() {
+      // JSON file doesn't exist before building
+      const { default: routes } = await import(
+        /* webpackChunkName: "[request]" */
+        './src/assets/json/routes/dynamic.json'
+      )
+      return routes
+    },
 
     // To show blog post list pages without generating
     // If no file matches, request must be redirected to 404.html

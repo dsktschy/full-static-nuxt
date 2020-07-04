@@ -40,7 +40,7 @@ import { getAllPageContentsForNav } from '~/assets/js/pages-fetcher'
 import { createHead } from '~/assets/js/head-creator'
 
 export default {
-  async asyncData({ app, payload, params, isDev, error }) {
+  async asyncData({ route, params, isDev, error }) {
     // Validation
     // If requested path has a generated static HTML file, asyncData is not run on client
     // So 404 error, if asyncData is run on client
@@ -54,11 +54,10 @@ export default {
 
     // For page
     const siteDataContent = await getSiteDataContent()
-    const { postContent, prevPostContent, nextPostContent } =
-      payload ||
-      (await import(
-        `~/assets/json/payloads/${app.i18n.locale}-blog-post-page.json`
-      ))
+    const { postContent, prevPostContent, nextPostContent } = await import(
+      /* webpackChunkName: "[request]" */
+      `~/assets/json/payloads/${route.name}-${params.id}.json`
+    )
 
     return {
       siteDataContent,

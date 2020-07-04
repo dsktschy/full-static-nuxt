@@ -64,7 +64,7 @@ export default {
     BasePager
   },
 
-  async asyncData({ app, params, payload, isDev, error }) {
+  async asyncData({ params, route, isDev, error }) {
     // Validation
     // If requested path has a generated static HTML file, asyncData is not run on client
     // So 404 error, if asyncData is run on client
@@ -73,17 +73,16 @@ export default {
       return {}
     }
 
+    const currentIndex = parseInt(params.index, 10)
     const {
       postContentList,
       maxLocalizedPageIndex: maxIndex,
       allLocalizedCategoryContents
-    } =
-      payload ||
-      (await import(
-        `~/assets/json/payloads/${app.i18n.locale}-blog-index-page.json`
-      ))
+    } = await import(
+      /* webpackChunkName: "[request]" */
+      `~/assets/json/payloads/${route.name}-${currentIndex}.json`
+    )
 
-    const currentIndex = parseInt(params.index, 10)
     if (currentIndex < 1 || currentIndex > maxIndex) {
       error({ statusCode: 404, message: '' })
       return {}

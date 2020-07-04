@@ -89,7 +89,10 @@ sw.*
 # Vim swap files
 *.swp
 
-# Payload json file for development mode
+# Route files
+src/assets/json/routes
+
+# Payload files
 src/assets/json/payloads/
 
 # Language files
