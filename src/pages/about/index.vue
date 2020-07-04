@@ -36,13 +36,13 @@
 </template>
 
 <script>
-import { getSiteDataContent } from '~/assets/js/site-data-fetcher'
+import { getSiteDataContent } from '~/assets/scripts/site-data-fetcher'
 import {
   getAllPageContentsForNav,
   getPageContent
-} from '~/assets/js/pages-fetcher'
-import { createHead } from '~/assets/js/head-creator'
-import { padWithZero } from '~/assets/js/common-utility'
+} from '~/assets/scripts/pages-fetcher'
+import { createHead } from '~/assets/scripts/head-creator'
+import { padWithZero } from '~/assets/scripts/common-utility'
 
 export default {
   async asyncData({ app }) {

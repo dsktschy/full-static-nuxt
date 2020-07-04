@@ -186,14 +186,14 @@
 <script>
 import { stringify } from 'querystring'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
-import { getSiteDataContent } from '~/assets/js/site-data-fetcher'
+import { getSiteDataContent } from '~/assets/scripts/site-data-fetcher'
 import {
   getAllPageContentsForNav,
   getPageContent
-} from '~/assets/js/pages-fetcher'
-import { getAllInputFieldContents } from '~/assets/js/input-fields-fetcher'
-import { postContactValues } from '~/assets/js/contact-fetcher'
-import { createHead } from '~/assets/js/head-creator'
+} from '~/assets/scripts/pages-fetcher'
+import { getAllInputFieldContents } from '~/assets/scripts/input-fields-fetcher'
+import { postContactValues } from '~/assets/scripts/contact-fetcher'
+import { createHead } from '~/assets/scripts/head-creator'
 import {
   isCheckbox,
   isSelect,
@@ -203,7 +203,7 @@ import {
   isTextOrTextarea,
   isSingleOptionCheckbox,
   createDefaultValue
-} from '~/assets/js/input-fields-utility'
+} from '~/assets/scripts/input-fields-utility'
 
 export default {
   components: {

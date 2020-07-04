@@ -15,12 +15,12 @@
 </template>
 
 <script>
-import { getSiteDataContent } from '~/assets/js/site-data-fetcher'
+import { getSiteDataContent } from '~/assets/scripts/site-data-fetcher'
 import {
   getAllPageContentsForNav,
   getPageContent
-} from '~/assets/js/pages-fetcher'
-import { createHead } from '~/assets/js/head-creator'
+} from '~/assets/scripts/pages-fetcher'
+import { createHead } from '~/assets/scripts/head-creator'
 
 export default {
   async asyncData({ app }) {

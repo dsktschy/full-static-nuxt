@@ -1,8 +1,8 @@
 import path from 'path'
 import fs from 'fs-extra'
 import { langDir, locales } from '../assets/json/variables'
-import { getAllPlainTextContents } from '../assets/js/plain-text-fetcher'
-import { getAllRichTextContents } from '../assets/js/rich-text-fetcher'
+import { getAllPlainTextContents } from '../assets/scripts/plain-text-fetcher'
+import { getAllRichTextContents } from '../assets/scripts/rich-text-fetcher'
 
 async function createMessages() {
   await fs.emptyDir(`src/${langDir}`)

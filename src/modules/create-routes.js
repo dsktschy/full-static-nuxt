@@ -4,8 +4,8 @@ import {
   locales,
   defaultLocale
 } from '../assets/json/variables'
-import { getAllPostContentsPerLocale } from '../assets/js/posts-fetcher'
-import { getAllCategoryContents } from '../assets/js/categories-fetcher'
+import { getAllPostContentsPerLocale } from '../assets/scripts/posts-fetcher'
+import { getAllCategoryContents } from '../assets/scripts/categories-fetcher'
 
 // prettier-ignore
 async function createDynamicRoutes() {

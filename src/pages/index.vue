@@ -57,16 +57,16 @@
 
 <script>
 import { VueAgile } from 'vue-agile'
-import { getSiteDataContent } from '~/assets/js/site-data-fetcher'
+import { getSiteDataContent } from '~/assets/scripts/site-data-fetcher'
 import {
   getAllPageContentsForNav,
   getPageContent
-} from '~/assets/js/pages-fetcher'
-import { createHead } from '~/assets/js/head-creator'
+} from '~/assets/scripts/pages-fetcher'
+import { createHead } from '~/assets/scripts/head-creator'
 import {
   convertIsoToDotSeparatedYmd,
   capitalize
-} from '~/assets/js/common-utility'
+} from '~/assets/scripts/common-utility'
 
 export default {
   components: {

@@ -35,9 +35,9 @@
 </template>
 
 <script>
-import { getSiteDataContent } from '~/assets/js/site-data-fetcher'
-import { getAllPageContentsForNav } from '~/assets/js/pages-fetcher'
-import { createHead } from '~/assets/js/head-creator'
+import { getSiteDataContent } from '~/assets/scripts/site-data-fetcher'
+import { getAllPageContentsForNav } from '~/assets/scripts/pages-fetcher'
+import { createHead } from '~/assets/scripts/head-creator'
 
 export default {
   async asyncData({ route, params, isDev, error }) {
