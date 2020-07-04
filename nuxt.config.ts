@@ -1,9 +1,15 @@
-import { config } from 'dotenv'
-import { langDir, locales, defaultLocale } from './src/assets/json/variables'
+import { config as configureDotenv } from 'dotenv'
+import { Configuration as NuxtConfiguration } from '@nuxt/types'
+import { Configuration as WebpackConfiguration } from 'webpack'
+import {
+  langDir,
+  locales,
+  defaultLocale
+} from './src/assets/json/variables.json'
 
-config()
+configureDotenv()
 
-export default {
+const configuration: NuxtConfiguration = {
   target: 'static',
 
   mode: 'universal',
@@ -81,7 +87,7 @@ export default {
     /*
      ** You can extend webpack config here
      */
-    extend(config) {
+    extend(config: WebpackConfiguration) {
       config.node = {
         fs: 'empty'
       }
@@ -111,3 +117,5 @@ export default {
     fallback: process.env.NUXT_ENV_GENERATE_FALLBACK_FILE_NAME || true
   }
 }
+
+export default configuration
