@@ -14,6 +14,7 @@ module.exports = {
   plugins: ['prettier'],
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'vue/no-v-html': 0
+    'vue/no-v-html': 0,
+    '@typescript-eslint/no-unused-vars': ['error', { args: 'after-used' }]
   }
 }
