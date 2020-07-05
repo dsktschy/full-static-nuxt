@@ -1,13 +1,13 @@
 import axios from 'axios'
 import { pagesPerRequestToGenerate } from '../json/variables.json'
-import { createPagesFetcherConfig } from './fetcher-config-creator.ts'
+import { createPagesRequestConfig } from './request-config.ts'
 
 export async function getPageContent(id) {
   if (!id) {
     const error = new Error('Page ID to request is missing.')
     return Promise.reject(error)
   }
-  const config = createPagesFetcherConfig()
+  const config = createPagesRequestConfig()
   const response = await axios.get(id, config)
   if (!response.data) throw new Error('API response is invalid.')
   return response.data
@@ -19,7 +19,7 @@ export async function getPageContentList({
   limit,
   filters
 } = {}) {
-  const config = createPagesFetcherConfig({ fields, offset, limit, filters })
+  const config = createPagesRequestConfig({ fields, offset, limit, filters })
   const response = await axios.get('', config)
   if (!response.data) throw new Error('API response is invalid.')
   return response.data.contents

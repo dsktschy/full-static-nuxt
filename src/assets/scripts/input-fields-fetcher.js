@@ -1,9 +1,9 @@
 import axios from 'axios'
 import { inputFieldsPerRequest } from '../json/variables.json'
-import { createInputFieldsFetcherConfig } from './fetcher-config-creator.ts'
+import { createInputFieldsRequestConfig } from './request-config.ts'
 
 export async function getInputFieldContentList({ fields, offset, limit } = {}) {
-  const config = createInputFieldsFetcherConfig({ fields, offset, limit })
+  const config = createInputFieldsRequestConfig({ fields, offset, limit })
   const response = await axios.get('', config)
   if (!response.data) throw new Error('API response is invalid.')
   return response.data.contents

@@ -1,9 +1,9 @@
 import axios from 'axios'
 import { richTextPerRequest } from '../json/variables.json'
-import { createRichTextFetcherConfig } from './fetcher-config-creator.ts'
+import { createRichTextRequestConfig } from './request-config.ts'
 
 export async function getRichTextContentList({ fields, offset, limit } = {}) {
-  const config = createRichTextFetcherConfig({ fields, offset, limit })
+  const config = createRichTextRequestConfig({ fields, offset, limit })
   const response = await axios.get('', config)
   if (!response.data) throw new Error('API response is invalid.')
   return response.data.contents

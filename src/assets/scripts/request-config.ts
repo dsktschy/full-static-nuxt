@@ -20,31 +20,31 @@ import {
 } from '../json/variables.json'
 import { MicroCmsQuery } from './micro-cms'
 
-function createGetFetcherConfig(params: MicroCmsQuery) {
-  const getFetcherConfig: AxiosRequestConfig = {
+function createGetRequestConfig(params: MicroCmsQuery = {}) {
+  const getRequestConfig = {
     timeout: apiGetRequestTimeout,
     params: {
       depth: apiGetRequestDepth,
       ...params
     }
-  }
+  } as AxiosRequestConfig
   if (process.env.NUXT_ENV_API_KEY) {
-    getFetcherConfig.headers = { 'X-API-KEY': process.env.NUXT_ENV_API_KEY }
+    getRequestConfig.headers = { 'X-API-KEY': process.env.NUXT_ENV_API_KEY }
   }
-  return getFetcherConfig
+  return getRequestConfig
 }
 
-export function createSiteDataFetcherConfig(params: MicroCmsQuery) {
+export function createSiteDataRequestConfig(params: MicroCmsQuery = {}) {
   const defaultParams = {
     fields: 'title.id,description.id,ogImage.value'
   }
   return {
-    ...createGetFetcherConfig({ ...defaultParams, ...params }),
+    ...createGetRequestConfig({ ...defaultParams, ...params }),
     baseURL: `${process.env.NUXT_ENV_API_URL}/site-data`
   } as AxiosRequestConfig
 }
 
-export function createPagesFetcherConfig(params: MicroCmsQuery) {
+export function createPagesRequestConfig(params: MicroCmsQuery = {}) {
   const defaultParams = {
     fields:
       'id,title.id,description.id,ogImage.value,plainText.id,richText.id,images',
@@ -52,12 +52,12 @@ export function createPagesFetcherConfig(params: MicroCmsQuery) {
     limit: pagesPerRequestToPage
   }
   return {
-    ...createGetFetcherConfig({ ...defaultParams, ...params }),
+    ...createGetRequestConfig({ ...defaultParams, ...params }),
     baseURL: `${process.env.NUXT_ENV_API_URL}/pages`
   } as AxiosRequestConfig
 }
 
-export function createPostsFetcherConfig(params: MicroCmsQuery) {
+export function createPostsRequestConfig(params: MicroCmsQuery = {}) {
   const defaultParams = {
     fields:
       'id,createdAt,title,description,featuredImage,content,category,tags.name,author',
@@ -65,60 +65,60 @@ export function createPostsFetcherConfig(params: MicroCmsQuery) {
     limit: postsPerRequestToPage
   }
   return {
-    ...createGetFetcherConfig({ ...defaultParams, ...params }),
+    ...createGetRequestConfig({ ...defaultParams, ...params }),
     baseURL: `${process.env.NUXT_ENV_API_URL}/posts`
   } as AxiosRequestConfig
 }
 
-export function createCategoriesFetcherConfig(params: MicroCmsQuery) {
+export function createCategoriesRequestConfig(params: MicroCmsQuery = {}) {
   const defaultParams = {
     fields: 'id,name.id',
     offset: 0,
     limit: categoriesPerRequest
   }
   return {
-    ...createGetFetcherConfig({ ...defaultParams, ...params }),
+    ...createGetRequestConfig({ ...defaultParams, ...params }),
     baseURL: `${process.env.NUXT_ENV_API_URL}/categories`
   } as AxiosRequestConfig
 }
 
-export function createInputFieldsFetcherConfig(params: MicroCmsQuery) {
+export function createInputFieldsRequestConfig(params: MicroCmsQuery = {}) {
   const defaultParams = {
     fields: 'id,label.id,name,type,options,rules',
     offset: 0,
     limit: inputFieldsPerRequest
   }
   return {
-    ...createGetFetcherConfig({ ...defaultParams, ...params }),
+    ...createGetRequestConfig({ ...defaultParams, ...params }),
     baseURL: `${process.env.NUXT_ENV_API_URL}/input-fields`
   } as AxiosRequestConfig
 }
 
-export function createPlainTextFetcherConfig(params: MicroCmsQuery) {
+export function createPlainTextRequestConfig(params: MicroCmsQuery = {}) {
   const defaultParams = {
     fields: 'id,value',
     offset: 0,
     limit: plainTextPerRequest
   }
   return {
-    ...createGetFetcherConfig({ ...defaultParams, ...params }),
+    ...createGetRequestConfig({ ...defaultParams, ...params }),
     baseURL: `${process.env.NUXT_ENV_API_URL}/plain-text`
   } as AxiosRequestConfig
 }
 
-export function createRichTextFetcherConfig(params: MicroCmsQuery) {
+export function createRichTextRequestConfig(params: MicroCmsQuery = {}) {
   const defaultParams = {
     fields: 'id,value',
     offset: 0,
     limit: richTextPerRequest
   }
   return {
-    ...createGetFetcherConfig({ ...defaultParams, ...params }),
+    ...createGetRequestConfig({ ...defaultParams, ...params }),
     baseURL: `${process.env.NUXT_ENV_API_URL}/rich-text`
   } as AxiosRequestConfig
 }
 
-export function createContactFetcherConfig() {
+export function createContactRequestConfig() {
   return {
     timeout: 0,
     // Contact form endpoint of Netlify is site origin

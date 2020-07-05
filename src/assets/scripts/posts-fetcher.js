@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { postsPerRequestToGenerate } from '../json/variables.json'
 import { localeCodes } from './nuxt-i18n-options.ts'
-import { createPostsFetcherConfig } from './fetcher-config-creator.ts'
+import { createPostsRequestConfig } from './request-config.ts'
 
 export async function getPostContentList({
   fields,
@@ -9,7 +9,7 @@ export async function getPostContentList({
   limit,
   filters
 } = {}) {
-  const config = createPostsFetcherConfig({ fields, offset, limit, filters })
+  const config = createPostsRequestConfig({ fields, offset, limit, filters })
   const response = await axios.get('', config)
   if (!response.data) throw new Error('API response is invalid.')
   return response.data.contents

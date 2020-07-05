@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { createSiteDataFetcherConfig } from './fetcher-config-creator.ts'
+import { createSiteDataRequestConfig } from './request-config'
 
 export async function getSiteDataContent() {
-  const config = createSiteDataFetcherConfig()
+  const config = createSiteDataRequestConfig()
   const response = await axios.get('', config)
   if (!response.data) throw new Error('API response is invalid.')
   return response.data

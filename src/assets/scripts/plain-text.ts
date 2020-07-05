@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { plainTextPerRequest } from '../json/variables.json'
-import { createPlainTextFetcherConfig } from './fetcher-config-creator'
+import { createPlainTextRequestConfig } from './request-config'
 import { MicroCmsQuery, MicroCmsListResponse } from './micro-cms'
 import { defaultLocale } from './nuxt-i18n-options'
 
@@ -14,7 +14,7 @@ interface PlainTextContent {
 }
 
 export async function getPlainTextContentList(params: MicroCmsQuery) {
-  const config = createPlainTextFetcherConfig(params)
+  const config = createPlainTextRequestConfig(params)
   const response = await axios.get<MicroCmsListResponse<PlainTextContent>>(
     '',
     config

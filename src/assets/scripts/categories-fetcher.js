@@ -1,9 +1,9 @@
 import axios from 'axios'
 import { categoriesPerRequest } from '../json/variables.json'
-import { createCategoriesFetcherConfig } from './fetcher-config-creator.ts'
+import { createCategoriesRequestConfig } from './request-config.ts'
 
 export async function getCategoryContentList({ fields, offset, limit } = {}) {
-  const config = createCategoriesFetcherConfig({ fields, offset, limit })
+  const config = createCategoriesRequestConfig({ fields, offset, limit })
   const response = await axios.get('', config)
   if (!response.data) throw new Error('API response is invalid.')
   return response.data.contents
