@@ -1,8 +1,8 @@
 import path from 'path'
 import fs from 'fs-extra'
-import { langDir, locales } from '../assets/json/variables.json'
 import { getAllPlainTextContents } from '../assets/scripts/plain-text-fetcher'
 import { getAllRichTextContents } from '../assets/scripts/rich-text-fetcher'
+import { langDir, locales } from '../assets/scripts/nuxt-i18n-options.ts'
 
 async function createMessages() {
   await fs.emptyDir(`src/${langDir}`)

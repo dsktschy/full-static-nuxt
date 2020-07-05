@@ -5,7 +5,7 @@ import {
   langDir,
   locales,
   defaultLocale
-} from './src/assets/json/variables.json'
+} from './src/assets/scripts/nuxt-i18n-options'
 import { handleError } from './src/assets/scripts/error-handler'
 
 configureDotenv()
@@ -60,11 +60,11 @@ export default {
     // Doc: https://github.com/nuxt-community/stylelint-module
     '@nuxtjs/stylelint-module',
 
-    // Create message files before building
-    '~/modules/create-messages',
-
     // Create route files before building
     '~/modules/create-routes',
+
+    // Create message files before building
+    '~/modules/create-messages',
 
     // Doc: https://github.com/nuxt-community/nuxt-i18n
     [

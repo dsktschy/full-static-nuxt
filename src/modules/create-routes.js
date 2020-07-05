@@ -1,11 +1,11 @@
 import fs from 'fs-extra'
-import {
-  postsPerRequestToPage,
-  locales,
-  defaultLocale
-} from '../assets/json/variables.json'
+import { postsPerRequestToPage } from '../assets/json/variables.json'
 import { getAllPostContentsPerLocale } from '../assets/scripts/posts-fetcher'
 import { getAllCategoryContents } from '../assets/scripts/categories-fetcher'
+import {
+  localeCodes,
+  defaultLocale
+} from '../assets/scripts/nuxt-i18n-options.ts'
 
 // prettier-ignore
 async function createDynamicRoutes() {
@@ -18,13 +18,13 @@ async function createDynamicRoutes() {
   ])
   const localizedPageRoutes = []
 
-  for (const locale of locales) {
-    const allLocalizedPostContents = allPostContentsPerLocale[locale.code]
+  for (const localeCode of localeCodes) {
+    const allLocalizedPostContents = allPostContentsPerLocale[localeCode]
     const allLocalizedPostContentsPerCategory = {}
     const maxLocalizedPageIndex =
       Math.ceil(allLocalizedPostContents.length / postsPerRequestToPage)
     const allLocalizedCategoryContents = []
-    const localePath = locale.code === defaultLocale ? '' : `/${locale.code}`
+    const localePath = localeCode === defaultLocale ? '' : `/${localeCode}`
 
     for (const categoryContent of allCategoryContents) {
       allLocalizedPostContentsPerCategory[categoryContent.id] = []
@@ -46,7 +46,7 @@ async function createDynamicRoutes() {
         prevPostContent,
         nextPostContent
       }
-      const payloadPath = `src/assets/json/payloads/blog-id___${locale.code}-${postContent.id}.json`
+      const payloadPath = `src/assets/json/payloads/blog-id___${localeCode}-${postContent.id}.json`
       localizedPageRoutes.push({ route, payload, payloadPath })
 
       // Create blog index page routes
@@ -71,13 +71,13 @@ async function createDynamicRoutes() {
         maxLocalizedPageIndex,
         allLocalizedCategoryContents
       }
-      const payloadPath = `src/assets/json/payloads/blog-page-index___${locale.code}-${pageIndex}.json`
+      const payloadPath = `src/assets/json/payloads/blog-page-index___${localeCode}-${pageIndex}.json`
       localizedPageRoutes.push({ route, payload, payloadPath })
 
       // Create index page route
       if (!i) {
         const route = localePath || '/'
-        const payloadPath = `src/assets/json/payloads/index___${locale.code}.json`
+        const payloadPath = `src/assets/json/payloads/index___${localeCode}.json`
         localizedPageRoutes.push({ route, payload, payloadPath })
       }
     }
@@ -115,7 +115,7 @@ async function createDynamicRoutes() {
           allLocalizedCategoryContents,
           categoryContent
         }
-        const payloadPath = `src/assets/json/payloads/blog-category-id-page-index___${locale.code}-${categoryId}-${pageIndex}.json`
+        const payloadPath = `src/assets/json/payloads/blog-category-id-page-index___${localeCode}-${categoryId}-${pageIndex}.json`
         localizedPageRoutes.push({ route, payload, payloadPath })
       }
     }

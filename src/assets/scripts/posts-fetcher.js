@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { postsPerRequestToGenerate, locales } from '../json/variables.json'
+import { postsPerRequestToGenerate } from '../json/variables.json'
+import { localeCodes } from './nuxt-i18n-options.ts'
 import { createPostsFetcherConfig } from './fetcher-config-creator.ts'
 
 export async function getPostContentList({
@@ -29,12 +30,12 @@ export async function getAllPostContents() {
 export async function getAllPostContentsPerLocale() {
   const allPostContents = await getAllPostContents()
   const allPostContentsPerLocale = {}
-  for (const locale of locales) {
+  for (const localeCode of localeCodes) {
     const postContentList = []
     for (const postContent of allPostContents) {
-      if (locale.code in postContent.title) postContentList.push(postContent)
+      if (localeCode in postContent.title) postContentList.push(postContent)
     }
-    allPostContentsPerLocale[locale.code] = postContentList
+    allPostContentsPerLocale[localeCode] = postContentList
   }
   return allPostContentsPerLocale
 }

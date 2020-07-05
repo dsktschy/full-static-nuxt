@@ -1,16 +1,4 @@
 {
-  "langDir": "assets/json/languages/",
-  "locales": [
-    {
-      "code": "ja",
-      "file": "ja.json"
-    },
-    {
-      "code": "en",
-      "file": "en.json"
-    }
-  ],
-  "defaultLocale": "ja",
   "postsPerRequestToPage": 10,
   "pagesPerRequestToPage": 10,
   "postsPerRequestToGenerate": 100,
