@@ -1,11 +1,12 @@
 import { config as configureDotenv } from 'dotenv'
-import { Configuration as NuxtConfiguration } from '@nuxt/types'
+import { NuxtConfig } from '@nuxt/types'
 import { Configuration as WebpackConfiguration } from 'webpack'
 import {
   langDir,
   locales,
   defaultLocale
 } from './src/assets/json/variables.json'
+import { handleError } from './src/assets/scripts/error-handler'
 
 configureDotenv()
 
@@ -115,5 +116,11 @@ export default {
     // To show blog post list pages without generating
     // If no file matches, request must be redirected to 404.html
     fallback: process.env.NUXT_ENV_GENERATE_FALLBACK_FILE_NAME || true
+  },
+
+  vue: {
+    config: {
+      errorHandler: handleError
+    }
   }
-} as NuxtConfiguration
+} as NuxtConfig
