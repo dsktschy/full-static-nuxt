@@ -59,8 +59,7 @@ export function createPagesRequestConfig(params: MicroCmsQuery = {}) {
 
 export function createPostsRequestConfig(params: MicroCmsQuery = {}) {
   const defaultParams = {
-    fields:
-      'id,createdAt,title,description,featuredImage,content,category,tags.name,author',
+    fields: 'id,createdAt,title,description,featuredImage,content,category',
     offset: 0,
     limit: postsPerRequestToPage
   }

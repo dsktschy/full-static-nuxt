@@ -1,7 +1,7 @@
 import fs from 'fs-extra'
 import { postsPerRequestToPage } from '../assets/json/variables.json'
-import { getAllPostContentsPerLocale } from '../assets/scripts/posts-fetcher'
-import { getAllCategoryContents } from '../assets/scripts/categories-fetcher'
+import { getAllPostContentsPerLocale } from '../assets/scripts/posts.ts'
+import { getAllCategoryContents } from '../assets/scripts/categories.ts'
 import {
   localeCodes,
   defaultLocale
