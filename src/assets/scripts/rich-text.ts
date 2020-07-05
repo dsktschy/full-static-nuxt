@@ -8,7 +8,7 @@ export interface RichTextContent {
   id: string
   value: {
     [defaultLocale]: string
-    [key: string]: string
+    [locale: string]: string
   }
 }
 
