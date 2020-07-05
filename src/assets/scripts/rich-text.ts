@@ -4,7 +4,7 @@ import { createRichTextRequestConfig } from './request-config'
 import { MicroCmsQuery, MicroCmsListResponse } from './micro-cms'
 import { defaultLocale } from './nuxt-i18n-options'
 
-interface RichTextContent {
+export interface RichTextContent {
   id: string
   value: {
     [defaultLocale]: string

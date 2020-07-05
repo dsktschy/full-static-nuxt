@@ -4,7 +4,7 @@ import { createPlainTextRequestConfig } from './request-config'
 import { MicroCmsQuery, MicroCmsListResponse } from './micro-cms'
 import { defaultLocale } from './nuxt-i18n-options'
 
-interface PlainTextContent {
+export interface PlainTextContent {
   id: string
   value: {
     [defaultLocale]: string
