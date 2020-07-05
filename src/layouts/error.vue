@@ -9,18 +9,11 @@
 
 <script>
 export default {
-  // nuxt@<=2.13.2 has bug that apply incorrect layout to page accessed after error page
-  // So, until A is resolved, default layout should be used in all pages
+  // Default layout can't be used
+  // Because when accessed page that doesn't exist as first page,
+  // $global has no value, because payload.js doesn't exist too
+  layout: 'empty',
 
-  props: { error: { type: Object, required: true } },
-
-  // Maybe official `isError` does not exist
-  beforeCreate() {
-    this.$global.showingError = true
-  },
-
-  destroyed() {
-    this.$global.showingError = false
-  }
+  props: { error: { type: Object, required: true } }
 }
 </script>
