@@ -6,14 +6,13 @@ import { defaultLocale } from './nuxt-i18n-options'
 
 interface PlainTextContent {
   id: string
-  createdAt: string
   value: {
     [defaultLocale]: string
     [key: string]: string
   }
 }
 
-export async function getPlainTextContentList(params: MicroCmsQuery) {
+export async function getPlainTextContentList(params: MicroCmsQuery = {}) {
   const config = createPlainTextRequestConfig(params)
   const response = await axios.get<MicroCmsListResponse<PlainTextContent>>(
     '',

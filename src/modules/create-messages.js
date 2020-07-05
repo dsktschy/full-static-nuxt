@@ -1,7 +1,7 @@
 import path from 'path'
 import fs from 'fs-extra'
 import { getAllPlainTextContents } from '../assets/scripts/plain-text.ts'
-import { getAllRichTextContents } from '../assets/scripts/rich-text-fetcher'
+import { getAllRichTextContents } from '../assets/scripts/rich-text.ts'
 import { langDir, locales } from '../assets/scripts/nuxt-i18n-options.ts'
 
 async function createMessages() {
