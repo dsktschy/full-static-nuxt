@@ -21,13 +21,13 @@ import {
 import { MicroCmsQuery } from './micro-cms'
 
 function createGetRequestConfig(params: MicroCmsQuery = {}) {
-  const getRequestConfig = {
+  const getRequestConfig: AxiosRequestConfig = {
     timeout: apiGetRequestTimeout,
     params: {
       depth: apiGetRequestDepth,
       ...params
     }
-  } as AxiosRequestConfig
+  }
   if (process.env.NUXT_ENV_API_KEY) {
     getRequestConfig.headers = { 'X-API-KEY': process.env.NUXT_ENV_API_KEY }
   }
