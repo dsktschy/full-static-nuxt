@@ -18,8 +18,9 @@ import {
   apiGetRequestTimeout,
   apiGetRequestDepth
 } from '../json/variables.json'
+import { MicroCmsQuery } from './micro-cms'
 
-function createGetFetcherConfig(params: any) {
+function createGetFetcherConfig(params: MicroCmsQuery) {
   const getFetcherConfig: AxiosRequestConfig = {
     timeout: apiGetRequestTimeout,
     params: {
@@ -33,7 +34,7 @@ function createGetFetcherConfig(params: any) {
   return getFetcherConfig
 }
 
-export function createSiteDataFetcherConfig(params: any) {
+export function createSiteDataFetcherConfig(params: MicroCmsQuery) {
   const defaultParams = {
     fields: 'title.id,description.id,ogImage.value'
   }
@@ -43,13 +44,12 @@ export function createSiteDataFetcherConfig(params: any) {
   } as AxiosRequestConfig
 }
 
-export function createPagesFetcherConfig(params: any) {
+export function createPagesFetcherConfig(params: MicroCmsQuery) {
   const defaultParams = {
     fields:
       'id,title.id,description.id,ogImage.value,plainText.id,richText.id,images',
     offset: 0,
-    limit: pagesPerRequestToPage,
-    filters: null
+    limit: pagesPerRequestToPage
   }
   return {
     ...createGetFetcherConfig({ ...defaultParams, ...params }),
@@ -57,13 +57,12 @@ export function createPagesFetcherConfig(params: any) {
   } as AxiosRequestConfig
 }
 
-export function createPostsFetcherConfig(params: any) {
+export function createPostsFetcherConfig(params: MicroCmsQuery) {
   const defaultParams = {
     fields:
       'id,createdAt,title,description,featuredImage,content,category,tags.name,author',
     offset: 0,
-    limit: postsPerRequestToPage,
-    filters: null
+    limit: postsPerRequestToPage
   }
   return {
     ...createGetFetcherConfig({ ...defaultParams, ...params }),
@@ -71,7 +70,7 @@ export function createPostsFetcherConfig(params: any) {
   } as AxiosRequestConfig
 }
 
-export function createCategoriesFetcherConfig(params: any) {
+export function createCategoriesFetcherConfig(params: MicroCmsQuery) {
   const defaultParams = {
     fields: 'id,name.id',
     offset: 0,
@@ -83,7 +82,7 @@ export function createCategoriesFetcherConfig(params: any) {
   } as AxiosRequestConfig
 }
 
-export function createInputFieldsFetcherConfig(params: any) {
+export function createInputFieldsFetcherConfig(params: MicroCmsQuery) {
   const defaultParams = {
     fields: 'id,label.id,name,type,options,rules',
     offset: 0,
@@ -95,7 +94,7 @@ export function createInputFieldsFetcherConfig(params: any) {
   } as AxiosRequestConfig
 }
 
-export function createPlainTextFetcherConfig(params: any) {
+export function createPlainTextFetcherConfig(params: MicroCmsQuery) {
   const defaultParams = {
     fields: 'id,value',
     offset: 0,
@@ -107,7 +106,7 @@ export function createPlainTextFetcherConfig(params: any) {
   } as AxiosRequestConfig
 }
 
-export function createRichTextFetcherConfig(params: any) {
+export function createRichTextFetcherConfig(params: MicroCmsQuery) {
   const defaultParams = {
     fields: 'id,value',
     offset: 0,
