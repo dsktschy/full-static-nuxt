@@ -18,10 +18,6 @@ export interface PageContent {
 }
 
 export async function getPageContent(id: string) {
-  if (!id) {
-    const error = new Error('Page ID to request is missing.')
-    return Promise.reject(error)
-  }
   const config = createPagesRequestConfig()
   const response = await axios.get(id, config)
   return response.data
