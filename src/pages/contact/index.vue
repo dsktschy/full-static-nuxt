@@ -191,7 +191,7 @@ import {
   getAllPageContentsForNav,
   getPageContent
 } from '~/assets/scripts/pages.ts'
-import { getAllInputFieldContents } from '~/assets/scripts/input-fields-fetcher'
+import { getAllInputFieldContents } from '~/assets/scripts/input-fields.ts'
 import { postContactValues } from '~/assets/scripts/contact-fetcher'
 import { createHead } from '~/assets/scripts/head-creator'
 import {
