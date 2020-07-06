@@ -1,14 +1,24 @@
 import fs from 'fs-extra'
+import { Module } from '@nuxt/types'
 import { postsPerRequestToPage } from '../assets/json/variables.json'
-import { getAllPostContentsPerLocale } from '../assets/scripts/posts.ts'
-import { getAllCategoryContents } from '../assets/scripts/categories.ts'
 import {
-  localeCodes,
-  defaultLocale
-} from '../assets/scripts/nuxt-i18n-options.ts'
+  getAllPostContentsPerLocale,
+  PostContent
+} from '../assets/scripts/posts'
+import {
+  getAllCategoryContents,
+  CategoryContent
+} from '../assets/scripts/categories'
+import { localeCodes, defaultLocale } from '../assets/scripts/nuxt-i18n-options'
+
+interface Options {}
+
+const createDynamicRoutes: Module<Options> = function() {
+  this.nuxt.hook('build:compile', _createDynamicRoutes)
+}
 
 // prettier-ignore
-async function createDynamicRoutes() {
+async function _createDynamicRoutes() {
   await fs.emptyDir(`src/assets/json/payloads/`)
   await fs.emptyDir(`src/assets/json/routes/`)
 
@@ -20,17 +30,19 @@ async function createDynamicRoutes() {
 
   for (const localeCode of localeCodes) {
     const allLocalizedPostContents = allPostContentsPerLocale[localeCode]
-    const allLocalizedPostContentsPerCategory = {}
+    const allLocalizedPostContentsPerCategory: { [category: string]: PostContent[] } = {}
     const maxLocalizedPageIndex =
       Math.ceil(allLocalizedPostContents.length / postsPerRequestToPage)
-    const allLocalizedCategoryContents = []
+    const allLocalizedCategoryContents: CategoryContent[] = []
     const localePath = localeCode === defaultLocale ? '' : `/${localeCode}`
 
     for (const categoryContent of allCategoryContents) {
       allLocalizedPostContentsPerCategory[categoryContent.id] = []
     }
 
-    const localizedPostContentListsPerPage = []
+    const localizedPostContentListsPerPage = Array(
+      Math.ceil(allLocalizedPostContents.length / postsPerRequestToPage)
+    ).fill([])
     for (let i = 0; i < allLocalizedPostContents.length; i++) {
       const postContent = allLocalizedPostContents[i]
 
@@ -52,7 +64,6 @@ async function createDynamicRoutes() {
       // Create blog index page routes
       const pageIndex = Math.floor(i / postsPerRequestToPage)
       const postIndexInPage = i % postsPerRequestToPage
-      if (!postIndexInPage) localizedPostContentListsPerPage[pageIndex] = []
       localizedPostContentListsPerPage[pageIndex][postIndexInPage] = postContent
 
       // Categorize
@@ -83,6 +94,7 @@ async function createDynamicRoutes() {
     }
 
     // Create blog index page routes per category
+
     for (let i = 0; i < allCategoryContents.length; i++) {
       const categoryContent = allCategoryContents[i]
 
@@ -93,14 +105,15 @@ async function createDynamicRoutes() {
       if (allLocalizedCategorizedPostContents.length)
         allLocalizedCategoryContents.push(categoryContent)
 
-      const localizedCategorizedPostContentListsPerPage = []
+      const localizedCategorizedPostContentListsPerPage = Array(
+        Math.ceil(allLocalizedCategorizedPostContents.length / postsPerRequestToPage)
+      ).fill([])
       for (let j = 0; j < allLocalizedCategorizedPostContents.length; j++) {
         const postContent = allLocalizedCategorizedPostContents[j]
 
         // Create blog index page routes
         const pageIndex = Math.floor(j / postsPerRequestToPage)
         const postIndexInPage = j % postsPerRequestToPage
-        if (!postIndexInPage) localizedCategorizedPostContentListsPerPage[pageIndex] = []
         localizedCategorizedPostContentListsPerPage[pageIndex][postIndexInPage] = postContent
       }
 
@@ -131,6 +144,4 @@ async function createDynamicRoutes() {
   await Promise.all(promises)
 }
 
-export default function() {
-  this.nuxt.hook('build:compile', createDynamicRoutes)
-}
+export default createDynamicRoutes
