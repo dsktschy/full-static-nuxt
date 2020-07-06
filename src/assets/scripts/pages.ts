@@ -10,8 +10,8 @@ export interface PageContent {
   id: string
   path?: string
   title: PlainTextContent
-  description?: PlainTextContent
-  ogImage?: ImageContent
+  description: PlainTextContent | null
+  ogImage: ImageContent | null
   plainText: PlainTextContent[]
   richText: RichTextContent[]
   images: ImageContent[]
