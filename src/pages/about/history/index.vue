@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { getSiteDataContent } from '~/assets/scripts/site-data-fetcher'
+import { getSiteDataContent } from '~/assets/scripts/site-data.ts'
 import {
   getAllPageContentsForNav,
   getPageContent
