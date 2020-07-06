@@ -4,9 +4,9 @@
  */
 
 import { extend } from 'vee-validate'
-import { required, max, email } from 'vee-validate/dist/rules'
+import { required, max, min, email } from 'vee-validate/dist/rules'
 
-for (const entry of Object.entries({ required, max, email })) {
+for (const entry of Object.entries({ required, max, min, email })) {
   extend(...entry)
 }
 
