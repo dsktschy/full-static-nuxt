@@ -190,7 +190,7 @@ import { getSiteDataContent } from '~/assets/scripts/site-data.ts'
 import {
   getAllPageContentsForNav,
   getPageContent
-} from '~/assets/scripts/pages-fetcher'
+} from '~/assets/scripts/pages.ts'
 import { getAllInputFieldContents } from '~/assets/scripts/input-fields-fetcher'
 import { postContactValues } from '~/assets/scripts/contact-fetcher'
 import { createHead } from '~/assets/scripts/head-creator'
