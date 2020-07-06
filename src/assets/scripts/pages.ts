@@ -33,15 +33,13 @@ export async function getPageContentList(params: MicroCmsQuery = {}) {
 }
 
 export async function getAllPageContentsForNav() {
-  const limit = pagesPerRequestToGenerate
-  const fields = 'id,path,title.id'
   const allPageContentsForNav = []
   let pageContentList = []
   do {
     pageContentList = await getPageContentList({
-      limit,
+      limit: pagesPerRequestToGenerate,
       offset: allPageContentsForNav.length,
-      fields
+      fields: 'id,path,title.id'
     })
     allPageContentsForNav.push(...pageContentList)
   } while (pageContentList.length === pagesPerRequestToGenerate)
