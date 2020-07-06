@@ -53,7 +53,7 @@ import {
   getAllPageContentsForNav,
   getPageContent
 } from '~/assets/scripts/pages.ts'
-import { createHead } from '~/assets/scripts/head-creator'
+import { createHead } from '~/assets/scripts/head.ts'
 import {
   convertIsoToDotSeparatedYmd,
   capitalize

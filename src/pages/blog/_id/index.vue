@@ -37,7 +37,7 @@
 <script>
 import { getSiteDataContent } from '~/assets/scripts/site-data.ts'
 import { getAllPageContentsForNav } from '~/assets/scripts/pages.ts'
-import { createHead } from '~/assets/scripts/head-creator'
+import { createHead } from '~/assets/scripts/head.ts'
 
 export default {
   async asyncData({ route, params, isDev, error }) {
