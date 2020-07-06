@@ -191,10 +191,8 @@ import {
   getAllPageContentsForNav,
   getPageContent
 } from '~/assets/scripts/pages.ts'
-import { getAllInputFieldContents } from '~/assets/scripts/input-fields.ts'
-import { postContactValues } from '~/assets/scripts/contact.ts'
-import { createHead } from '~/assets/scripts/head.ts'
 import {
+  getAllInputFieldContents,
   isCheckbox,
   isSelect,
   isTextarea,
@@ -203,7 +201,9 @@ import {
   isTextOrTextarea,
   isSingleOptionCheckbox,
   createDefaultValue
-} from '~/assets/scripts/input-fields-utility'
+} from '~/assets/scripts/input-fields.ts'
+import { postContactValues } from '~/assets/scripts/contact.ts'
+import { createHead } from '~/assets/scripts/head.ts'
 
 export default {
   components: {

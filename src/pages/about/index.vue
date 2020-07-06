@@ -42,7 +42,7 @@ import {
   getPageContent
 } from '~/assets/scripts/pages.ts'
 import { createHead } from '~/assets/scripts/head.ts'
-import { padWithZero } from '~/assets/scripts/common-utility'
+import { padWithZero } from '~/assets/scripts/utility.ts'
 
 export default {
   async asyncData({ app }) {

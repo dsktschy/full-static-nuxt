@@ -63,7 +63,7 @@ import { createHead } from '~/assets/scripts/head.ts'
 import {
   convertIsoToDotSeparatedYmd,
   capitalize
-} from '~/assets/scripts/common-utility'
+} from '~/assets/scripts/utility.ts'
 
 export default {
   components: {
