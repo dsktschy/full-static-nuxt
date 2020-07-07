@@ -7,15 +7,7 @@
 </template>
 
 <script>
-import TheHeader from '~/components/TheHeader'
-import TheFooter from '~/components/TheFooter'
-
 export default {
-  components: {
-    TheHeader,
-    TheFooter
-  },
-
   computed: {
     headerTag() {
       return this.$route.path === '/' ? 'h1' : 'div'

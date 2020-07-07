@@ -47,7 +47,6 @@
 </template>
 
 <script>
-import BasePager from '~/components/BasePager'
 import { getSiteDataContent } from '~/assets/scripts/site-data.ts'
 import {
   getAllPageContentsForNav,
@@ -60,10 +59,6 @@ import {
 } from '~/assets/scripts/utility.ts'
 
 export default {
-  components: {
-    BasePager
-  },
-
   async asyncData({ params, route, isDev, error }) {
     // Validation
     // If requested path has a generated static HTML file, asyncData is not run on client

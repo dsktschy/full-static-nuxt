@@ -17,6 +17,8 @@ export default {
 
   srcDir: 'src/',
 
+  components: true,
+
   /*
    ** Headers of the page
    */
