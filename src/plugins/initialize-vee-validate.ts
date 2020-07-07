@@ -11,4 +11,4 @@ for (const entry of Object.entries({ required, max, min, email })) {
 }
 
 // Rule for checkbox that must be true
-extend('is_true', (value) => value === true)
+extend('is_true', (value: boolean) => value === true)
