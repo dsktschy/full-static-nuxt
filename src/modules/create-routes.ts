@@ -40,9 +40,9 @@ async function _createDynamicRoutes() {
       allLocalizedPostContentsPerCategory[categoryContent.id] = []
     }
 
-    const localizedPostContentListsPerPage = Array(
-      Math.ceil(allLocalizedPostContents.length / postsPerRequestToPage)
-    ).fill([])
+    const localizedPostContentListsPerPage: PostContent[][] = []
+    for (let i = 0; i < allLocalizedPostContents.length / postsPerRequestToPage; i++)
+      localizedPostContentListsPerPage[i] = []
     for (let i = 0; i < allLocalizedPostContents.length; i++) {
       const postContent = allLocalizedPostContents[i]
 
@@ -63,8 +63,7 @@ async function _createDynamicRoutes() {
 
       // Create blog index page routes
       const pageIndex = Math.floor(i / postsPerRequestToPage)
-      const postIndexInPage = i % postsPerRequestToPage
-      localizedPostContentListsPerPage[pageIndex][postIndexInPage] = postContent
+      localizedPostContentListsPerPage[pageIndex].push(postContent)
 
       // Categorize
       const categoryId = postContent.category.id
@@ -105,16 +104,15 @@ async function _createDynamicRoutes() {
       if (allLocalizedCategorizedPostContents.length)
         allLocalizedCategoryContents.push(categoryContent)
 
-      const localizedCategorizedPostContentListsPerPage = Array(
-        Math.ceil(allLocalizedCategorizedPostContents.length / postsPerRequestToPage)
-      ).fill([])
+      const localizedCategorizedPostContentListsPerPage: PostContent[][] = []
+      for (let j = 0; j < allLocalizedCategorizedPostContents.length / postsPerRequestToPage; j++)
+        localizedCategorizedPostContentListsPerPage[j] = []
       for (let j = 0; j < allLocalizedCategorizedPostContents.length; j++) {
         const postContent = allLocalizedCategorizedPostContents[j]
 
         // Create blog index page routes
         const pageIndex = Math.floor(j / postsPerRequestToPage)
-        const postIndexInPage = j % postsPerRequestToPage
-        localizedCategorizedPostContentListsPerPage[pageIndex][postIndexInPage] = postContent
+        localizedCategorizedPostContentListsPerPage[pageIndex].push(postContent)
       }
 
       for (let j = 0; j < localizedCategorizedPostContentListsPerPage.length; j++) {
