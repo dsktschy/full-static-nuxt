@@ -70,7 +70,7 @@ export default {
 
   created() {
     // Assign value to global
-    this.$global.allPageContentsForNav = this.allPageContentsForNav
+    this.$pageContentsForNav.all = this.allPageContentsForNav
   },
 
   head() {

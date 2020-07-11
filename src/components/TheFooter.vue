@@ -4,14 +4,14 @@
       {{ $t('site-data-title') }}
     </NuxtLink>
 
-    <ul v-if="showingNav" class="nav">
+    <ul v-if="$pageContentsForNav.firstLowerLevelExisting" class="nav">
       <li class="nav-item">
-        <NuxtLink :to="localePath(aboutPageContent.path)">
-          {{ $t(aboutPageContent.title.id) }}
+        <NuxtLink :to="localePath($pageContentsForNav.about.path)">
+          {{ $t($pageContentsForNav.about.title.id) }}
         </NuxtLink>
         <ul>
           <NuxtLink
-            v-for="aboutLowerPageContent of aboutLowerPageContentList"
+            v-for="aboutLowerPageContent of $pageContentsForNav.aboutSecondLowerLevel"
             :key="aboutLowerPageContent.id"
             :to="localePath(aboutLowerPageContent.path)"
             tag="li"
@@ -22,13 +22,13 @@
         </ul>
       </li>
       <li class="nav-item">
-        <NuxtLink :to="localePath(blogPageContent.path)">
-          {{ $t(blogPageContent.title.id) }}
+        <NuxtLink :to="localePath($pageContentsForNav.blog.path)">
+          {{ $t($pageContentsForNav.blog.title.id) }}
         </NuxtLink>
       </li>
       <li class="nav-item">
-        <NuxtLink :to="localePath(contactPageContent.path)">
-          {{ $t(contactPageContent.title.id) }}
+        <NuxtLink :to="localePath($pageContentsForNav.contact.path)">
+          {{ $t($pageContentsForNav.contact.title.id) }}
         </NuxtLink>
       </li>
     </ul>
@@ -61,45 +61,6 @@
     </ul>
   </footer>
 </template>
-
-<script>
-export default {
-  computed: {
-    showingNav() {
-      return (
-        this.aboutPageContent != null &&
-        this.blogPageContent != null &&
-        this.contactPageContent != null
-      )
-    },
-
-    aboutPageContent() {
-      return this.$global.allPageContentsForNav.find(
-        (pageContent) => pageContent.path === '/about'
-      )
-    },
-
-    blogPageContent() {
-      return this.$global.allPageContentsForNav.find(
-        (pageContent) => pageContent.path === '/blog'
-      )
-    },
-
-    contactPageContent() {
-      return this.$global.allPageContentsForNav.find(
-        (pageContent) => pageContent.path === '/contact'
-      )
-    },
-
-    aboutLowerPageContentList() {
-      return this.$global.allPageContentsForNav.filter(
-        (pageContent) =>
-          pageContent.path && pageContent.path.startsWith('/about/')
-      )
-    }
-  }
-}
-</script>
 
 <style lang="scss" scoped>
 .the-footer {
