@@ -38,10 +38,11 @@ export function createSiteDataRequestConfig(params: MicroCmsQuery = {}) {
   const defaultParams = {
     fields: 'title.id,description.id,ogImage.value'
   }
-  return {
+  const siteDataRequestConfig: AxiosRequestConfig = {
     ...createGetRequestConfig({ ...defaultParams, ...params }),
     baseURL: `${process.env.NUXT_ENV_API_URL}/site-data`
-  } as AxiosRequestConfig
+  }
+  return siteDataRequestConfig
 }
 
 export function createPagesRequestConfig(params: MicroCmsQuery = {}) {
@@ -51,10 +52,11 @@ export function createPagesRequestConfig(params: MicroCmsQuery = {}) {
     offset: 0,
     limit: pagesPerRequestToPage
   }
-  return {
+  const pagesRequestConfig: AxiosRequestConfig = {
     ...createGetRequestConfig({ ...defaultParams, ...params }),
     baseURL: `${process.env.NUXT_ENV_API_URL}/pages`
-  } as AxiosRequestConfig
+  }
+  return pagesRequestConfig
 }
 
 export function createPostsRequestConfig(params: MicroCmsQuery = {}) {
@@ -63,10 +65,11 @@ export function createPostsRequestConfig(params: MicroCmsQuery = {}) {
     offset: 0,
     limit: postsPerRequestToPage
   }
-  return {
+  const postsRequestConfig: AxiosRequestConfig = {
     ...createGetRequestConfig({ ...defaultParams, ...params }),
     baseURL: `${process.env.NUXT_ENV_API_URL}/posts`
-  } as AxiosRequestConfig
+  }
+  return postsRequestConfig
 }
 
 export function createCategoriesRequestConfig(params: MicroCmsQuery = {}) {
@@ -75,10 +78,11 @@ export function createCategoriesRequestConfig(params: MicroCmsQuery = {}) {
     offset: 0,
     limit: categoriesPerRequest
   }
-  return {
+  const categoriesRequestConfig: AxiosRequestConfig = {
     ...createGetRequestConfig({ ...defaultParams, ...params }),
     baseURL: `${process.env.NUXT_ENV_API_URL}/categories`
-  } as AxiosRequestConfig
+  }
+  return categoriesRequestConfig
 }
 
 export function createInputFieldsRequestConfig(params: MicroCmsQuery = {}) {
@@ -87,10 +91,11 @@ export function createInputFieldsRequestConfig(params: MicroCmsQuery = {}) {
     offset: 0,
     limit: inputFieldsPerRequest
   }
-  return {
+  const inputFieldsRequestConfig: AxiosRequestConfig = {
     ...createGetRequestConfig({ ...defaultParams, ...params }),
     baseURL: `${process.env.NUXT_ENV_API_URL}/input-fields`
-  } as AxiosRequestConfig
+  }
+  return inputFieldsRequestConfig
 }
 
 export function createPlainTextRequestConfig(params: MicroCmsQuery = {}) {
@@ -99,10 +104,11 @@ export function createPlainTextRequestConfig(params: MicroCmsQuery = {}) {
     offset: 0,
     limit: plainTextPerRequest
   }
-  return {
+  const plainTextRequestConfig: AxiosRequestConfig = {
     ...createGetRequestConfig({ ...defaultParams, ...params }),
     baseURL: `${process.env.NUXT_ENV_API_URL}/plain-text`
-  } as AxiosRequestConfig
+  }
+  return plainTextRequestConfig
 }
 
 export function createRichTextRequestConfig(params: MicroCmsQuery = {}) {
@@ -111,16 +117,18 @@ export function createRichTextRequestConfig(params: MicroCmsQuery = {}) {
     offset: 0,
     limit: richTextPerRequest
   }
-  return {
+  const richTextRequestConfig: AxiosRequestConfig = {
     ...createGetRequestConfig({ ...defaultParams, ...params }),
     baseURL: `${process.env.NUXT_ENV_API_URL}/rich-text`
-  } as AxiosRequestConfig
+  }
+  return richTextRequestConfig
 }
 
 export function createContactRequestConfig() {
-  return {
+  const contactRequestConfig: AxiosRequestConfig = {
     timeout: 0,
     // Contact form endpoint of Netlify is site origin
     baseURL: process.env.NUXT_ENV_BASE_URL
-  } as AxiosRequestConfig
+  }
+  return contactRequestConfig
 }

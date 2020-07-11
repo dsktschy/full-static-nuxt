@@ -10,7 +10,7 @@ import { handleError } from './src/assets/scripts/error-handler'
 
 configureDotenv()
 
-export default {
+const config: NuxtConfig = {
   target: 'static',
 
   mode: 'universal',
@@ -125,4 +125,6 @@ export default {
       errorHandler: handleError
     }
   }
-} as NuxtConfig
+}
+
+export default config
