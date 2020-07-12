@@ -126,7 +126,11 @@ async function _createDynamicRouteList() {
     // Create post list routes per category
     for (let i = 0; i < allCategoryContents.length; i++) {
       const categoryContent = allCategoryContents[i]
+
+      // Create post list routes per category, that have no page index
       const categoryId = categoryContent.id
+      const route = `${localePath}/blog/category/${categoryId}`
+      localizedRouteList.push({ route })
 
       const allLocalizedCategorizedPostContents = allLocalizedPostContentsPerCategory[categoryId]
       const maxLocalizedCategorizedPageIndex =
