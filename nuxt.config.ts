@@ -66,7 +66,7 @@ const config: NuxtConfig = {
     '@nuxtjs/stylelint-module',
 
     // Create route files before building
-    '~/modules/create-routes',
+    '~/modules/create-dynamic-route-list',
 
     // Create message files before building
     '~/modules/create-messages',
