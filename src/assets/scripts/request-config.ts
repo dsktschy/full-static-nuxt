@@ -9,22 +9,20 @@
 
 import { AxiosRequestConfig } from 'axios'
 import {
-  postsPerRequestToPage,
-  pagesPerRequestToPage,
-  categoriesPerRequest,
-  inputFieldsPerRequest,
-  plainTextPerRequest,
-  richTextPerRequest,
-  apiGetRequestTimeout,
-  apiGetRequestDepth
-} from '../json/variables.json'
+  DEFAULT_API_GET_REQUEST_TIMEOUT,
+  DEFAULT_API_GET_REQUEST_DEPTH,
+  DEFAULT_API_GET_REQUEST_LIMIT,
+  MAX_API_GET_REQUEST_LIMIT,
+  TOTAL_POSTS_PER_PAGE
+} from './constants'
 import { MicroCmsQuery } from './micro-cms'
 
 function createGetRequestConfig(params: MicroCmsQuery = {}) {
   const getRequestConfig: AxiosRequestConfig = {
-    timeout: apiGetRequestTimeout,
+    timeout: DEFAULT_API_GET_REQUEST_TIMEOUT,
     params: {
-      depth: apiGetRequestDepth,
+      depth: DEFAULT_API_GET_REQUEST_DEPTH,
+      limit: DEFAULT_API_GET_REQUEST_LIMIT,
       ...params
     }
   }
@@ -49,8 +47,7 @@ export function createPagesRequestConfig(params: MicroCmsQuery = {}) {
   const defaultParams = {
     fields:
       'id,title.id,description.id,ogImage.value,plainText.id,richText.id,images',
-    offset: 0,
-    limit: pagesPerRequestToPage
+    offset: 0
   }
   const pagesRequestConfig: AxiosRequestConfig = {
     ...createGetRequestConfig({ ...defaultParams, ...params }),
@@ -63,7 +60,7 @@ export function createPostsRequestConfig(params: MicroCmsQuery = {}) {
   const defaultParams = {
     fields: 'id,createdAt,title,description,featuredImage,content,category',
     offset: 0,
-    limit: postsPerRequestToPage
+    limit: TOTAL_POSTS_PER_PAGE
   }
   const postsRequestConfig: AxiosRequestConfig = {
     ...createGetRequestConfig({ ...defaultParams, ...params }),
@@ -76,7 +73,7 @@ export function createCategoriesRequestConfig(params: MicroCmsQuery = {}) {
   const defaultParams = {
     fields: 'id,name.id',
     offset: 0,
-    limit: categoriesPerRequest
+    limit: MAX_API_GET_REQUEST_LIMIT
   }
   const categoriesRequestConfig: AxiosRequestConfig = {
     ...createGetRequestConfig({ ...defaultParams, ...params }),
@@ -89,7 +86,7 @@ export function createInputFieldsRequestConfig(params: MicroCmsQuery = {}) {
   const defaultParams = {
     fields: 'id,label.id,name,type,options,rules',
     offset: 0,
-    limit: inputFieldsPerRequest
+    limit: MAX_API_GET_REQUEST_LIMIT
   }
   const inputFieldsRequestConfig: AxiosRequestConfig = {
     ...createGetRequestConfig({ ...defaultParams, ...params }),
@@ -102,7 +99,7 @@ export function createPlainTextRequestConfig(params: MicroCmsQuery = {}) {
   const defaultParams = {
     fields: 'id,value',
     offset: 0,
-    limit: plainTextPerRequest
+    limit: MAX_API_GET_REQUEST_LIMIT
   }
   const plainTextRequestConfig: AxiosRequestConfig = {
     ...createGetRequestConfig({ ...defaultParams, ...params }),
@@ -115,7 +112,7 @@ export function createRichTextRequestConfig(params: MicroCmsQuery = {}) {
   const defaultParams = {
     fields: 'id,value',
     offset: 0,
-    limit: richTextPerRequest
+    limit: MAX_API_GET_REQUEST_LIMIT
   }
   const richTextRequestConfig: AxiosRequestConfig = {
     ...createGetRequestConfig({ ...defaultParams, ...params }),

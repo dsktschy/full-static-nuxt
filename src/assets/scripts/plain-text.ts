@@ -1,13 +1,12 @@
 import axios from 'axios'
-import { plainTextPerRequest } from '../json/variables.json'
 import { createPlainTextRequestConfig } from './request-config'
 import { MicroCmsQuery, MicroCmsListResponse } from './micro-cms'
-import { defaultLocale } from './nuxt-i18n-options'
+import { DEFAULT_LOCALE, MAX_API_GET_REQUEST_LIMIT } from './constants'
 
 export interface PlainTextContent {
   id: string
   value: {
-    [defaultLocale]: string
+    [DEFAULT_LOCALE]: string
     [locale: string]: string
   }
 }
@@ -26,10 +25,10 @@ export async function getAllPlainTextContents() {
   let plainTextContentList: PlainTextContent[] = []
   do {
     plainTextContentList = await getPlainTextContentList({
-      limit: plainTextPerRequest,
+      limit: MAX_API_GET_REQUEST_LIMIT,
       offset: allPlainTextContents.length
     })
     allPlainTextContents.push(...plainTextContentList)
-  } while (plainTextContentList.length === plainTextPerRequest)
+  } while (plainTextContentList.length === MAX_API_GET_REQUEST_LIMIT)
   return allPlainTextContents
 }

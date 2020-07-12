@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { inputFieldsPerRequest } from '../json/variables.json'
 import { createInputFieldsRequestConfig } from './request-config'
 import { MicroCmsQuery, MicroCmsListResponse } from './micro-cms'
 import { PlainTextContent } from './plain-text'
+import { MAX_API_GET_REQUEST_LIMIT } from './constants'
 
 interface InputFieldContentOption {
   label?: PlainTextContent
@@ -41,11 +41,11 @@ export async function getAllInputFieldContents() {
   let inputFieldContentList: InputFieldContent[] = []
   do {
     inputFieldContentList = await getInputFieldContentList({
-      limit: inputFieldsPerRequest,
+      limit: MAX_API_GET_REQUEST_LIMIT,
       offset: allInputFieldContents.length
     })
     allInputFieldContents.push(...inputFieldContentList)
-  } while (inputFieldContentList.length === inputFieldsPerRequest)
+  } while (inputFieldContentList.length === MAX_API_GET_REQUEST_LIMIT)
   return allInputFieldContents
 }
 

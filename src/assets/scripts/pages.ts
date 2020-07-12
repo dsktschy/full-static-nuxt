@@ -1,10 +1,10 @@
 import axios from 'axios'
-import { pagesPerRequestToGenerate } from '../json/variables.json'
 import { createPagesRequestConfig } from './request-config'
 import { MicroCmsQuery, MicroCmsListResponse } from './micro-cms'
 import { PlainTextContent } from './plain-text'
 import { RichTextContent } from './rich-text'
 import { ImageContent } from './images'
+import { MAX_API_GET_REQUEST_LIMIT } from './constants'
 
 export interface PageContent {
   id: string
@@ -37,11 +37,11 @@ export async function getAllPageContentsForNav() {
   let pageContentList: PageContent[] = []
   do {
     pageContentList = await getPageContentList({
-      limit: pagesPerRequestToGenerate,
+      limit: MAX_API_GET_REQUEST_LIMIT,
       offset: allPageContentsForNav.length,
       fields: 'id,path,title.id'
     })
     allPageContentsForNav.push(...pageContentList)
-  } while (pageContentList.length === pagesPerRequestToGenerate)
+  } while (pageContentList.length === MAX_API_GET_REQUEST_LIMIT)
   return allPageContentsForNav
 }

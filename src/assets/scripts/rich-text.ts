@@ -1,13 +1,12 @@
 import axios from 'axios'
-import { richTextPerRequest } from '../json/variables.json'
 import { createRichTextRequestConfig } from './request-config'
 import { MicroCmsQuery, MicroCmsListResponse } from './micro-cms'
-import { defaultLocale } from './nuxt-i18n-options'
+import { DEFAULT_LOCALE, MAX_API_GET_REQUEST_LIMIT } from './constants'
 
 export interface RichTextContent {
   id: string
   value: {
-    [defaultLocale]: string
+    [DEFAULT_LOCALE]: string
     [locale: string]: string
   }
 }
@@ -26,10 +25,10 @@ export async function getAllRichTextContents() {
   let richTextContentList: RichTextContent[] = []
   do {
     richTextContentList = await getRichTextContentList({
-      limit: richTextPerRequest,
+      limit: MAX_API_GET_REQUEST_LIMIT,
       offset: allRichTextContents.length
     })
     allRichTextContents.push(...richTextContentList)
-  } while (richTextContentList.length === richTextPerRequest)
+  } while (richTextContentList.length === MAX_API_GET_REQUEST_LIMIT)
   return allRichTextContents
 }

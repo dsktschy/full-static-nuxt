@@ -2,10 +2,10 @@ import { config as configureDotenv } from 'dotenv'
 import { NuxtConfig } from '@nuxt/types'
 import { Configuration as WebpackConfiguration } from 'webpack'
 import {
-  langDir,
-  locales,
-  defaultLocale
-} from './src/assets/scripts/nuxt-i18n-options'
+  LOCALES,
+  DEFAULT_LOCALE,
+  LANG_DIR
+} from './src/assets/scripts/constants'
 import { handleError } from './src/assets/scripts/error-handler'
 
 configureDotenv()
@@ -76,9 +76,9 @@ const config: NuxtConfig = {
       'nuxt-i18n',
       {
         lazy: true,
-        langDir,
-        locales,
-        defaultLocale,
+        langDir: LANG_DIR,
+        locales: LOCALES,
+        defaultLocale: DEFAULT_LOCALE,
         vueI18n: {
           warnHtmlInMessage: 'off'
         }

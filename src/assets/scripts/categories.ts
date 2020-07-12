@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { categoriesPerRequest } from '../json/variables.json'
 import { createCategoriesRequestConfig } from './request-config'
 import { MicroCmsQuery, MicroCmsListResponse } from './micro-cms'
 import { PlainTextContent } from './plain-text'
+import { MAX_API_GET_REQUEST_LIMIT } from './constants'
 
 export interface CategoryContent {
   id: string
@@ -23,10 +23,10 @@ export async function getAllCategoryContents() {
   let categoryContentList: CategoryContent[] = []
   do {
     categoryContentList = await getCategoryContentList({
-      limit: categoriesPerRequest,
+      limit: MAX_API_GET_REQUEST_LIMIT,
       offset: allCategoryContents.length
     })
     allCategoryContents.push(...categoryContentList)
-  } while (categoryContentList.length === categoriesPerRequest)
+  } while (categoryContentList.length === MAX_API_GET_REQUEST_LIMIT)
   return allCategoryContents
 }

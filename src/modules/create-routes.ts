@@ -1,6 +1,5 @@
 import fs from 'fs-extra'
 import { Module } from '@nuxt/types'
-import { postsPerRequestToPage } from '../assets/json/variables.json'
 import {
   getAllPostContentsPerLocale,
   PostContent
@@ -9,7 +8,11 @@ import {
   getAllCategoryContents,
   CategoryContent
 } from '../assets/scripts/categories'
-import { localeCodes, defaultLocale } from '../assets/scripts/nuxt-i18n-options'
+import {
+  LOCALE_CODE_LIST,
+  DEFAULT_LOCALE,
+  TOTAL_POSTS_PER_PAGE
+} from '../assets/scripts/constants'
 
 interface Options {}
 
@@ -56,20 +59,20 @@ async function _createDynamicRoutes() {
   ])
   const localizedPageRoutes: LocalizedPageRoute[] = []
 
-  for (const localeCode of localeCodes) {
-    const allLocalizedPostContents = allPostContentsPerLocale[localeCode]
+  for (const LOCALE_CODE of LOCALE_CODE_LIST) {
+    const allLocalizedPostContents = allPostContentsPerLocale[LOCALE_CODE]
     const allLocalizedPostContentsPerCategory: { [category: string]: PostContent[] } = {}
     const maxLocalizedPageIndex =
-      Math.ceil(allLocalizedPostContents.length / postsPerRequestToPage)
+      Math.ceil(allLocalizedPostContents.length / TOTAL_POSTS_PER_PAGE)
     const allLocalizedCategoryContents: CategoryContent[] = []
-    const localePath = localeCode === defaultLocale ? '' : `/${localeCode}`
+    const localePath = LOCALE_CODE === DEFAULT_LOCALE ? '' : `/${LOCALE_CODE}`
 
     for (const categoryContent of allCategoryContents) {
       allLocalizedPostContentsPerCategory[categoryContent.id] = []
     }
 
     const localizedPostContentListsPerPage: PostContent[][] = []
-    for (let i = 0; i < allLocalizedPostContents.length / postsPerRequestToPage; i++)
+    for (let i = 0; i < allLocalizedPostContents.length / TOTAL_POSTS_PER_PAGE; i++)
       localizedPostContentListsPerPage[i] = []
     for (let i = 0; i < allLocalizedPostContents.length; i++) {
       const postContent = allLocalizedPostContents[i]
@@ -86,11 +89,11 @@ async function _createDynamicRoutes() {
         prevPostContent,
         nextPostContent
       }
-      const payloadPath = `src/assets/json/payloads/blog-id___${localeCode}-${postContent.id}.json`
+      const payloadPath = `src/assets/json/payloads/blog-id___${LOCALE_CODE}-${postContent.id}.json`
       localizedPageRoutes.push({ route, payload, payloadPath })
 
       // Create blog index page routes
-      const pageIndex = Math.floor(i / postsPerRequestToPage)
+      const pageIndex = Math.floor(i / TOTAL_POSTS_PER_PAGE)
       localizedPostContentListsPerPage[pageIndex].push(postContent)
 
       // Categorize
@@ -109,13 +112,13 @@ async function _createDynamicRoutes() {
         maxLocalizedPageIndex,
         allLocalizedCategoryContents
       }
-      const payloadPath = `src/assets/json/payloads/blog-page-index___${localeCode}-${pageIndex}.json`
+      const payloadPath = `src/assets/json/payloads/blog-page-index___${LOCALE_CODE}-${pageIndex}.json`
       localizedPageRoutes.push({ route, payload, payloadPath })
 
       // Create index page route
       if (!i) {
         const route = localePath || '/'
-        const payloadPath = `src/assets/json/payloads/index___${localeCode}.json`
+        const payloadPath = `src/assets/json/payloads/index___${LOCALE_CODE}.json`
         localizedPageRoutes.push({ route, payload, payloadPath })
       }
     }
@@ -128,18 +131,18 @@ async function _createDynamicRoutes() {
       const categoryId = categoryContent.id
       const allLocalizedCategorizedPostContents = allLocalizedPostContentsPerCategory[categoryId]
       const maxLocalizedCategorizedPageIndex =
-        Math.ceil(allLocalizedCategorizedPostContents.length / postsPerRequestToPage)
+        Math.ceil(allLocalizedCategorizedPostContents.length / TOTAL_POSTS_PER_PAGE)
       if (allLocalizedCategorizedPostContents.length)
         allLocalizedCategoryContents.push(categoryContent)
 
       const localizedCategorizedPostContentListsPerPage: PostContent[][] = []
-      for (let j = 0; j < allLocalizedCategorizedPostContents.length / postsPerRequestToPage; j++)
+      for (let j = 0; j < allLocalizedCategorizedPostContents.length / TOTAL_POSTS_PER_PAGE; j++)
         localizedCategorizedPostContentListsPerPage[j] = []
       for (let j = 0; j < allLocalizedCategorizedPostContents.length; j++) {
         const postContent = allLocalizedCategorizedPostContents[j]
 
         // Create blog index page routes
-        const pageIndex = Math.floor(j / postsPerRequestToPage)
+        const pageIndex = Math.floor(j / TOTAL_POSTS_PER_PAGE)
         localizedCategorizedPostContentListsPerPage[pageIndex].push(postContent)
       }
 
@@ -154,7 +157,7 @@ async function _createDynamicRoutes() {
           allLocalizedCategoryContents,
           categoryContent
         }
-        const payloadPath = `src/assets/json/payloads/blog-category-id-page-index___${localeCode}-${categoryId}-${pageIndex}.json`
+        const payloadPath = `src/assets/json/payloads/blog-category-id-page-index___${LOCALE_CODE}-${categoryId}-${pageIndex}.json`
         localizedPageRoutes.push({ route, payload, payloadPath })
       }
     }

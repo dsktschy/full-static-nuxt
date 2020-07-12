@@ -1,27 +1,29 @@
 import axios from 'axios'
-import { postsPerRequestToGenerate } from '../json/variables.json'
-import { localeCodes } from './nuxt-i18n-options'
 import { createPostsRequestConfig } from './request-config'
 import { MicroCmsQuery, MicroCmsListResponse } from './micro-cms'
 import { CategoryContent } from './categories'
-import { defaultLocale } from './nuxt-i18n-options'
+import {
+  MAX_API_GET_REQUEST_LIMIT,
+  LOCALE_CODE_LIST,
+  DEFAULT_LOCALE
+} from './constants'
 
 export interface PostContent {
   id: string
   createdAt: string
   title: {
-    [defaultLocale]: string
+    [DEFAULT_LOCALE]: string
     [locale: string]: string
   }
   description: {
-    [defaultLocale]: string
+    [DEFAULT_LOCALE]: string
     [locale: string]: string
   }
   featuredImage: {
     url: string
   }
   content: {
-    [defaultLocale]: string
+    [DEFAULT_LOCALE]: string
     [locale: string]: string
   }
   category: CategoryContent
@@ -41,23 +43,23 @@ export async function getAllPostContents() {
   let postContentList: PostContent[] = []
   do {
     postContentList = await getPostContentList({
-      limit: postsPerRequestToGenerate,
+      limit: MAX_API_GET_REQUEST_LIMIT,
       offset: allPostContents.length
     })
     allPostContents.push(...postContentList)
-  } while (postContentList.length === postsPerRequestToGenerate)
+  } while (postContentList.length === MAX_API_GET_REQUEST_LIMIT)
   return allPostContents
 }
 
 export async function getAllPostContentsPerLocale() {
   const allPostContents = await getAllPostContents()
   const allPostContentsPerLocale: { [locale: string]: PostContent[] } = {}
-  for (const localeCode of localeCodes) {
+  for (const LOCALE_CODE of LOCALE_CODE_LIST) {
     const postContentList: PostContent[] = []
     for (const postContent of allPostContents) {
-      if (localeCode in postContent.title) postContentList.push(postContent)
+      if (LOCALE_CODE in postContent.title) postContentList.push(postContent)
     }
-    allPostContentsPerLocale[localeCode] = postContentList
+    allPostContentsPerLocale[LOCALE_CODE] = postContentList
   }
   return allPostContentsPerLocale
 }
