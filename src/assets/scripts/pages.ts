@@ -33,8 +33,8 @@ export async function getPageContentList(params: MicroCmsQuery = {}) {
 }
 
 export async function getAllPageContentsForNav() {
-  const allPageContentsForNav = []
-  let pageContentList = []
+  const allPageContentsForNav: PageContent[] = []
+  let pageContentList: PageContent[] = []
   do {
     pageContentList = await getPageContentList({
       limit: pagesPerRequestToGenerate,

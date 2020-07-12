@@ -30,7 +30,7 @@ async function _createMessages() {
     ...allRichTextContents
   ]
 
-  const outputJsonPromiseList = []
+  const outputJsonPromiseList: Promise<void>[] = []
   for (const locale of locales) {
     const message: LocaleMessageObject = {}
     for (const textContent of allTextContents) {

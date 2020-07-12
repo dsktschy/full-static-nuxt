@@ -22,8 +22,8 @@ export async function getRichTextContentList(params: MicroCmsQuery = {}) {
 }
 
 export async function getAllRichTextContents() {
-  const allRichTextContents = []
-  let richTextContentList = []
+  const allRichTextContents: RichTextContent[] = []
+  let richTextContentList: RichTextContent[] = []
   do {
     richTextContentList = await getRichTextContentList({
       limit: richTextPerRequest,

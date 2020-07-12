@@ -37,8 +37,8 @@ export async function getInputFieldContentList(params: MicroCmsQuery = {}) {
 }
 
 export async function getAllInputFieldContents() {
-  const allInputFieldContents = []
-  let inputFieldContentList = []
+  const allInputFieldContents: InputFieldContent[] = []
+  let inputFieldContentList: InputFieldContent[] = []
   do {
     inputFieldContentList = await getInputFieldContentList({
       limit: inputFieldsPerRequest,

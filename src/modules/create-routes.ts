@@ -13,6 +13,34 @@ import { localeCodes, defaultLocale } from '../assets/scripts/nuxt-i18n-options'
 
 interface Options {}
 
+interface LocalizedPostPagePayload {
+  postContent: PostContent
+  prevPostContent: PostContent | null
+  nextPostContent: PostContent | null
+}
+
+interface LocalizedPostIndexPagePayload {
+  postContentList: PostContent[]
+  maxLocalizedPageIndex: number
+  allLocalizedCategoryContents: CategoryContent[]
+}
+
+interface LocalizedCategorizedPostIndexPagePayload {
+  postContentList: PostContent[]
+  maxLocalizedCategorizedPageIndex: number
+  allLocalizedCategoryContents: CategoryContent[]
+  categoryContent: CategoryContent
+}
+
+interface LocalizedPageRoute {
+  route: string
+  payload:
+    | LocalizedPostPagePayload
+    | LocalizedPostIndexPagePayload
+    | LocalizedCategorizedPostIndexPagePayload
+  payloadPath: string
+}
+
 const createDynamicRoutes: Module<Options> = function() {
   this.nuxt.hook('build:compile', _createDynamicRoutes)
 }
@@ -26,7 +54,7 @@ async function _createDynamicRoutes() {
     getAllPostContentsPerLocale(),
     getAllCategoryContents()
   ])
-  const localizedPageRoutes = []
+  const localizedPageRoutes: LocalizedPageRoute[] = []
 
   for (const localeCode of localeCodes) {
     const allLocalizedPostContents = allPostContentsPerLocale[localeCode]
@@ -132,8 +160,8 @@ async function _createDynamicRoutes() {
     }
   }
 
-  const promises = []
-  const dynamicRoutes = []
+  const promises: Promise<void>[] = []
+  const dynamicRoutes: string[] = []
   for (const { route, payload, payloadPath } of localizedPageRoutes) {
     promises.push(fs.outputJSON(payloadPath, payload))
     dynamicRoutes.push(route)

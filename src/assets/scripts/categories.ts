@@ -19,8 +19,8 @@ export async function getCategoryContentList(params: MicroCmsQuery = {}) {
 }
 
 export async function getAllCategoryContents() {
-  const allCategoryContents = []
-  let categoryContentList = []
+  const allCategoryContents: CategoryContent[] = []
+  let categoryContentList: CategoryContent[] = []
   do {
     categoryContentList = await getCategoryContentList({
       limit: categoriesPerRequest,

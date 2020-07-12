@@ -37,8 +37,8 @@ export async function getPostContentList(params: MicroCmsQuery = {}) {
 }
 
 export async function getAllPostContents() {
-  const allPostContents = []
-  let postContentList = []
+  const allPostContents: PostContent[] = []
+  let postContentList: PostContent[] = []
   do {
     postContentList = await getPostContentList({
       limit: postsPerRequestToGenerate,
@@ -53,7 +53,7 @@ export async function getAllPostContentsPerLocale() {
   const allPostContents = await getAllPostContents()
   const allPostContentsPerLocale: { [locale: string]: PostContent[] } = {}
   for (const localeCode of localeCodes) {
-    const postContentList = []
+    const postContentList: PostContent[] = []
     for (const postContent of allPostContents) {
       if (localeCode in postContent.title) postContentList.push(postContent)
     }

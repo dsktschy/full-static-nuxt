@@ -22,8 +22,8 @@ export async function getPlainTextContentList(params: MicroCmsQuery = {}) {
 }
 
 export async function getAllPlainTextContents() {
-  const allPlainTextContents = []
-  let plainTextContentList = []
+  const allPlainTextContents: PlainTextContent[] = []
+  let plainTextContentList: PlainTextContent[] = []
   do {
     plainTextContentList = await getPlainTextContentList({
       limit: plainTextPerRequest,
