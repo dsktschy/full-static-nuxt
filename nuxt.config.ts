@@ -44,10 +44,7 @@ const config: NuxtConfig = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [
-    '~/plugins/initialize-vee-validate',
-    '~/plugins/inject-page-contents-for-nav'
-  ],
+  plugins: ['~/plugins/initialize-vee-validate', '~/plugins/inject-nav-state'],
 
   /*
    ** Nuxt.js dev-modules

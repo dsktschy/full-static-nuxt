@@ -4,31 +4,34 @@
       {{ $t('site-data-title') }}
     </NuxtLink>
 
-    <ul v-if="$pageContentsForNav.firstLowerLevelExisting" class="nav">
+    <ul
+      v-if="$navState.firstLowerLevelPartialPageContentListExisting"
+      class="nav"
+    >
       <li class="nav-item">
-        <NuxtLink :to="localePath($pageContentsForNav.about.path)">
-          {{ $t($pageContentsForNav.about.title.id) }}
+        <NuxtLink :to="localePath($navState.aboutPartialPageContent.path)">
+          {{ $t($navState.aboutPartialPageContent.title.id) }}
         </NuxtLink>
         <ul>
           <NuxtLink
-            v-for="aboutLowerPageContent of $pageContentsForNav.aboutSecondLowerLevel"
-            :key="aboutLowerPageContent.id"
-            :to="localePath(aboutLowerPageContent.path)"
+            v-for="partialPageContent of $navState.aboutSecondLowerLevelPartialPageContentList"
+            :key="partialPageContent.id"
+            :to="localePath(partialPageContent.path)"
             tag="li"
             class="nav-lower-item"
           >
-            {{ $t(aboutLowerPageContent.title.id) }}
+            {{ $t(partialPageContent.title.id) }}
           </NuxtLink>
         </ul>
       </li>
       <li class="nav-item">
-        <NuxtLink :to="localePath($pageContentsForNav.blog.path)">
-          {{ $t($pageContentsForNav.blog.title.id) }}
+        <NuxtLink :to="localePath($navState.blogPartialPageContent.path)">
+          {{ $t($navState.blogPartialPageContent.title.id) }}
         </NuxtLink>
       </li>
       <li class="nav-item">
-        <NuxtLink :to="localePath($pageContentsForNav.contact.path)">
-          {{ $t($pageContentsForNav.contact.title.id) }}
+        <NuxtLink :to="localePath($navState.contactPartialPageContent.path)">
+          {{ $t($navState.contactPartialPageContent.title.id) }}
         </NuxtLink>
       </li>
     </ul>

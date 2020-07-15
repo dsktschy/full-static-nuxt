@@ -38,7 +38,7 @@
 <script>
 import { getSiteDataContent } from '~/assets/scripts/site-data.ts'
 import {
-  getAllPageContentsForNav,
+  getAllPartialPageContents,
   getPageContent
 } from '~/assets/scripts/pages.ts'
 import { createHead } from '~/assets/scripts/head.ts'
@@ -47,20 +47,20 @@ import { padWithZero } from '~/assets/scripts/utility.ts'
 export default {
   async asyncData({ app }) {
     // For global
-    const allPageContentsForNav = await getAllPageContentsForNav()
+    const allPartialPageContents = await getAllPartialPageContents()
 
     // For page
     const siteDataContent = await getSiteDataContent()
     const routeName = app.getRouteBaseName()
     const pageContent = await getPageContent(routeName)
-    const lowerPageContentList = allPageContentsForNav.filter(
+    const lowerPageContentList = allPartialPageContents.filter(
       (pageContent) =>
         pageContent.path && pageContent.path.startsWith('/about/')
     )
 
     return {
       siteDataContent,
-      allPageContentsForNav,
+      allPartialPageContents,
       pageContent,
       lowerPageContentList
     }
@@ -105,7 +105,7 @@ export default {
 
   created() {
     // Assign value to global
-    this.$pageContentsForNav.all = this.allPageContentsForNav
+    this.$navState.allPartialPageContents = this.allPartialPageContents
   },
 
   methods: {

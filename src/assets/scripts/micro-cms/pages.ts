@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { PageContent } from '../pages'
+import { PageContent, PartialPageContent } from '../pages'
 import { MAX_API_GET_REQUEST_LIMIT } from '../constants'
 import { createPagesRequestConfig } from './request-config'
 import { MicroCmsQuery } from './query'
@@ -7,29 +7,26 @@ import { MicroCmsListResponse } from './response'
 
 export async function getPageContent(id: string) {
   const config = createPagesRequestConfig()
-  const response = await axios.get(id, config)
+  const response = await axios.get<PageContent>(id, config)
   return response.data
 }
 
-async function getPageContentList(params: MicroCmsQuery = {}) {
+async function getPageContentList<T>(params: MicroCmsQuery = {}) {
   const config = createPagesRequestConfig(params)
-  const response = await axios.get<MicroCmsListResponse<PageContent>>(
-    '',
-    config
-  )
+  const response = await axios.get<MicroCmsListResponse<T>>('', config)
   return response.data.contents
 }
 
-export async function getAllPageContentsForNav() {
-  const allPageContentsForNav: PageContent[] = []
-  let pageContentList: PageContent[] = []
+export async function getAllPartialPageContents() {
+  const allPartialPageContents: PartialPageContent[] = []
+  let pageContentList: PartialPageContent[] = []
   do {
-    pageContentList = await getPageContentList({
+    pageContentList = await getPageContentList<PartialPageContent>({
       limit: MAX_API_GET_REQUEST_LIMIT,
-      offset: allPageContentsForNav.length,
+      offset: allPartialPageContents.length,
       fields: 'id,path,title.id'
     })
-    allPageContentsForNav.push(...pageContentList)
+    allPartialPageContents.push(...pageContentList)
   } while (pageContentList.length === MAX_API_GET_REQUEST_LIMIT)
-  return allPageContentsForNav
+  return allPartialPageContents
 }

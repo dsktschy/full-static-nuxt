@@ -13,9 +13,15 @@ export interface PageContent {
   images: ImageContent[]
 }
 
+export interface PartialPageContent {
+  id: string
+  path?: string
+  title: PlainTextContent
+}
+
 interface Child {
   getPageContent(id: string): Promise<PageContent>
-  getAllPageContentsForNav(): Promise<PageContent[]>
+  getAllPartialPageContents(): Promise<PartialPageContent[]>
 }
 
 let child: Child | null = null
@@ -36,8 +42,8 @@ export async function getPageContent(id: string) {
   return result
 }
 
-export async function getAllPageContentsForNav() {
-  const { getAllPageContentsForNav } = await getChild()
-  const result = await getAllPageContentsForNav()
+export async function getAllPartialPageContents() {
+  const { getAllPartialPageContents } = await getChild()
+  const result = await getAllPartialPageContents()
   return result
 }

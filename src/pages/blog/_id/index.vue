@@ -36,7 +36,7 @@
 
 <script>
 import { getSiteDataContent } from '~/assets/scripts/site-data.ts'
-import { getAllPageContentsForNav } from '~/assets/scripts/pages.ts'
+import { getAllPartialPageContents } from '~/assets/scripts/pages.ts'
 import { createHead } from '~/assets/scripts/head.ts'
 
 export default {
@@ -50,7 +50,7 @@ export default {
     }
 
     // For global
-    const allPageContentsForNav = await getAllPageContentsForNav()
+    const allPartialPageContents = await getAllPartialPageContents()
 
     // For page
     const siteDataContent = await getSiteDataContent()
@@ -61,7 +61,7 @@ export default {
 
     return {
       siteDataContent,
-      allPageContentsForNav,
+      allPartialPageContents,
       postContent,
       prevPostContent,
       nextPostContent
@@ -70,7 +70,7 @@ export default {
 
   created() {
     // Assign value to global
-    this.$pageContentsForNav.all = this.allPageContentsForNav
+    this.$navState.allPartialPageContents = this.allPartialPageContents
   },
 
   head() {
