@@ -1,10 +1,6 @@
-import axios from 'axios'
-import { createPagesRequestConfig } from './request-config'
-import { MicroCmsQuery, MicroCmsListResponse } from './micro-cms'
 import { PlainTextContent } from './plain-text'
 import { RichTextContent } from './rich-text'
 import { ImageContent } from './images'
-import { MAX_API_GET_REQUEST_LIMIT } from './constants'
 
 export interface PageContent {
   id: string
@@ -17,31 +13,31 @@ export interface PageContent {
   images: ImageContent[]
 }
 
-export async function getPageContent(id: string) {
-  const config = createPagesRequestConfig()
-  const response = await axios.get(id, config)
-  return response.data
+interface Child {
+  getPageContent(id: string): Promise<PageContent>
+  getAllPageContentsForNav(): Promise<PageContent[]>
 }
 
-export async function getPageContentList(params: MicroCmsQuery = {}) {
-  const config = createPagesRequestConfig(params)
-  const response = await axios.get<MicroCmsListResponse<PageContent>>(
-    '',
-    config
-  )
-  return response.data.contents
+let child: Child | null = null
+
+async function getChild() {
+  if (child) return child
+  if (!process.env.NUXT_ENV_CONTENT_API_TYPE)
+    throw new Error('Content API type is not defined')
+  child = (await import(
+    `./${process.env.NUXT_ENV_CONTENT_API_TYPE}/pages.ts`
+  )) as Child
+  return child
+}
+
+export async function getPageContent(id: string) {
+  const { getPageContent } = await getChild()
+  const result = await getPageContent(id)
+  return result
 }
 
 export async function getAllPageContentsForNav() {
-  const allPageContentsForNav: PageContent[] = []
-  let pageContentList: PageContent[] = []
-  do {
-    pageContentList = await getPageContentList({
-      limit: MAX_API_GET_REQUEST_LIMIT,
-      offset: allPageContentsForNav.length,
-      fields: 'id,path,title.id'
-    })
-    allPageContentsForNav.push(...pageContentList)
-  } while (pageContentList.length === MAX_API_GET_REQUEST_LIMIT)
-  return allPageContentsForNav
+  const { getAllPageContentsForNav } = await getChild()
+  const result = await getAllPageContentsForNav()
+  return result
 }

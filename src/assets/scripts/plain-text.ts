@@ -1,7 +1,4 @@
-import axios from 'axios'
-import { createPlainTextRequestConfig } from './request-config'
-import { MicroCmsQuery, MicroCmsListResponse } from './micro-cms'
-import { DEFAULT_LOCALE, MAX_API_GET_REQUEST_LIMIT } from './constants'
+import { DEFAULT_LOCALE } from './constants'
 
 export interface PlainTextContent {
   id: string
@@ -11,24 +8,24 @@ export interface PlainTextContent {
   }
 }
 
-export async function getPlainTextContentList(params: MicroCmsQuery = {}) {
-  const config = createPlainTextRequestConfig(params)
-  const response = await axios.get<MicroCmsListResponse<PlainTextContent>>(
-    '',
-    config
-  )
-  return response.data.contents
+interface Child {
+  getAllPlainTextContents(): Promise<PlainTextContent[]>
+}
+
+let child: Child | null = null
+
+async function getChild() {
+  if (child) return child
+  if (!process.env.NUXT_ENV_CONTENT_API_TYPE)
+    throw new Error('Content API type is not defined')
+  child = (await import(
+    `./${process.env.NUXT_ENV_CONTENT_API_TYPE}/plain-text.ts`
+  )) as Child
+  return child
 }
 
 export async function getAllPlainTextContents() {
-  const allPlainTextContents: PlainTextContent[] = []
-  let plainTextContentList: PlainTextContent[] = []
-  do {
-    plainTextContentList = await getPlainTextContentList({
-      limit: MAX_API_GET_REQUEST_LIMIT,
-      offset: allPlainTextContents.length
-    })
-    allPlainTextContents.push(...plainTextContentList)
-  } while (plainTextContentList.length === MAX_API_GET_REQUEST_LIMIT)
-  return allPlainTextContents
+  const { getAllPlainTextContents } = await getChild()
+  const result = await getAllPlainTextContents()
+  return result
 }

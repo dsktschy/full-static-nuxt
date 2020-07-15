@@ -1,8 +1,4 @@
-import axios from 'axios'
-import { createInputFieldsRequestConfig } from './request-config'
-import { MicroCmsQuery, MicroCmsListResponse } from './micro-cms'
 import { PlainTextContent } from './plain-text'
-import { MAX_API_GET_REQUEST_LIMIT } from './constants'
 
 interface InputFieldContentOption {
   label?: PlainTextContent
@@ -27,26 +23,26 @@ export interface InputFieldContent {
   rules: InputFieldContentRule | null
 }
 
-export async function getInputFieldContentList(params: MicroCmsQuery = {}) {
-  const config = createInputFieldsRequestConfig(params)
-  const response = await axios.get<MicroCmsListResponse<InputFieldContent>>(
-    '',
-    config
-  )
-  return response.data.contents
+interface Child {
+  getAllInputFieldContents(): Promise<InputFieldContent[]>
+}
+
+let child: Child | null = null
+
+async function getChild() {
+  if (child) return child
+  if (!process.env.NUXT_ENV_CONTENT_API_TYPE)
+    throw new Error('Content API type is not defined')
+  child = (await import(
+    `./${process.env.NUXT_ENV_CONTENT_API_TYPE}/input-fields.ts`
+  )) as Child
+  return child
 }
 
 export async function getAllInputFieldContents() {
-  const allInputFieldContents: InputFieldContent[] = []
-  let inputFieldContentList: InputFieldContent[] = []
-  do {
-    inputFieldContentList = await getInputFieldContentList({
-      limit: MAX_API_GET_REQUEST_LIMIT,
-      offset: allInputFieldContents.length
-    })
-    allInputFieldContents.push(...inputFieldContentList)
-  } while (inputFieldContentList.length === MAX_API_GET_REQUEST_LIMIT)
-  return allInputFieldContents
+  const { getAllInputFieldContents } = await getChild()
+  const result = await getAllInputFieldContents()
+  return result
 }
 
 export function isRadio(inputFieldContent: InputFieldContent) {

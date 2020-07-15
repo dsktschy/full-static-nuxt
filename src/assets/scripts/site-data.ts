@@ -1,5 +1,3 @@
-import axios from 'axios'
-import { createSiteDataRequestConfig } from './request-config'
 import { PlainTextContent } from './plain-text'
 import { ImageContent } from './images'
 
@@ -9,8 +7,24 @@ export interface SiteDataContent {
   ogImage: ImageContent
 }
 
+interface Child {
+  getSiteDataContent(): Promise<SiteDataContent>
+}
+
+let child: Child | null = null
+
+async function getChild() {
+  if (child) return child
+  if (!process.env.NUXT_ENV_CONTENT_API_TYPE)
+    throw new Error('Content API type is not defined')
+  child = (await import(
+    `./${process.env.NUXT_ENV_CONTENT_API_TYPE}/site-data.ts`
+  )) as Child
+  return child
+}
+
 export async function getSiteDataContent() {
-  const config = createSiteDataRequestConfig()
-  const response = await axios.get<SiteDataContent>('', config)
-  return response.data
+  const { getSiteDataContent } = await getChild()
+  const result = await getSiteDataContent()
+  return result
 }

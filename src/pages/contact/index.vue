@@ -6,8 +6,8 @@
       <form
         v-if="!completed"
         :name="formValues['form-name']"
-        data-netlify="true"
-        data-netlify-honeypot="honeypot"
+        :data-netlify="dataNetlifyValue"
+        :data-netlify-honeypot="dataNetlifyHoneypotValue"
         @submit.prevent="handleSubmit(submit)"
       >
         <!-- To avoid error, insert hidden field that Netlify inserts, in advance -->
@@ -18,7 +18,11 @@
         />
 
         <!-- Trap spam submissions -->
-        <input v-model="formValues.honeypot" name="honeypot" class="honeypot" />
+        <input
+          v-model="formValues.honeypot"
+          :name="honeypotName"
+          class="honeypot"
+        />
 
         <ValidationProvider
           v-for="inputFieldContent of allInputFieldContents"
@@ -241,7 +245,20 @@ export default {
   data() {
     return {
       confirming: false,
-      completed: false
+      completed: false,
+      honeypotName: 'honeypot'
+    }
+  },
+
+  computed: {
+    dataNetlifyValue() {
+      return process.env.NUXT_ENV_CONTACT_API_TYPE === 'netlify' ? 'true' : null
+    },
+
+    dataNetlifyHoneypotValue() {
+      return process.env.NUXT_ENV_CONTACT_API_TYPE === 'netlify'
+        ? this.honeypotName
+        : null
     }
   },
 

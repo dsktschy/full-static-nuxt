@@ -1,7 +1,4 @@
-import axios from 'axios'
-import { createRichTextRequestConfig } from './request-config'
-import { MicroCmsQuery, MicroCmsListResponse } from './micro-cms'
-import { DEFAULT_LOCALE, MAX_API_GET_REQUEST_LIMIT } from './constants'
+import { DEFAULT_LOCALE } from './constants'
 
 export interface RichTextContent {
   id: string
@@ -11,24 +8,24 @@ export interface RichTextContent {
   }
 }
 
-export async function getRichTextContentList(params: MicroCmsQuery = {}) {
-  const config = createRichTextRequestConfig(params)
-  const response = await axios.get<MicroCmsListResponse<RichTextContent>>(
-    '',
-    config
-  )
-  return response.data.contents
+interface Child {
+  getAllRichTextContents(): Promise<RichTextContent[]>
+}
+
+let child: Child | null = null
+
+async function getChild() {
+  if (child) return child
+  if (!process.env.NUXT_ENV_CONTENT_API_TYPE)
+    throw new Error('Content API type is not defined')
+  child = (await import(
+    `./${process.env.NUXT_ENV_CONTENT_API_TYPE}/rich-text.ts`
+  )) as Child
+  return child
 }
 
 export async function getAllRichTextContents() {
-  const allRichTextContents: RichTextContent[] = []
-  let richTextContentList: RichTextContent[] = []
-  do {
-    richTextContentList = await getRichTextContentList({
-      limit: MAX_API_GET_REQUEST_LIMIT,
-      offset: allRichTextContents.length
-    })
-    allRichTextContents.push(...richTextContentList)
-  } while (richTextContentList.length === MAX_API_GET_REQUEST_LIMIT)
-  return allRichTextContents
+  const { getAllRichTextContents } = await getChild()
+  const result = await getAllRichTextContents()
+  return result
 }
