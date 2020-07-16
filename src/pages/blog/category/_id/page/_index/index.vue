@@ -10,7 +10,7 @@
 
     <ul class="category-list">
       <NuxtLink
-        v-for="categoryContent of allLocalizedCategoryContents"
+        v-for="categoryContent of localizedAllCategoryContents"
         :key="categoryContent.id"
         :to="localePath(`/blog/category/${categoryContent.id}/page/1`)"
         tag="li"
@@ -78,8 +78,8 @@ export default {
     const currentIndex = parseInt(params.index, 10)
     const {
       postContentList,
-      maxLocalizedCategorizedPageIndex: maxIndex,
-      allLocalizedCategoryContents,
+      localizedCategorizedMaxPageIndex: maxIndex,
+      localizedAllCategoryContents,
       categoryContent: currentCategoryContent
     } = await import(
       /* webpackChunkName: "[request]" */
@@ -101,7 +101,7 @@ export default {
     return {
       postContentList,
       maxIndex,
-      allLocalizedCategoryContents,
+      localizedAllCategoryContents,
       currentCategoryContent,
       currentIndex,
       allPartialPageContents,
