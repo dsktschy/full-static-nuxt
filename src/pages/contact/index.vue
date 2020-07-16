@@ -252,11 +252,13 @@ export default {
 
   computed: {
     dataNetlifyValue() {
-      return process.env.NUXT_ENV_CONTACT_API_TYPE === 'netlify' ? 'true' : null
+      return process.env.NUXT_ENV_CONTACT_API_DIR_NAME === 'netlify'
+        ? 'true'
+        : null
     },
 
     dataNetlifyHoneypotValue() {
-      return process.env.NUXT_ENV_CONTACT_API_TYPE === 'netlify'
+      return process.env.NUXT_ENV_CONTACT_API_DIR_NAME === 'netlify'
         ? this.honeypotName
         : null
     }

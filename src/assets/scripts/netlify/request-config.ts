@@ -14,7 +14,7 @@ export function createContactRequestConfig() {
   const contactRequestConfig: AxiosRequestConfig = {
     timeout: DEFAULT_API_GET_REQUEST_TIMEOUT,
     // Contact form endpoint of Netlify is site origin
-    baseURL: process.env.NUXT_ENV_BASE_URL
+    baseURL: process.env.NUXT_ENV_CONTACT_API_URL
   }
   return contactRequestConfig
 }

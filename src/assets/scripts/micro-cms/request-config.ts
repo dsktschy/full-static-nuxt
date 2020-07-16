@@ -27,10 +27,10 @@ function createGetRequestConfig(params: MicroCmsQuery = {}) {
   }
 
   // Micro CMS requires API key
-  if (!process.env.NUXT_ENV_MICRO_CMS_API_KEY)
+  if (!process.env.NUXT_ENV_CONTENT_API_KEY)
     throw new Error('Content API key is not defined')
   getRequestConfig.headers = {
-    'X-API-KEY': process.env.NUXT_ENV_MICRO_CMS_API_KEY
+    'X-API-KEY': process.env.NUXT_ENV_CONTENT_API_KEY
   }
 
   return getRequestConfig
@@ -40,7 +40,7 @@ export function createSiteDataRequestConfig(params: MicroCmsQuery = {}) {
   const defaultFields = 'title.id,description.id,ogImage.value'
   const siteDataRequestConfig: AxiosRequestConfig = {
     ...createGetRequestConfig({ fields: defaultFields, ...params }),
-    baseURL: `${process.env.NUXT_ENV_MICRO_CMS_API_URL}/site-data`
+    baseURL: `${process.env.NUXT_ENV_CONTENT_API_URL}/site-data`
   }
   return siteDataRequestConfig
 }
@@ -50,7 +50,7 @@ export function createPagesRequestConfig(params: MicroCmsQuery = {}) {
     'id,title.id,description.id,ogImage.value,plainText.id,richText.id,images'
   const pagesRequestConfig: AxiosRequestConfig = {
     ...createGetRequestConfig({ fields: defaultFields, ...params }),
-    baseURL: `${process.env.NUXT_ENV_MICRO_CMS_API_URL}/pages`
+    baseURL: `${process.env.NUXT_ENV_CONTENT_API_URL}/pages`
   }
   return pagesRequestConfig
 }
@@ -60,7 +60,7 @@ export function createPostsRequestConfig(params: MicroCmsQuery = {}) {
     'id,createdAt,title,description,featuredImage,content,category'
   const postsRequestConfig: AxiosRequestConfig = {
     ...createGetRequestConfig({ fields: defaultFields, ...params }),
-    baseURL: `${process.env.NUXT_ENV_MICRO_CMS_API_URL}/posts`
+    baseURL: `${process.env.NUXT_ENV_CONTENT_API_URL}/posts`
   }
   return postsRequestConfig
 }
@@ -69,7 +69,7 @@ export function createCategoriesRequestConfig(params: MicroCmsQuery = {}) {
   const defaultFields = 'id,name.id'
   const categoriesRequestConfig: AxiosRequestConfig = {
     ...createGetRequestConfig({ fields: defaultFields, ...params }),
-    baseURL: `${process.env.NUXT_ENV_MICRO_CMS_API_URL}/categories`
+    baseURL: `${process.env.NUXT_ENV_CONTENT_API_URL}/categories`
   }
   return categoriesRequestConfig
 }
@@ -78,7 +78,7 @@ export function createInputFieldsRequestConfig(params: MicroCmsQuery = {}) {
   const defaultFields = 'id,label.id,name,type,options,rules'
   const inputFieldsRequestConfig: AxiosRequestConfig = {
     ...createGetRequestConfig({ fields: defaultFields, ...params }),
-    baseURL: `${process.env.NUXT_ENV_MICRO_CMS_API_URL}/input-fields`
+    baseURL: `${process.env.NUXT_ENV_CONTENT_API_URL}/input-fields`
   }
   return inputFieldsRequestConfig
 }
@@ -87,7 +87,7 @@ export function createPlainTextRequestConfig(params: MicroCmsQuery = {}) {
   const defaultFields = 'id,value'
   const plainTextRequestConfig: AxiosRequestConfig = {
     ...createGetRequestConfig({ fields: defaultFields, ...params }),
-    baseURL: `${process.env.NUXT_ENV_MICRO_CMS_API_URL}/plain-text`
+    baseURL: `${process.env.NUXT_ENV_CONTENT_API_URL}/plain-text`
   }
   return plainTextRequestConfig
 }
@@ -96,7 +96,7 @@ export function createRichTextRequestConfig(params: MicroCmsQuery = {}) {
   const defaultFields = 'id,value'
   const richTextRequestConfig: AxiosRequestConfig = {
     ...createGetRequestConfig({ fields: defaultFields, ...params }),
-    baseURL: `${process.env.NUXT_ENV_MICRO_CMS_API_URL}/rich-text`
+    baseURL: `${process.env.NUXT_ENV_CONTENT_API_URL}/rich-text`
   }
   return richTextRequestConfig
 }
