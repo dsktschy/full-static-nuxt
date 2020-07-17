@@ -206,7 +206,7 @@ import {
   isSingleOptionCheckbox,
   createDefaultValue
 } from '~/api/content/input-fields.ts'
-import { postContactValues } from '~/api/contact/contact.ts'
+import { postContactValues } from '~/api/form/contact.ts'
 import { createHead } from '~/utilities/index.ts'
 
 export default {
@@ -252,13 +252,13 @@ export default {
 
   computed: {
     dataNetlifyValue() {
-      return process.env.NUXT_ENV_CONTACT_API_DIR_NAME === 'netlify'
+      return process.env.NUXT_ENV_FORM_API_DIR_NAME === 'netlify'
         ? 'true'
         : null
     },
 
     dataNetlifyHoneypotValue() {
-      return process.env.NUXT_ENV_CONTACT_API_DIR_NAME === 'netlify'
+      return process.env.NUXT_ENV_FORM_API_DIR_NAME === 'netlify'
         ? this.honeypotName
         : null
     }
