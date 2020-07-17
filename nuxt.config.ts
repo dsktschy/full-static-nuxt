@@ -112,19 +112,20 @@ const config: NuxtConfig = {
       return routes
     },
 
-    // To show blog post list pages without generating
-    // If no file matches, request must be redirected to 404.html
     fallback: process.env.NUXT_ENV_GENERATE_FALLBACK_FILE_NAME || true
   },
 
   vue: {
     config: {
+      /*
+       ** Global error handler
+       */
       errorHandler(error: Error | AxiosError, vm: Vue) {
         let statusCode = 500
         if ('response' in error && typeof error.response !== 'undefined') {
           statusCode = error.response.status
         }
-
+        // Show error page
         vm.$nuxt.error({
           statusCode,
           message: error.message
