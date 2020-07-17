@@ -1,22 +1,24 @@
-# free-site-sample
+# Full Static Nuxt
 
-> Sample of a cost-free site using a static site generator, a headless CMS, and a static site hosting service.
+> Sample of full static export with Nuxt.
 
 ## Build Setup
 
 ```bash
 # install dependencies
-$ npm install
+$ npm ci
 
 # serve with hot reload at localhost:3000
 $ npm run dev
 
-# build for production and launch server
+# build for production
 $ npm run build
-$ npm run start
 
 # generate static project
-$ npm run generate
+$ npm run export
+
+# serve generated static project at localhost:3000
+$ npm run serve
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
