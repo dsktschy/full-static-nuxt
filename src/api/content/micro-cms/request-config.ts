@@ -25,14 +25,10 @@ function createGetRequestConfig(params: MicroCmsQuery = {}) {
       ...params
     }
   }
-
   // Micro CMS requires API key
-  if (!process.env.NUXT_ENV_CONTENT_API_KEY)
-    throw new Error('Content API key is not defined')
   getRequestConfig.headers = {
     'X-API-KEY': process.env.NUXT_ENV_CONTENT_API_KEY
   }
-
   return getRequestConfig
 }
 

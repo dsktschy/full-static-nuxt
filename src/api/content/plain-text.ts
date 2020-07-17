@@ -16,8 +16,6 @@ let child: Child | null = null
 
 async function getChild() {
   if (child) return child
-  if (!process.env.NUXT_ENV_CONTENT_API_DIR_NAME)
-    throw new Error('Content API type is not defined')
   child = (await import(
     `./${process.env.NUXT_ENV_CONTENT_API_DIR_NAME}/plain-text.ts`
   )) as Child
