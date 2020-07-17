@@ -22,3 +22,7 @@ $ npm run serve
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+## Caution
+
+If publishing, don't forget to remove meta tag of robots.
