@@ -5,12 +5,12 @@ import { LocaleMessageObject } from 'vue-i18n'
 import {
   getAllPlainTextContents,
   PlainTextContent
-} from '../assets/scripts/plain-text'
+} from '../api/content/plain-text'
 import {
   getAllRichTextContents,
   RichTextContent
-} from '../assets/scripts/rich-text'
-import { LOCALES, LANG_DIR } from '../assets/scripts/constants'
+} from '../api/content/rich-text'
+import { LOCALES, LANG_DIR } from '../constants/index'
 
 interface Options {}
 

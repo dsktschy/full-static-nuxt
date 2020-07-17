@@ -12,7 +12,7 @@ import {
   DEFAULT_API_GET_REQUEST_TIMEOUT,
   DEFAULT_API_GET_REQUEST_DEPTH,
   DEFAULT_API_GET_REQUEST_LIMIT
-} from '../constants'
+} from '../../../constants/index'
 import { MicroCmsQuery } from './query'
 
 function createGetRequestConfig(params: MicroCmsQuery = {}) {

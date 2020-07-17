@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { Plugin } from '@nuxt/types'
-import { PartialPageContent } from '~/assets/scripts/pages'
+import { PartialPageContent } from '~/api/content/pages'
 
 interface NavState {
   allPartialPageContents: PartialPageContent[]

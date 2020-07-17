@@ -8,7 +8,7 @@
  */
 
 import { AxiosRequestConfig } from 'axios'
-import { DEFAULT_API_GET_REQUEST_TIMEOUT } from '../constants'
+import { DEFAULT_API_GET_REQUEST_TIMEOUT } from '../../../constants/index'
 
 export function createContactRequestConfig() {
   const contactRequestConfig: AxiosRequestConfig = {

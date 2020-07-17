@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { CategoryContent } from '../categories'
-import { MAX_API_GET_REQUEST_LIMIT } from '../constants'
+import { MAX_API_GET_REQUEST_LIMIT } from '../../../constants/index'
 import { createCategoriesRequestConfig } from './request-config'
 import { MicroCmsQuery } from './query'
 import { MicroCmsListResponse } from './response'

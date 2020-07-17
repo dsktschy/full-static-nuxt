@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { RichTextContent } from '../rich-text'
-import { MAX_API_GET_REQUEST_LIMIT } from '../constants'
+import { MAX_API_GET_REQUEST_LIMIT } from '../../../constants/index'
 import { createRichTextRequestConfig } from './request-config'
 import { MicroCmsQuery } from './query'
 import { MicroCmsListResponse } from './response'

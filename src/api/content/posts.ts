@@ -1,5 +1,5 @@
+import { DEFAULT_LOCALE } from '../../constants/index'
 import { CategoryContent } from './categories'
-import { DEFAULT_LOCALE } from './constants'
 
 export interface PostContent {
   id: string

@@ -47,16 +47,16 @@
 </template>
 
 <script>
-import { getSiteDataContent } from '~/assets/scripts/site-data.ts'
+import { getSiteDataContent } from '~/api/content/site-data.ts'
 import {
   getAllPartialPageContents,
   getPageContent
-} from '~/assets/scripts/pages.ts'
-import { createHead } from '~/assets/scripts/head.ts'
+} from '~/api/content/pages.ts'
 import {
   convertIsoToDotSeparatedYmd,
-  capitalize
-} from '~/assets/scripts/utility.ts'
+  capitalize,
+  createHead
+} from '~/utilities/index.ts'
 
 export default {
   async asyncData({ params, route, isDev, error }) {

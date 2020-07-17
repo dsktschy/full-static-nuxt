@@ -1,12 +1,9 @@
+import Vue from 'vue'
 import { config as configureDotenv } from 'dotenv'
+import { AxiosError } from 'axios'
 import { NuxtConfig } from '@nuxt/types'
 import { Configuration as WebpackConfiguration } from 'webpack'
-import {
-  LOCALES,
-  DEFAULT_LOCALE,
-  LANG_DIR
-} from './src/assets/scripts/constants'
-import { handleError } from './src/assets/scripts/error-handler'
+import { LOCALES, DEFAULT_LOCALE, LANG_DIR } from './src/constants/index'
 
 configureDotenv()
 
@@ -122,7 +119,17 @@ const config: NuxtConfig = {
 
   vue: {
     config: {
-      errorHandler: handleError
+      errorHandler(error: Error | AxiosError, vm: Vue) {
+        let statusCode = 500
+        if ('response' in error && typeof error.response !== 'undefined') {
+          statusCode = error.response.status
+        }
+
+        vm.$nuxt.error({
+          statusCode,
+          message: error.message
+        })
+      }
     }
   }
 }

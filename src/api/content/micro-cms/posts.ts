@@ -1,6 +1,9 @@
 import axios from 'axios'
 import { PostContent } from '../posts'
-import { MAX_API_GET_REQUEST_LIMIT, LOCALE_CODE_LIST } from '../constants'
+import {
+  MAX_API_GET_REQUEST_LIMIT,
+  LOCALE_CODE_LIST
+} from '../../../constants/index'
 import { createPostsRequestConfig } from './request-config'
 import { MicroCmsQuery } from './query'
 import { MicroCmsListResponse } from './response'

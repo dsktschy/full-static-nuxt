@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE } from './constants'
+import { DEFAULT_LOCALE } from '../../constants/index'
 
 export interface PlainTextContent {
   id: string

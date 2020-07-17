@@ -1,18 +1,15 @@
 import fs from 'fs-extra'
 import { Module } from '@nuxt/types'
-import {
-  getAllPostContentsPerLocale,
-  PostContent
-} from '../assets/scripts/posts'
+import { getAllPostContentsPerLocale, PostContent } from '../api/content/posts'
 import {
   getAllCategoryContents,
   CategoryContent
-} from '../assets/scripts/categories'
+} from '../api/content/categories'
 import {
   LOCALE_CODE_LIST,
   DEFAULT_LOCALE,
   TOTAL_POSTS_PER_PAGE
-} from '../assets/scripts/constants'
+} from '../constants/index'
 
 interface LocalizedPostDetailPayload {
   postContent: PostContent
