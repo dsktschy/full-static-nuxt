@@ -65,7 +65,9 @@ import {
 import {
   convertIsoToDotSeparatedYmd,
   capitalize,
-  createHead
+  createHead,
+  filterWithIdPrefix,
+  sortById
 } from '~/utilities/index.ts'
 
 export default {
@@ -96,18 +98,9 @@ export default {
 
   computed: {
     sliderImageList() {
-      const prefix = 'page-index-slider-'
-      const sliderImageList = this.pageContent.images.filter((image) =>
-        image.id.startsWith(prefix)
-      )
-      const sortedSliderImageList = []
-      for (let i = 0; i < sliderImageList.length; i++) {
-        const id = `${prefix}${i + 1}`
-        sortedSliderImageList[i] = sliderImageList.find(
-          (image) => image.id === id
-        )
-      }
-      return sortedSliderImageList
+      const list = this.pageContent.images
+      const idPrefix = 'page-index-slider-'
+      return sortById(filterWithIdPrefix(list, idPrefix))
     }
   },
 

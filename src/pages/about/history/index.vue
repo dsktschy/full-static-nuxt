@@ -20,7 +20,7 @@ import {
   getAllPartialPageContents,
   getPageContent
 } from '~/model/content/pages.ts'
-import { createHead } from '~/utilities/index.ts'
+import { createHead, filterWithIdPrefix, sortById } from '~/utilities/index.ts'
 
 export default {
   async asyncData({ app }) {
@@ -41,38 +41,15 @@ export default {
 
   computed: {
     historyTermTextList() {
-      const prefix = 'page-about-history-body-term-'
-      const historyTermTextList = this.pageContent.plainText.filter((text) =>
-        text.id.startsWith(prefix)
-      )
-      const sortedHistoryTermTextList = []
-      for (let i = 0; i < historyTermTextList.length; i++) {
-        const id = `${prefix}${i + 1}`
-        sortedHistoryTermTextList[i] = historyTermTextList.find(
-          (text) => text.id === id
-        )
-      }
-      return sortedHistoryTermTextList
+      const list = this.pageContent.plainText
+      const idPrefix = 'page-about-history-body-term-'
+      return sortById(filterWithIdPrefix(list, idPrefix))
     },
 
     historyDefinitionTextList() {
-      const prefix = 'page-about-history-body-definition-'
-      const historyDefinitionTextList = [
-        ...this.pageContent.plainText.filter((text) =>
-          text.id.startsWith(prefix)
-        ),
-        ...this.pageContent.richText.filter((text) =>
-          text.id.startsWith(prefix)
-        )
-      ]
-      const sortedHistoryDefinitionTextList = []
-      for (let i = 0; i < historyDefinitionTextList.length; i++) {
-        const id = `${prefix}${i + 1}`
-        sortedHistoryDefinitionTextList[i] = historyDefinitionTextList.find(
-          (text) => text.id === id
-        )
-      }
-      return sortedHistoryDefinitionTextList
+      const list = [...this.pageContent.plainText, ...this.pageContent.richText]
+      const idPrefix = 'page-about-history-body-definition-'
+      return sortById(filterWithIdPrefix(list, idPrefix))
     }
   },
 

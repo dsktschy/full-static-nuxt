@@ -41,7 +41,12 @@ import {
   getAllPartialPageContents,
   getPageContent
 } from '~/model/content/pages.ts'
-import { padWithZero, createHead } from '~/utilities/index.ts'
+import {
+  padWithZero,
+  createHead,
+  filterWithIdPrefix,
+  sortById
+} from '~/utilities/index.ts'
 
 export default {
   async asyncData({ app }) {
@@ -67,38 +72,15 @@ export default {
 
   computed: {
     companyTermTextList() {
-      const prefix = 'page-about-company-body-term-'
-      const companyTermTextList = this.pageContent.plainText.filter((text) =>
-        text.id.startsWith(prefix)
-      )
-      const sortedCompanyTermTextList = []
-      for (let i = 0; i < companyTermTextList.length; i++) {
-        const id = `${prefix}${i + 1}`
-        sortedCompanyTermTextList[i] = companyTermTextList.find(
-          (text) => text.id === id
-        )
-      }
-      return sortedCompanyTermTextList
+      const list = this.pageContent.plainText
+      const idPrefix = 'page-about-company-body-term-'
+      return sortById(filterWithIdPrefix(list, idPrefix))
     },
 
     companyDefinitionTextList() {
-      const prefix = 'page-about-company-body-definition-'
-      const companyDefinitionTextList = [
-        ...this.pageContent.plainText.filter((text) =>
-          text.id.startsWith(prefix)
-        ),
-        ...this.pageContent.richText.filter((text) =>
-          text.id.startsWith(prefix)
-        )
-      ]
-      const sortedCompanyDefinitionTextList = []
-      for (let i = 0; i < companyDefinitionTextList.length; i++) {
-        const id = `${prefix}${i + 1}`
-        sortedCompanyDefinitionTextList[i] = companyDefinitionTextList.find(
-          (text) => text.id === id
-        )
-      }
-      return sortedCompanyDefinitionTextList
+      const list = [...this.pageContent.plainText, ...this.pageContent.richText]
+      const idPrefix = 'page-about-company-body-definition-'
+      return sortById(filterWithIdPrefix(list, idPrefix))
     }
   },
 

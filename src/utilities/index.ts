@@ -56,3 +56,32 @@ export function createHead(
     ]
   }
 }
+
+/**
+ * Filter with ID prefix
+ */
+export function filterWithIdPrefix(
+  list: {
+    id: string
+    [key: string]: any
+  }[],
+  idPrefix: string
+) {
+  return list.filter((item) => item.id.startsWith(idPrefix))
+}
+
+/**
+ * Sort by ID
+ */
+export function sortById(
+  list: {
+    id: string
+    [key: string]: any
+  }[]
+) {
+  return list.sort((itemA, itemB) => {
+    if (itemA.id < itemB.id) return -1
+    if (itemA.id > itemB.id) return 1
+    return 0
+  })
+}
