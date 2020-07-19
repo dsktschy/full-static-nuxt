@@ -127,10 +127,10 @@
             </template>
             <span v-else>{{
               $t(
-                createOptionLabelText(
+                getOptionLabelTextId(
                   inputFieldContent,
                   formValues[inputFieldContent.name]
-                ).id
+                )
               )
             }}</span>
           </template>
@@ -188,7 +188,6 @@
 </template>
 
 <script>
-import { stringify } from 'querystring'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import { getSiteDataContent } from '~/model/content/site-data.ts'
 import {
@@ -204,7 +203,10 @@ import {
   isRadioOrSelect,
   isTextOrTextarea,
   isSingleOptionCheckbox,
-  createDefaultValue
+  createDefaultValue,
+  createValidationProviderTag,
+  createValidationProviderRules,
+  getOptionLabelTextId
 } from '~/model/content/input-fields.ts'
 import { postContactValues } from '~/model/form/contact.ts'
 import { createHead } from '~/utilities/index.ts'
@@ -282,37 +284,16 @@ export default {
     isRadioOrSelect,
     isTextOrTextarea,
     isSingleOptionCheckbox,
-
-    createValidationProviderTag(inputFieldContent) {
-      const type = inputFieldContent.type
-      return ['radio', 'checkbox'].includes(type) ? 'div' : 'label'
-    },
-
-    createValidationProviderRules(inputFieldContent) {
-      const rules = inputFieldContent.rules
-      if (!rules) return ''
-      const ruleList = []
-      if (rules.required) ruleList.push('required')
-      if (rules.email) ruleList.push('email')
-      if (rules.max != null) ruleList.push(`max:${rules.max}`)
-      if (rules.min != null) ruleList.push(`min:${rules.min}`)
-      return ruleList.join('|')
-    },
-
-    createOptionLabelText(inputFieldContent, formValue) {
-      const option = inputFieldContent.options.find(
-        (option) => option.value === formValue
-      )
-      return option.label
-    },
+    createValidationProviderTag,
+    createValidationProviderRules,
+    getOptionLabelTextId,
 
     toggleConfirming() {
       this.confirming = !this.confirming
     },
 
     async submit() {
-      const stringifiedValues = stringify({ ...this.formValues })
-      await postContactValues(stringifiedValues)
+      await postContactValues(this.formValues)
       this.completed = true
     },
 

@@ -1,12 +1,14 @@
-export interface ContactRequestBody {
+import { FormValue } from './value'
+
+export interface ContactValues {
   'form-name': string
   honeypot: string
   agreement: boolean
-  [name: string]: string | boolean | string[]
+  [name: string]: FormValue
 }
 
 interface Child {
-  postContactValues(requestBody: ContactRequestBody): Promise<void>
+  postContactValues(contactValues: ContactValues): Promise<void>
 }
 
 let child: Child | null = null
@@ -19,8 +21,8 @@ async function getChild() {
   return child
 }
 
-export async function postContactValues(requestBody: ContactRequestBody) {
+export async function postContactValues(contactValues: ContactValues) {
   const { postContactValues } = await getChild()
-  const result = await postContactValues(requestBody)
+  const result = await postContactValues(contactValues)
   return result
 }

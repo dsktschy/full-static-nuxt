@@ -1,3 +1,4 @@
+import { FormValue } from '../form/value'
 import { PlainTextContent } from './plain-text'
 
 interface InputFieldContentOption {
@@ -75,8 +76,28 @@ export function isSingleOptionCheckbox(inputFieldContent: InputFieldContent) {
   return isCheckbox(inputFieldContent) && inputFieldContent.options.length === 1
 }
 
+export function createValidationProviderTag(
+  inputFieldContent: InputFieldContent
+) {
+  const type = inputFieldContent.type
+  return ['radio', 'checkbox'].includes(type) ? 'div' : 'label'
+}
+
+export function createValidationProviderRules(
+  inputFieldContent: InputFieldContent
+) {
+  const rules = inputFieldContent.rules
+  if (!rules) return ''
+  const ruleList = []
+  if (rules.required) ruleList.push('required')
+  if (rules.email) ruleList.push('email')
+  if (rules.max != null) ruleList.push(`max:${rules.max}`)
+  if (rules.min != null) ruleList.push(`min:${rules.min}`)
+  return ruleList.join('|')
+}
+
 export function createDefaultValue(inputFieldContent: InputFieldContent) {
-  let value: string | string[] | boolean = ''
+  let value: FormValue = ''
   if (isCheckbox(inputFieldContent)) {
     if (!inputFieldContent.options.length) {
       value = false
@@ -96,4 +117,14 @@ export function createDefaultValue(inputFieldContent: InputFieldContent) {
     }
   }
   return value
+}
+
+export function getOptionLabelTextId(
+  inputFieldContent: InputFieldContent,
+  formValue: FormValue
+) {
+  const option = inputFieldContent.options.find(
+    (option) => option.value === formValue
+  )
+  return option && option.label ? option.label.id : ''
 }
