@@ -57,11 +57,11 @@
 
 <script>
 import { VueAgile } from 'vue-agile'
-import { getSiteDataContent } from '~/api/content/site-data.ts'
+import { getSiteDataContent } from '~/model/content/site-data.ts'
 import {
   getAllPartialPageContents,
   getPageContent
-} from '~/api/content/pages.ts'
+} from '~/model/content/pages.ts'
 import {
   convertIsoToDotSeparatedYmd,
   capitalize,

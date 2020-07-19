@@ -190,11 +190,11 @@
 <script>
 import { stringify } from 'querystring'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
-import { getSiteDataContent } from '~/api/content/site-data.ts'
+import { getSiteDataContent } from '~/model/content/site-data.ts'
 import {
   getAllPartialPageContents,
   getPageContent
-} from '~/api/content/pages.ts'
+} from '~/model/content/pages.ts'
 import {
   getAllInputFieldContents,
   isCheckbox,
@@ -205,8 +205,8 @@ import {
   isTextOrTextarea,
   isSingleOptionCheckbox,
   createDefaultValue
-} from '~/api/content/input-fields.ts'
-import { postContactValues } from '~/api/form/contact.ts'
+} from '~/model/content/input-fields.ts'
+import { postContactValues } from '~/model/form/contact.ts'
 import { createHead } from '~/utilities/index.ts'
 
 export default {

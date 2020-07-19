@@ -1,10 +1,13 @@
 import fs from 'fs-extra'
 import { Module } from '@nuxt/types'
-import { getAllPostContentsPerLocale, PostContent } from '../api/content/posts'
+import {
+  getAllPostContentsPerLocale,
+  PostContent
+} from '../model/content/posts'
 import {
   getAllCategoryContents,
   CategoryContent
-} from '../api/content/categories'
+} from '../model/content/categories'
 import {
   LOCALE_CODE_LIST,
   DEFAULT_LOCALE,

@@ -35,8 +35,8 @@
 </template>
 
 <script>
-import { getSiteDataContent } from '~/api/content/site-data.ts'
-import { getAllPartialPageContents } from '~/api/content/pages.ts'
+import { getSiteDataContent } from '~/model/content/site-data.ts'
+import { getAllPartialPageContents } from '~/model/content/pages.ts'
 import { createHead } from '~/utilities/index.ts'
 
 export default {
