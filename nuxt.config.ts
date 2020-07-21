@@ -51,9 +51,6 @@ const config: NuxtConfig = {
     // Doc: https://typescript.nuxtjs.org/ja/
     '@nuxt/typescript-build',
 
-    // Doc: https://github.com/nuxt-community/dotenv-module
-    ['@nuxtjs/dotenv', { path: __dirname }],
-
     // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
 
@@ -134,6 +131,23 @@ const config: NuxtConfig = {
       }
     }
   }
+}
+
+/**
+ * Private environment variables
+ */
+const privateEnvironmentValues = {
+  NUXT_PRIVATE_ENV_CONTENT_API_KEY:
+    process.env.NUXT_PRIVATE_ENV_CONTENT_API_KEY || '',
+  NUXT_PRIVATE_ENV_FORM_API_KEY: process.env.NUXT_PRIVATE_ENV_FORM_API_KEY || ''
+}
+// Don't expose to client
+if (process.env.NODE_ENV === 'production') {
+  config.privateRuntimeConfig = privateEnvironmentValues
+}
+// Expose to client because asyncData is run in development
+else if (process.env.NODE_ENV === 'development') {
+  config.env = privateEnvironmentValues
 }
 
 export default config

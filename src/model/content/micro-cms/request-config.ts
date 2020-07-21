@@ -27,7 +27,7 @@ function createGetRequestConfig(params: MicroCmsQuery = {}) {
   }
   // Micro CMS requires API key
   getRequestConfig.headers = {
-    'X-API-KEY': process.env.NUXT_ENV_CONTENT_API_KEY
+    'X-API-KEY': process.env.NUXT_PRIVATE_ENV_CONTENT_API_KEY
   }
   return getRequestConfig
 }
