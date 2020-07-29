@@ -8,17 +8,14 @@
 # install dependencies
 $ npm ci
 
-# serve with hot reload at localhost:3000
+# serve application with hot reload at localhost:3000
 $ npm run dev
 
-# build for production
-$ npm run build
+# bundle and export static application
+$ npm run generate
 
-# generate static project
-$ npm run export
-
-# serve generated static project at localhost:3000
-$ npm run serve
+# serve exported application at localhost:3000
+$ npm run start
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
